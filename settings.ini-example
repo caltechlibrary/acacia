@@ -1,0 +1,41 @@
+# ========================================================================
+# @file    settings.ini
+# @brief   Settings file for Acacia.
+# @created 2021-03-19
+# @license Please see the file named LICENSE in the project directory
+# @website https://github.com/caltechlibrary/acacia
+# 
+#     ,------------------- Notice -- Notice -- Notice -------------------.
+#     | This file must be located in the same directory as               |
+#     | process_mail.py.                                                 |
+#     `------------------------------------------------------------------'
+#
+# ========================================================================
+
+[settings]
+# Path to the sqlite database, relative to here.
+DATABASE_FILE = acacia.db
+
+# Email details. This is to access the mailbox of the submissions
+# email account.
+
+# Inbound IMAP Mailbox of submittions email address
+# NOTE: Codebase assumes SSL support
+# FIXME: you need to set these appropriate to your email provider
+IMAP_HOST = imap.gmail.com
+IMAP_PORT   = 993
+
+# Outbound IMAP if needed
+# NOTE: Codebase assumes SSL/TLS support
+# FIXME: you need to set these appropriate to your email provider
+SMTP_HOST = smtp.gmail.com
+SMTP_SSL_PORT = 465
+SMTP_TLS_PORT = 587
+
+# Account info
+# FIXME: you need to EMAIL and SECRET appropriately
+DISPLAY_NAME = 'Author Submissions Bot'
+EMAIL = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_ADDRESS'
+SECRET = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_PASSWORD'
+
+

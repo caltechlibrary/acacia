@@ -57,3 +57,5 @@ TAGS
 
 # Project-specific things to ignore:
 # .............................................................................
+settings.ini
+*.db
