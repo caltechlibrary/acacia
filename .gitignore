@@ -57,5 +57,8 @@ TAGS
 
 # Project-specific things to ignore:
 # .............................................................................
+*.swp
 settings.ini
 *.db
+__pycache__
+example_data_formats

@@ -6,82 +6,11 @@ account and stores the results in a SQLite3 database
 import os
 import sys
 
-from imaplib import IMAP4_SSL
-import email
+from acacia.email import EMailProcessor
 
-from peewee import Model, CharField, TextField, DateTimeField
 from decouple import config
 
 _db = config('DATABASE', 'acacia.db')
-
-class Message(Model):
-    msg_id = CharField(unique = True)
-    msg_reply_to = CharField()
-    msg_date = DateTimeField()
-    msg_from = CharField()
-    msg_subject = CharField()
-    msg_body = TextField()
-
-    class Meta():
-        database = _db
-
-def unquote(s):
-    s = s.strip()
-    if s.startswith("'"):
-        return s.strip("'")
-    elif s.startswith('"'):
-        return s.strip('"')
-    return s.strip()
-
-class EMailProcessor():
-    def __init__(self):
-        self.imap_host = config('IMAP_HOST','')
-        self.imap_port = config('IMAP_PORT', 993)
-        self.smtp_host = config('SMTP_HOST', '')
-        self.smtp_require_tls = config('STMP_REQUIRE_TLS', True)
-        self.smtp_auth = config('SMTP_AUTH', True)
-        self.smtp_ssl_port = config('SMTP_SSL_PORT', 465)
-        self.smtp_tls_port = config('SMTP_TLS_PORT', 587)
-        self.display_name = config('DISPLAY_NAME', '')
-        self.email = config('EMAIL', '')
-        self.secret = config('SECRET', '')
-
-    def get_mail(self):
-        print(f'DEBUG attempting to connect to {self.email}')
-        user = unquote(self.email)
-        psword = unquote(self.secret)
-        print(f'DEBUG with  >{user}<')
-        print(f'DEBUG with  >{psword}<')
-        print(f'DEBUG host {self.imap_host}, port {self.imap_port}')
-        M = IMAP4_SSL(self.imap_host, self.imap_port) #, self.imap_port)
-        try: 
-            M.login(user, psword)
-        except Exception as err:
-            print(f'Cannot connect, {err}')
-            return False
-#        res, mailboxes = M.list()
-#        if res == 'OK':
-#            for mailbox in mailboxes:
-#                box = str(mailbox)
-#                print(f'{box}')
-        res, cnt = M.select()
-        print(f'{res}, {cnt} message found')
-        res, data = M.search(None, 'ALL')
-        if res == 'OK':
-            for num in data[0].split():
-                res, data = M.fetch(num, '(RFC822)')
-                if res == 'OK':
-                    msg = email.message_from_bytes(data[0][1])
-                    print(f'DEBUG msg({num}) -> {msg.as_string()}')
-                else:
-                    print(f"Can't read message {num}")
-        else:
-            print('No messages')
-            return False
-        M.close()
-        M.logout()
-        return True
-        
 
 def usage(app_name, db_name, exit_code = None):
     '''Describe how process_email.py works'''
@@ -127,7 +56,7 @@ IMAP_PORT   = 993
 # FIXME: You need to set these appropriate to your email provider
 SMTP_HOST = smtp.gmail.com
 SMTP_SSL = true
-STMP_REQUIRE_TLS = true
+SMTP_REQUIRE_TLS = true
 SMTP_AUTH = true
 SMTP_SSL_PORT = 465
 SMTP_TLS_PORT = 587
@@ -143,17 +72,37 @@ PASSWORD = "CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_PASSWORD"
     if exit_code != None:
         sys.exit(exit_code)
 
-
-if __name__ == '__main__':
-    app_name = os.path.basename(sys.argv[0])
-    if not os.path.exists('settings.ini'):
-        usage(app_name, _db, 1)
+def apply(app_name, _db, args):
+    smtp_dry_run = False
+    for arg in args:
+        if arg.startswith('-'):
+            print(f'DEBUG option {arg}')
+            if arg.startswith('--smtp-dry-run'):
+                p = arg.split("=", 2)
+                if (len(p) == 2) and (p[1].lower() == 'true'): 
+                    smtp_dry_run = True
+                elif (len(p) == 2) and (p[1].lower() == 'false'):
+                    smtp_dry_run = False
+                else:
+                    print(f'''Don't understand "{p[1]}" for --stmp-dry-run''')
+                    exit(1)
+            elif arg.startswith('-h') or arg.startswith('--help'):
+                usage(app_name, _db, 0)
+        else:
+            print('DEBUG command {arg}')
     processor = EMailProcessor()
-    if processor.get_mail():
+    # the request to the SMTP service
+    if processor.get_mail(smtp_dry_run = smtp_dry_run):
         print(f'mail retrieved and stored in {_db}')
         sys.exit(0)
     else:
         print(f'Something went wrong with {app_name}, failed to fetch mail')
         sys.exit(1)
 
+
+if __name__ == '__main__':
+    app_name = os.path.basename(sys.argv[0])
+    if not os.path.exists('settings.ini'):
+        usage(app_name, _db, 1)
+    apply(app_name, _db, sys.argv[1:])
 
