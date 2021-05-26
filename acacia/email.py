@@ -24,15 +24,15 @@ _db = SqliteDatabase(config('DATABASE', 'acacia.db'))
 # e.g. 'Wed, 15 Jul 2020 12:13:29 -0700'
 dt_email_format = '%a, %d %b %Y %H:%M:%S %z'
 
-def setup_message_table(db_name):
-    '''setup a message SQLite3 database table'''
+def setup_message_table(db_name, table_name = 'message'):
+    '''setup a SQLite3 database table'''
     db = SqliteDatabase(db_name)
     if db.connect():
-        if db.table_exists('message'):
-            print(f'''WARNING: message already exists in {db_name}''')
+        if db.table_exists(table_name):
+            print(f'''WARNING: {table_name} already exists in {db_name}''')
         else:
             db.create_tables([Message])
-            print(f'''message table createdf in {db_name}''')
+            print(f'''{table_name} table created in {db_name}''')
     else:
         print(f'''ERROR: could not connect to {db_name}''')
 

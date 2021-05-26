@@ -11,11 +11,13 @@ from decouple import config
 
 from acacia.people import setup_person_table
 from acacia.email import setup_message_table
+from acacia.doi import setup_doi_table
 
 
 db_name = config('DATABASE_FILE', default='acacia.db')
 
 setup_message_table(db_name)
+setup_doi_table(db_name)
 setup_person_table(db_name)
 
 print('-'*50)

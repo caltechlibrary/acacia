@@ -32,15 +32,15 @@ import os
 # Figure out how are authentication and authorization is configured.
 _db = SqliteDatabase(config('DATABASE_FILE', default='acacia.db'))
 
-def setup_person_table(db_name):
-    '''setup a people SQLite3 database'''
+def setup_person_table(db_name, table_name = 'person'):
+    '''setup a SQLite3 database table'''
     db = SqliteDatabase(db_name)
     if db.connect():
-        if db.table_exists('person'):
-            print(f'''WARNING: person already exists in {db_name}''')
+        if db.table_exists(table_name):
+            print(f'''WARNING: {table_name} already exists in {db_name}''')
         else:
             db.create_tables([Person])
-            print(f'''person table create in {db_name}''')
+            print(f'''{table_name} table create in {db_name}''')
     else:
         print(f'''ERROR: could not connect to {db_name}''')
         
