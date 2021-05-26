@@ -30,7 +30,7 @@ from peewee import AutoField, CharField, TimestampField
 import os
 
 # Figure out how are authentication and authorization is configured.
-_db = SqliteDatabase(config('DATABASE_FILE', default='dibs.db'))
+_db = SqliteDatabase(config('DATABASE_FILE', default='acacia.db'))
 
 def setup_person_table(db_name):
     '''setup a people SQLite3 database'''
@@ -40,6 +40,7 @@ def setup_person_table(db_name):
             print(f'''WARNING: person already exists in {db_name}''')
         else:
             db.create_tables([Person])
+            print(f'''person table create in {db_name}''')
     else:
         print(f'''ERROR: could not connect to {db_name}''')
         

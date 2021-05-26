@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # ==========================================================================
 # @file    configure-sqlite3.py
 # @brief   Setup the SQLite3 database for acacia
@@ -6,19 +7,18 @@
 # @website https://github.com/caltechlibrary/dibs
 # ==========================================================================
 
-from datetime import datetime, timedelta
 from decouple import config
-from peewee import SqliteDatabase
 
-from acacia.email import Message
-from acacia.people import Person
+from acacia.people import setup_person_table
+from acacia.email import setup_message_table
 
-db = SqliteDatabase(config('DATABASE_FILE', default='acacia.db'))
 
-# Peewee autoconnects to the database if doing queries but not other ops.
-db.connect()
-db.create_tables([Message, Person])
+db_name = config('DATABASE_FILE', default='acacia.db')
+
+setup_message_table(db_name)
+setup_person_table(db_name)
 
 print('-'*50)
 print('Now use people-manager to add users')
 print('-'*50)
+

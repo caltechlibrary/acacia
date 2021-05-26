@@ -11,10 +11,23 @@ import sys
 from imaplib import IMAP4_SSL
 import email
 
-from peewee import Model, CharField, TextField, DateTimeField
 from decouple import config
+from peewee import SqliteDatabase, Model
+from peewee import CharField, TextField, DateTimeField
 
-_db = config('DATABASE', 'acacia.db')
+_db = SqliteDatabase(config('DATABASE', 'acacia.db'))
+
+def setup_message_table(db_name):
+    '''setup a message SQLite3 database table'''
+    db = SqliteDatabase(db_name)
+    if db.connect():
+        if db.table_exists('message'):
+            print(f'''WARNING: message already exists in {db_name}''')
+        else:
+            db.create_tables([Message])
+            print(f'''message table createdf in {db_name}''')
+    else:
+        print(f'''ERROR: could not connect to {db_name}''')
 
 class Message(Model):
     msg_id = CharField(unique = True)
