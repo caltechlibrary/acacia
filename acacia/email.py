@@ -57,7 +57,7 @@ class EMailProcessor():
             return True
         else:
             print(f'Making connection');
-            M = IMAP4_SSL(self.imap_host, self.imap_port) #, self.imap_port)
+            M = IMAP4_SSL(self.imap_host, self.imap_port)
             try: 
                 M.login(user, psword)
             except Exception as err:
@@ -72,6 +72,7 @@ class EMailProcessor():
                     if res == 'OK':
                         msg = email.message_from_bytes(data[0][1])
                         print(f'DEBUG msg({num}) -> {msg.as_string()}')
+
                     else:
                         print(f"Can't read message {num}")
             else:

@@ -1,7 +1,7 @@
 {
     "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
     "@type": "SoftwareSourceCode",
-    "description": "A set of tools to process an emailed list of DOI to include in CaltechAUTHORS or other repository.",
+    "description": "A system to process an emailed list of DOI to include in CaltechAUTHORS or other repository.",
     "name": "acacia",
     "codeRepository": "https://github.com/caltechlibrary/acacia",
     "issueTracker": "https://github.com/caltechlibrary/acacia/issues",
