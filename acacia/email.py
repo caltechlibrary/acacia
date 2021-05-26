@@ -8,7 +8,7 @@
 import os
 import sys
 
-from imaplib import IMAP4_SSL
+from imaplib import IMAP4, IMAP4_SSL
 import email
 
 from peewee import Model, CharField, TextField, DateTimeField
@@ -50,16 +50,22 @@ class EMailProcessor():
 
     def get_mail(self, smtp_dry_run = False):
         user = unquote(self.email)
-        psword = unquote(self.secret)
+        passwd = unquote(self.secret)
+        if user == "":
+            print(f'User not set.')
+            return False
+        if passwd == "":
+            print(f'Password not set for {user}')
+            return False
         print(f'Connect to {self.imap_host}:{self.imap_port} as {user}')
         if smtp_dry_run == True:
             print(f'Dry run. No connection made.')
             return True
         else:
             print(f'Making connection');
-            M = IMAP4_SSL(self.imap_host, self.imap_port) #, self.imap_port)
+            M = IMAP4_SSL(self.imap_host, self.imap_port)
             try: 
-                M.login(user, psword)
+                M.login(user, passwd)
             except Exception as err:
                 print(f'Cannot connect, {err}')
                 return False

@@ -76,7 +76,6 @@ def apply(app_name, _db, args):
     smtp_dry_run = False
     for arg in args:
         if arg.startswith('-'):
-            print(f'DEBUG option {arg}')
             if arg.startswith('--smtp-dry-run'):
                 p = arg.split("=", 2)
                 if (len(p) == 2) and (p[1].lower() == 'true'): 
@@ -88,8 +87,6 @@ def apply(app_name, _db, args):
                     exit(1)
             elif arg.startswith('-h') or arg.startswith('--help'):
                 usage(app_name, _db, 0)
-        else:
-            print('DEBUG command {arg}')
     processor = EMailProcessor()
     # the request to the SMTP service
     if processor.get_mail(smtp_dry_run = smtp_dry_run):
