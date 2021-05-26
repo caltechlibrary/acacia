@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+# ==========================================================================
+# @file    configure-sqlite3.py
+# @brief   Setup the SQLite3 database for acacia
+# @created 2021-05-26
+# @license Please see the file named LICENSE in the project directory
+# @website https://github.com/caltechlibrary/dibs
+# ==========================================================================
+
+from decouple import config
+
+from acacia.people import setup_person_table
+from acacia.email import setup_message_table
+
+
+db_name = config('DATABASE_FILE', default='acacia.db')
+
+setup_message_table(db_name)
+setup_person_table(db_name)
+
+print('-'*50)
+print('Now use people-manager to add users')
+print('-'*50)
+
