@@ -5,5 +5,7 @@ there is some additional setup you need to do.
 1. Turn on IMAP this is done from the GMail settings when logged into th eacocunt.
 2. You need to enable "Allow Less secure app access", this is done from
 the going to "https://myaccount.google.com/u/1/security" clicking
-the "security" menu item on the left, scrool down to "Less Secure app access" in the main content area, the click on the "Less secure app access" title and enable it (move the dot to the right so it is blue).
+the "security" menu item on the left, scrool down to "Less Secure app access" in the main content area, then click on the "Less secure app access" title and enable it (move the dot to the right so it is blue).
+
+NOTE: If you don't use this "feature" Google will re-enable the "Secure app access". They don't say how long of non-use the less secure option has.
 
