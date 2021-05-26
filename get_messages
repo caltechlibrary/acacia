@@ -12,6 +12,8 @@ from decouple import config
 
 _db = config('DATABASE', 'acacia.db')
 
+user = config('EMAIL', 'demo@example.edu')
+
 def usage(app_name, db_name, exit_code = None):
     '''Describe how process_email.py works'''
     print(f'''
@@ -90,7 +92,7 @@ def apply(app_name, _db, args):
     processor = EMailProcessor()
     # the request to the SMTP service
     if processor.get_mail(smtp_dry_run = smtp_dry_run):
-        print(f'mail retrieved and stored in {_db}')
+        print(f'Mail messages retrieved for {user} and stored in {_db}')
         sys.exit(0)
     else:
         print(f'Something went wrong with {app_name}, failed to fetch mail')

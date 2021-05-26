@@ -7,15 +7,22 @@
 #
 import os
 import sys
+from datetime import datetime
 
 from imaplib import IMAP4, IMAP4_SSL
 import email
+from email.parser import BytesParser, Parser
+from email.policy import default
+from email.message import EmailMessage
 
 from decouple import config
 from peewee import SqliteDatabase, Model
-from peewee import CharField, TextField, DateTimeField
+from peewee import CharField, TextField, DateTimeField, BooleanField
 
 _db = SqliteDatabase(config('DATABASE', 'acacia.db'))
+
+# e.g. 'Wed, 15 Jul 2020 12:13:29 -0700'
+dt_email_format = '%a, %d %b %Y %H:%M:%S %z'
 
 def setup_message_table(db_name):
     '''setup a message SQLite3 database table'''
@@ -29,13 +36,26 @@ def setup_message_table(db_name):
     else:
         print(f'''ERROR: could not connect to {db_name}''')
 
+def populate_field(key, msg, default = ''):
+    field = None
+    if key in msg:
+        field = msg[key]
+    else:
+        field = default
+    return field
+
+def email_date_to_datetime(s):
+    return None
+
 class Message(Model):
-    msg_id = CharField(unique = True)
-    msg_reply_to = CharField()
-    msg_date = DateTimeField()
-    msg_from = CharField()
-    msg_subject = CharField()
-    msg_body = TextField()
+    m_id = CharField(unique = True)
+    m_reply_to = CharField()
+    m_date = DateTimeField()
+    m_to = CharField()
+    m_from = CharField()
+    m_subject = CharField()
+    m_body = TextField()
+    m_processed = BooleanField(null = False, default = False)
 
     class Meta():
         database = _db
@@ -82,16 +102,37 @@ class EMailProcessor():
             except Exception as err:
                 print(f'Cannot connect, {err}')
                 return False
-            res, cnt = M.select()
-            print(f'{res}, {cnt} message found')
+            (res, cnt) = M.select(readonly=True)
+# Convert cnt to the integer it represents.
+            if isinstance(cnt, list):
+                cnt = cnt[0]
+                if isinstance(cnt, bytes):
+                    cnt = int(cnt)
+            if cnt == 1:
+                print(f'{res}, {cnt} message found')
+            else:
+                print(f'{res}, {cnt} messages found')
             res, data = M.search(None, 'ALL')
             if res == 'OK':
                 for num in data[0].split():
                     res, data = M.fetch(num, '(RFC822)')
                     if res == 'OK':
-                        msg = email.message_from_bytes(data[0][1])
-                        print(f'DEBUG msg({num}) -> {msg.as_string()}')
-
+                        msg = email.message_from_bytes(data[0][1], policy = default)
+                        msg_id = populate_field('Message-ID', msg, None)
+                        if msg_id:
+                            m = Message.get_or_none(m_id = msg_id)
+                            if m == None:
+                                m = Message()
+                                m.m_id = msg_id
+                            m.m_to = populate_field('To', msg, '')
+                            m.m_reply_to = populate_field('Reply-To', msg, '')
+                            m.m_from = populate_field('From', msg, '')
+                            m.m_subject = populate_field('Subject', msg, '')
+                            m.m_date = datetime.strptime(populate_field('Date', msg, None), dt_email_format)
+                            m.m_body = msg.get_body(preferencelist=('plain', 'html'))
+                            m.save()
+                        else:
+                            print(f'ERROR: could not save {str(num)} {msg_id}, {m.m_subject}, {m.m_date}')
                     else:
                         print(f"Can't read message {num}")
             else:
