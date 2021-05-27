@@ -142,3 +142,11 @@ class EMailProcessor():
             M.logout()
             return True
        
+    def get_unprocessed(self):
+        '''Returns an arrays of messages which are flagged as unprocessed.'''
+        records = [] 
+        for m in Message.select().where(Message.m_processed == False):
+            if m.m_body:
+                records.append(m)
+        return records
+

@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+'''
+messages_to_doi retrieves the previously saved unprocessed messages 
+converts the message bodies to DOI records to be retreived and
+stores the results in a SQLite3 database.
+'''
+import os
+import sys
+
+from acacia.settings import settings_example
+from acacia.email import EMailProcessor
+from acacia.doi import DOIProcessor
+
+from decouple import config
+
+_db = config('DATABASE', 'acacia.db')
+
+def usage(app_name, db_name, exit_code = None):
+    '''Describe how process_email.py works'''
+    print(f'''
+USAGE: {app_name}
+
+This program reads the message table in {db_name}
+and extracts and generates DOI retreival records from 
+unprocessed messages saving the retrival records in the
+doi table in {db_name}. It requires that both the
+doi and message tables exist in {db_name} and that
+the {db_name}. See configure-sqlite3 if tables
+do not already exist. Use get_messages if messages
+need to be retrieved.
+
+A "settings.ini" file needs to exist and be configured.
+See example file and create it if necessary.
+
+OPTIONS:
+
+  -h, --help     this help page
+  --dry-run      run process but don't update or 
+                 save records
+
+EXAMPLE
+
+Retrieve the lates email submissions and make then
+ready to review.
+
+```
+    ./get_messages
+    ./messages_to_doi
+```
+
+You can now look at the web application for further
+processing.
+
+''')
+    if exit_code != None:
+        sys.exit(exit_code)
+
+def apply(app_name, _db, args):
+    dry_run = False
+    for arg in args:
+        if arg.startswith('-'):
+            if arg.startswith('--dry-run'):
+                if "=" in arg:
+                    p = arg.split("=", 2)
+                    if (len(p) == 2) and (p[1].lower() == 'true'): 
+                        dry_run = True
+                    elif (len(p) == 2) and (p[1].lower() == 'false'):
+                        dry_run = False
+                    else:
+                        print(f'''Don't understand "{p[1]}" for --dry-run''')
+                        exit(1)
+                else:
+                    dry_run = True
+            elif arg.startswith('-h') or arg.startswith('--help'):
+                usage(app_name, _db, 0)
+    mail_processor = EMailProcessor()
+    doi_processor = DOIProcessor()
+    # the request to the SMTP service
+    err_cnt = 0
+    item_cnt = 0
+    doi_cnt = 0
+    records = mail_processor.get_unprocessed()
+    if len(records) == 0:
+        print(f'WARNING: not unprocessed messages found')
+    else:
+        for rec in records:
+            n, err = doi_processor.email_to_doi(rec, dry_run = dry_run)
+            if err:
+                print(f'ERROR message_to_doi: {err}')
+                if dry_run:
+                    sys.exit(1)
+                else:
+                    err_cnt += 1
+            else:
+                rec.m_processed = True
+                rec.save()
+            doi_cnt += n
+            item_cnt += 1
+    if dry_run:
+        print(f'Dry run: no records saved.')
+    print(f'{item_cnt} messages processed into {doi_cnt} retrievals')
+    if err_cnt > 0:
+        print(f'{err_cnt} errors in processing messages')
+        sys.exit(1)
+
+if __name__ == '__main__':
+    app_name = os.path.basename(sys.argv[0])
+    if not os.path.exists('settings.ini'):
+        print(f'ERROR: Missing settings.ini')
+        settings_example()
+        sys.exit(1)
+    apply(app_name, _db, sys.argv[1:])
+

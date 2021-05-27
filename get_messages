@@ -6,6 +6,7 @@ account and stores the results in a SQLite3 database
 import os
 import sys
 
+from acacia.settings import settings_example
 from acacia.email import EMailProcessor
 
 from decouple import config
@@ -24,75 +25,43 @@ the current directory, connects to the email host
 and downloads and processes each email saving messages
 in the messages table of {db_name}.
 
-The "settings.ini" file should look something like
+A "settings.ini" file needs to exist in the same directory
+as this program is executed in.
 
-```
-# ========================================================================
-# @file    settings.ini
-# @brief   Settings file for Acacia.
-# @created 2021-03-19
-# @license Please see the file named LICENSE in the project directory
-# @website https://github.com/caltechlibrary/acacia
-# 
-#     ,------------------- Notice -- Notice -- Notice -------------------.
-#     | This file must be located in the same directory as               |
-#     | process_mail.py.                                                 |
-#     `------------------------------------------------------------------'
-#
-# ========================================================================
+OPTIONS:
 
-[settings]
-# Path to the sqlite database, relative to here.
-DATABASE_FILE = acacia.db
-
-# Email details. This is to access the mailbox of the submissions
-# email account.
-
-# Inbound IMAP Mailbox of submittions email address
-# FIXME: You need to set these appropriate to your email provider
-IMAP_HOST = imap.gmail.com
-IMAP_SSL = true
-IMAP_PORT   = 993
-
-# Outbound IMAP if needed
-# FIXME: You need to set these appropriate to your email provider
-SMTP_HOST = smtp.gmail.com
-SMTP_SSL = true
-SMTP_REQUIRE_TLS = true
-SMTP_AUTH = true
-SMTP_SSL_PORT = 465
-SMTP_TLS_PORT = 587
-
-# Account info
-# FIXME: You will need change the values for EMAIL and PASSWORD
-DISPLAY_NAME = "Author Submissions Bot"
-EMAIL = "CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_ADDRESS"
-PASSWORD = "CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_PASSWORD"
-```
+  -h, --help     this help page
+  --dry-run      do a dry run but don't connect via SMTP
 
 ''')
     if exit_code != None:
         sys.exit(exit_code)
 
 def apply(app_name, _db, args):
-    smtp_dry_run = False
+    dry_run = False
     for arg in args:
         if arg.startswith('-'):
-            if arg.startswith('--smtp-dry-run'):
-                p = arg.split("=", 2)
-                if (len(p) == 2) and (p[1].lower() == 'true'): 
-                    smtp_dry_run = True
-                elif (len(p) == 2) and (p[1].lower() == 'false'):
-                    smtp_dry_run = False
+            if arg.startswith('--dry-run'):
+                if "=" in arg:
+                    p = arg.split("=", 2)
+                    if (len(p) == 2) and (p[1].lower() == 'true'): 
+                        dry_run = True
+                    elif (len(p) == 2) and (p[1].lower() == 'false'):
+                        dry_run = False
+                    else:
+                        print(f'''Don't understand "{p[1]}" for --dry-run''')
+                        sys.exit(1)
                 else:
-                    print(f'''Don't understand "{p[1]}" for --stmp-dry-run''')
-                    exit(1)
+                    dry_run = True
             elif arg.startswith('-h') or arg.startswith('--help'):
                 usage(app_name, _db, 0)
-    processor = EMailProcessor()
+    mail_processor = EMailProcessor()
     # the request to the SMTP service
-    if processor.get_mail(smtp_dry_run = smtp_dry_run):
-        print(f'Mail messages retrieved for {user} and stored in {_db}')
+    if mail_processor.get_mail(smtp_dry_run = dry_run):
+        if dry_run:
+            print(f'Mail messages retrieved for {user}')
+        else:
+            print(f'Mail messages retrieved for {user} and stored in {_db}')
         sys.exit(0)
     else:
         print(f'Something went wrong with {app_name}, failed to fetch mail')
@@ -102,6 +71,8 @@ def apply(app_name, _db, args):
 if __name__ == '__main__':
     app_name = os.path.basename(sys.argv[0])
     if not os.path.exists('settings.ini'):
-        usage(app_name, _db, 1)
+        print(f'ERROR: Missing settings.ini')
+        settings_example()
+        sys.exit(1)
     apply(app_name, _db, sys.argv[1:])
 

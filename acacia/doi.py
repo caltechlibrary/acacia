@@ -85,3 +85,15 @@ def unquote(s):
         return s.strip('"')
     return s.strip()
 
+class DOIProcessor:
+    '''An object for working with Doi module.'''
+    def __init__(self):
+       self.db_name = _db
+       self.table_name = 'doi'
+
+    def email_to_doi(self, m, dry_run = False):
+        '''email_to_doi process a source exist extracting doi retrieval
+           records and saving them to doi table if dry_run is false.
+           returns a count of doi found and error message is their is
+           a problem'''
+        return 0, f'email_to_doi() not implemented, m_id {m.m_id}'
