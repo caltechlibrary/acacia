@@ -7,6 +7,7 @@ next
 
 + [x] Figure out how to connect from Python to Google SMTP service to read the submissions.authors@library.caltech.edu. According to the configuration in Thunderbird OAuth2 is being used to authenticate.
 + [ ] Sort out models for email, doi request and retrieval records
++ [ ] Rename email to messages, people to persons
 + [ ] Implement an automated mail fetch (run from cron)
 + [ ] Implement email to doi request process (run from cron)
 + [ ] Implement doi request to retrieval process (run from cron)

@@ -101,7 +101,7 @@ def apply(app_name, _db, args):
                 rec.metadata = src
                 rec.status = 'ready'
                 rec.updated = now
-                doi_cnt += n
+                doi_cnt += 1
             rec.save()
             item_cnt += 1
     if dry_run:

@@ -8,6 +8,7 @@
 #
 import os
 import sys
+import shutil
 from datetime import datetime
 from urllib.parse import urlparse
 
@@ -15,6 +16,8 @@ import idutils
 from decouple import config
 from peewee import SqliteDatabase, Model, Field
 from peewee import CharField, TextField, DateTimeField, BooleanField
+
+from . import cmds
 
 _db = SqliteDatabase(config('DATABASE', 'acacia.db'))
 
@@ -32,6 +35,24 @@ def setup_doi_table(db_name, table_name = 'doi'):
             print(f'''{table_name} table created in {db_name}''')
     else:
         print(f'''ERROR: could not connect to {db_name}''')
+
+def upgrade_doi_table(db_name, table_name = 'doi'):
+    # Find upgrade sql file to run.
+    sql_file = os.path.join('schema', f'upgrade_{table_name}.sql')
+    if os.path.exists(sql_file):
+        with open(sql_file, 'r') as fp:
+            sql = fp.read()
+    else:
+        print(f'''ERROR: {sql_file} does not exist. Upgrade aborted''')
+    # Copy existing SQLite3 database to a backup
+    backup_name = f'{db_name}.bak-' + datetime.now().strftime('%Y%m%d%H%M%S')
+    shutil.copyfile(db_name, backup_name)
+
+    cmd = ["sqlite3", '--init', f'{sql_file}', db_name, '.exit' ]
+    out, err = cmds.run(cmd)
+    if err:
+        print(f'''ERROR ({' '.join(cmd)}): {err}''')
+        sys.exit(1)
 
 def populate_field(key, msg, default = ''):
     field = None
@@ -167,8 +188,10 @@ class DOIProcessor:
         return Doi.select().where(Doi.status == 'unprocessed')
 
     def get_metadata(self, doi, dry_run = False):
-        src, err = None, None
-        err = f'''get_metadata({doi}) not implemented'''
-        return src, err
+        if dry_run:
+            print(f'Dry run, no data fetched with doi2eprintxml')
+            return None, None
+        cmd = [ 'doi2eprintxml', '-json', doi ]
+        return cmds.run(cmd)
 
 

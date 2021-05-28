@@ -18,6 +18,9 @@ is open-source software released under a 3-clause BSD license.  Please see the
 file "LICENSE" for more information.
 '''
 
+import os
+import sys
+import shutil
 from datetime import datetime
 from subprocess import Popen, PIPE
 
@@ -26,6 +29,8 @@ from getpass import getpass
 from decouple import config
 from peewee import SqliteDatabase, Model
 from peewee import AutoField, CharField, TimestampField
+
+from . import cmds
 
 import os
 
@@ -44,6 +49,24 @@ def setup_person_table(db_name, table_name = 'person'):
     else:
         print(f'''ERROR: could not connect to {db_name}''')
         
+def upgrade_person_table(db_name, table_name = 'person'):
+    # Find upgrade sql file to run.
+    sql_file = os.path.join('schema', f'upgrade_{table_name}.sql')
+    if os.path.exists(sql_file):
+        with open(sql_file, 'r') as fp:
+            sql = fp.read()
+    else:
+        print(f'''ERROR: {sql_file} does not exist. Upgrade aborted''')
+    # Copy existing SQLite3 database to a backup
+    backup_name = f'{db_name}.bak-' + datetime.now().strftime('%Y%m%d%H%M%S')
+    shutil.copyfile(db_name, backup_name)
+
+    cmd = ["sqlite3", '--init', f'{sql_file}', db_name, '.exit' ]
+    out, err = cmds.run(cmd)
+    if err:
+        print(f'''ERROR ({' '.join(cmd)}): {err}''')
+        sys.exit(1)
+    
 
 # Person is for development, it uses a SQLite3 DB to user
 # connection validation data.

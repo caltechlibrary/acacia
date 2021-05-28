@@ -1,26 +1,73 @@
 #!/usr/bin/env python3
 # ==========================================================================
-# @file    configure-database.py
+# @file    configure-database
 # @brief   Setup the SQLite3 database for acacia
 # @created 2021-05-26
 # @license Please see the file named LICENSE in the project directory
-# @website https://github.com/caltechlibrary/dibs
+# @website https://github.com/caltechlibrary/acacia
 # ==========================================================================
 
+import os
+import sys
 from decouple import config
 
-from acacia.people import setup_person_table
-from acacia.email import setup_message_table
-from acacia.doi import setup_doi_table
+from acacia.settings import settings_example
+from acacia.people import setup_person_table, upgrade_person_table
+from acacia.email import setup_message_table, upgrade_message_table
+from acacia.doi import setup_doi_table, upgrade_doi_table
 
+def usage(app_name, db_name, exit_code = None):
+    '''describe how configure-database works'''
+    printf('''
+USAGE: {app_name} [OPTIONS]
 
-db_name = config('DATABASE_FILE', default='acacia.db')
+This program will created the necessary SQLite3 database
+and tables needed for Acacia.
 
-setup_message_table(db_name)
-setup_doi_table(db_name)
-setup_person_table(db_name)
+OPTIONS
 
-print('-'*50)
-print('Now use people-manager to add users')
-print('-'*50)
+  -h, --help   this help message
+
+  --upgrade    this attempts a schema upgrade for existing tables.
+               It will rename {db_name} to {db_name}.bak.YYYYMMDDHHMMSS
+               before doing so.
+
+EXAMPLES
+
+  ./configure-database
+
+''')
+    if isinstance(exit_code, int):
+        sys.exit(exit_code)
+
+def apply(app_name, db_name, args):
+    upgrade  = False
+    for arg in args:
+        if arg.startswith('-'):
+            if arg.startswith('-h') or arg.startswith('--help'):
+                usage(app_name, db_name, 0)
+            elif arg.startswith('-upgrade') or arg.startswith('--upgrade'):
+                upgrade = True
+    if upgrade:
+        upgrade_message_table(db_name)
+        upgrade_doi_table(db_name)
+        upgrade_person_table(db_name)
+    else:
+        setup_message_table(db_name)
+        setup_doi_table(db_name)
+        setup_person_table(db_name)
+        print('-'*50)
+        print('Now use people-manager to add users')
+        print('-'*50)
+
+if __name__ == '__main__':
+    app_name = os.path.basename(sys.argv[0])
+    if not os.path.exists('settings.ini'):
+        print(f'ERROR: Missing settings.ini')
+        settings_example()
+        sys.exit(1)
+    db_name = config('DATABASE_FILE', default='acacia.db')
+    apply(app_name, db_name, sys.argv[1:])
+    
+
 
