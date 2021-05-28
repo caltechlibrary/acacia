@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 '''
-messages_to_doi retrieves the previously saved unprocessed messages 
-converts the message bodies to DOI records to be retreived and
-stores the results in a SQLite3 database.
+retrieve-metadata retrieves the previously saved unprocessed doi 
+records updating the metadata field with content retrieved via
+`doi2eprintxml` and also pulls down a copy of any PDF URL 
+associated with the DOI. The workflow status in the doi SQLite3 
+table for doi.
 '''
 import os
 import sys
+from datetime import datetime
 
 from acacia.settings import settings_example
-from acacia.email import EMailProcessor
 from acacia.doi import DOIProcessor
 
 from decouple import config
@@ -20,14 +22,13 @@ def usage(app_name, db_name, exit_code = None):
     print(f'''
 USAGE: {app_name}
 
-This program reads the message table in {db_name}
-and extracts and generates DOI retreival records from 
-unprocessed messages saving the retrival records in the
-doi table in {db_name}. It requires that both the
-doi and message tables exist in {db_name} and that
-the {db_name}. See configure-sqlite3 if tables
-do not already exist. Use get_messages if messages
-need to be retrieved.
+This program updates the metadata for unprocessed doi
+records in the doi table of {db_name}.  It requires that
+both the doi and message tables exist in {db_name} and
+that the {db_name}. See configure-sqlite3 if tables
+do not already exist. Use get-messages if messages
+need to be retrieved and message-to-doi to add any
+unprocessed doi for processing with this program.
 
 A "settings.ini" file needs to exist and be configured.
 See example file and create it if necessary.
@@ -46,6 +47,7 @@ ready to review.
 ```
     ./get_messages
     ./messages_to_doi
+    ./retrieve-metadata
 ```
 
 You can now look at the web application for further
@@ -73,28 +75,34 @@ def apply(app_name, _db, args):
                     dry_run = True
             elif arg.startswith('-h') or arg.startswith('--help'):
                 usage(app_name, _db, 0)
-    mail_processor = EMailProcessor()
     doi_processor = DOIProcessor()
     # the request to the SMTP service
     err_cnt = 0
     item_cnt = 0
     doi_cnt = 0
-    records = mail_processor.get_unprocessed()
+    records = doi_processor.get_unprocessed()
     if len(records) == 0:
         print(f'WARNING: not unprocessed messages found')
     else:
         for rec in records:
-            n, e_cnt, err = doi_processor.email_to_doi(rec, dry_run = dry_run)
+            now = datetime.now()
+            src, err = doi_processor.get_metadata(rec.doi, dry_run = dry_run)
             if err:
-                print(f'ERROR message_to_doi: {err}')
+                msg = f'ERROR get_metadata({rec.doi}) {now.isoformat()}: {err}'
+                print(msg)
                 if dry_run:
                     sys.exit(1)
                 else:
-                    err_cnt += e_cnt
+                    err_cnt += 1
+                rec.status = 'processing_error'
+                rec.notes += msg + "\n"
+                rec.updated = now
             else:
-                rec.m_processed = True
-                rec.save()
-            doi_cnt += n
+                rec.metadata = src
+                rec.status = 'ready'
+                rec.updated = now
+                doi_cnt += n
+            rec.save()
             item_cnt += 1
     if dry_run:
         print(f'Dry run: no records saved.')

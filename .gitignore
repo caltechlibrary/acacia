@@ -62,3 +62,4 @@ settings.ini
 *.db
 __pycache__
 example_data_formats
+bin/

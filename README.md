@@ -31,6 +31,7 @@ Requirements
 + IMAP email account (and access credentials)
 + Emails with list of DOI, one per line
 + software in this repository setup to run periodically (e.g. via cron, systemd or launchd)
++ eprinttools' doi2eprintxml to retrieve the metadata associated with a DOI from CrossRef or DataCite
 
 Details to be determined.
 
