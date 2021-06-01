@@ -12,6 +12,10 @@ next
 + [x] Implement email to doi request process (run from cron)
 + [x] Implement doi request to retrieval process (run from cron)
 + [ ] Add check to see if a given doi exists in the EPrints collection
+    + [ ] Implement a cgi/eprint/lookup/doi to EPrints
+    + [ ] Implement a cgi/users/lookup/orcid to EPrints
+    + [ ] Use cgi/users/lookup/name to potentially flag known people in the in creators, editors, contributors lists
+    + [ ] Implement a cgi/eprint/recent/FROM_DATETIME[/TO_DATETIME] that returns EPrintID for possible retrieval
 + [ ] Create a dashboard page for linked to tasks
     + [ ] Inbox (Retrieve submissions.author emails)
        + [ ] Sort by date, sort by sender, sort by unprocessed
