@@ -5,16 +5,23 @@ Action Items
 next
 ----
 
+**Automated processing**
+
 + [x] Figure out how to connect from Python to Google SMTP service to read the submissions.authors@library.caltech.edu. According to the configuration in Thunderbird OAuth2 is being used to authenticate.
 + [x] Rename email to messages, people to persons
 + [x] Sort out models for message, doi request and retrieval records
 + [x] Implement an automated mail fetch (run from cron)
 + [x] Implement email to doi request process (run from cron)
 + [x] Implement doi request to retrieval process (run from cron)
-+ [ ] Implement doi eprints lookup via MySQL
+    + currently via SSH and a script on the old EPrints box
+    + [x] Test EPrintsSSH to see if I can retrieve valid eprint id
++ [ ] Switch to implementation of doi eprints lookup via MySQL direct access
     + [x] An EPrintsDB object for working at the MySQL level
     + [ ] Requires MySQL 8 not MySQL 5 due to old password problem
     + [ ] Test EPrintsDB object for all its functionality
+
+**Staff managed processing**
+
 + [ ] Create a dashboard page for linked to tasks
     + [ ] Inbox (Retrieve submissions.author emails)
        + [ ] Sort by date, sort by sender, sort by unprocessed
@@ -30,10 +37,4 @@ next
         + [ ] Update processed status
         + [ ] Archive processed records
 
-Someday, maybe
---------------
 
-+ [ ] Add Lookups via web API calls, e.g. see if doi exists in the EPrints collection
-    + [ ] Implement as /cgi/eprint/lookup/doi to EPrints
-    + [ ] Implement as /cgi/users/lookup/orcid to EPrints
-    + [ ] Implement as /cgi/eprint/recent/FROM_DATETIME[/TO_DATETIME] that returns EPrintID for possible retrieval
