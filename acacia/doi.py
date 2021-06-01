@@ -101,9 +101,9 @@ class Doi(Model):
     # When the record was created
     created = DateTimeField(default=datetime.now)
     # EPrints eprint_id if known
-    eprint_id = CharField(default = None)
+    eprint_id = CharField(null = True, default = None)
     # EPrints repository id if known
-    repo_id = CharField(default = None)
+    repo_id = CharField(null = True, default = None)
 
     class Meta():
         database = _db

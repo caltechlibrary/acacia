@@ -13,6 +13,12 @@ from mysql.connector import errorcode
 
 from . import cmds
 
+def dquote(s):
+    return '"' + s + '"'
+
+def squote(s):
+    return "'" + s + "'"
+
 class EPrintsSSH:
     host = None
     repo_id = None
@@ -22,16 +28,10 @@ class EPrintsSSH:
         self.repo_id = repo_id # EPrint repository id, e.g. caltechauthors
 
     def get_eprint_id_by_doi(self, doi):
-        cmd = ['ssh', self.host, f'''"get-eprint_id-by-doi.bash {self.repo_id} {doi}"''' ]
-        out, err = cmds.run(cmd)
-        if err:
-            print(f'''ERROR: "{' '.join(cmd)}", {err}''')
-            out = None
-        if out:
-            print(f'DEBUG out -> {out}')
-        else:
-            out = None
-        return out
+        remote_cmd = ' '.join([ './get-eprint_id-by-doi.bash',
+           self.repo_id, dquote(doi) ])
+        cmd = ['ssh', self.host, remote_cmd ]
+        return cmds.run(cmd)
 
 
 class EPrintsDB:

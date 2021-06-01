@@ -19,6 +19,7 @@ from decouple import config
 _db = config('DATABASE', 'acacia.db')
 ssh_host = config('EPRINT_SSH', None)
 repo_id = config('EPRINT_REPO_ID', None)
+eprints_ssh = EPrintsSSH(ssh_host, repo_id)
 
 
 def usage(app_name, db_name, exit_code = None):
