@@ -23,5 +23,8 @@ if __name__ == '__main__':
         sys.exit(1)
     eprints_ssh = EPrintsSSH(connect, repo_id)
     doi = '10.1364/OL.20.002222'
-    eprint_id = eprints_ssh.get_eprint_id_by_doi(doi)
+    eprint_id, err = eprints_ssh.get_eprint_id_by_doi(doi)
+    if err:
+        print(f'Test failed, {err}')
+        sys.exit(1)
     print(f'DOI: {doi} -> eprint_id: {eprint_id}')
