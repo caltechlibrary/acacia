@@ -38,7 +38,7 @@ Details to be determined.
 Usage
 -----
 
-The application constist of two parts. The first part is
+The application consist of two parts. The first part is
 a set of services for commands for retrieving email submissions,
 translating them into DOIs to be requested and to retrieve
 the CrossRef/DataCite JSON records associated with the DOI.
@@ -47,18 +47,18 @@ if the DOI is already known.  These typically would run on a
 schedule (e.g. run from cron).
 
 The second part is a web service for monitoring and aggregating
-the harvestd DOI records for import eventual import into EPrints.
+the harvested DOI records for import eventual import into EPrints.
 The web interface is intended to show status information about
-the DOIs submitted, support triaging the DOI for further processing
+the DOIs submitted, support triage the DOI for further processing
 (e.g. import into EPrints), generating a downloadable bundle of
-PDF and EPrintsXML for import into EPrints. Additional reports
+PDF and EPrints XML for import into EPrints. Additional reports
 will be determined through the pilot process of application
 development.
 
 The downloadable bundle is a zip file that contains any PDF
-retrieved, an EPrintXML document for importing into EPrints,
+retrieved, an EPrints XML document for importing into EPrints,
 a CSV manifest file for what was included and status information
-(e.g. http error codes) for material retrieved and placed into the
+(e.g. HTTP error codes) for material retrieved and placed into the
 bundle. Once the bundle is successfully generated the doi record
 is marketed as processed.
 

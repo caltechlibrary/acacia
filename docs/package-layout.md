@@ -8,7 +8,7 @@ acacia/cmds.py
 --------------
 
 The cmds object is used internally by Acacia for assemble commands run
-via the host operating system. The includes running the `doi2eprintsxml`
+via the host operating system. The includes running the `doi2eprintxml`
 tool as well as using SSH to remotely access SQL content on the host
 EPrints server.
 
@@ -21,7 +21,7 @@ settings.ini file limitting the number of variables that need to be managed.
 acacia/doi.py
 -------------
 
-The doi object models metadata related to retriving objects from a DOI. This includes accessing the CrossRef/DataCite API via `doi2eprintsxml` and accessing EPrint data via SSH scripts on the EPrints host
+The doi object models metadata related to retriving objects from a DOI. This includes accessing the CrossRef/DataCite API via `doi2eprintxml` and accessing EPrint data via SSH scripts on the EPrints host
 
 acacia/eprints
 --------------
