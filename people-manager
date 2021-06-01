@@ -14,7 +14,7 @@ from hashlib import blake2b
 
 from decouple import config
 from peewee import SqliteDatabase
-from acacia.people import PersonManager, setup_person_table
+from acacia.persons import PersonManager, setup_person_table
 
 db_name = config('DATABASE_FILE', default='acacia.db')
 htpasswd = config('HTPASSWD', default = None)

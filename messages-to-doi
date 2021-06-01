@@ -8,7 +8,7 @@ import os
 import sys
 
 from acacia.settings import settings_example
-from acacia.email import EMailProcessor
+from acacia.messages import EMailProcessor
 from acacia.doi import DOIProcessor
 
 from decouple import config
@@ -16,7 +16,7 @@ from decouple import config
 _db = config('DATABASE', 'acacia.db')
 
 def usage(app_name, db_name, exit_code = None):
-    '''Describe how process_email.py works'''
+    '''Describe how message-to-doi cli works'''
     print(f'''
 USAGE: {app_name}
 
@@ -84,7 +84,7 @@ def apply(app_name, _db, args):
         print(f'WARNING: not unprocessed messages found')
     else:
         for rec in records:
-            n, e_cnt, err = doi_processor.email_to_doi(rec, dry_run = dry_run)
+            n, e_cnt, err = doi_processor.message_to_doi(rec, dry_run = dry_run)
             if err:
                 print(f'ERROR message_to_doi: {err}')
                 if dry_run:

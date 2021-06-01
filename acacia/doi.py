@@ -150,8 +150,8 @@ class DOIProcessor:
        self.db_name = _db
        self.table_name = 'doi'
 
-    def email_to_doi(self, m, dry_run = False):
-        '''email_to_doi process a source exist extracting doi retrieval
+    def message_to_doi(self, m, dry_run = False):
+        '''message_to_doi process a source exist extracting doi retrieval
            records and saving them to doi table if dry_run is false.
            returns a count of doi found and error message is their is
            a problem'''

@@ -7,7 +7,7 @@ import os
 import sys
 
 from acacia.settings import settings_example
-from acacia.email import EMailProcessor
+from acacia.messages import EMailProcessor
 
 from decouple import config
 
@@ -16,7 +16,7 @@ _db = config('DATABASE', 'acacia.db')
 user = config('EMAIL', 'demo@example.edu')
 
 def usage(app_name, db_name, exit_code = None):
-    '''Describe how process_email.py works'''
+    '''Describe how get-messages cli works'''
     print(f'''
 USAGE: {app_name}
 

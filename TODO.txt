@@ -6,11 +6,12 @@ next
 ----
 
 + [x] Figure out how to connect from Python to Google SMTP service to read the submissions.authors@library.caltech.edu. According to the configuration in Thunderbird OAuth2 is being used to authenticate.
-+ [ ] Sort out models for email, doi request and retrieval records
-+ [ ] Rename email to messages, people to persons
-+ [ ] Implement an automated mail fetch (run from cron)
-+ [ ] Implement email to doi request process (run from cron)
-+ [ ] Implement doi request to retrieval process (run from cron)
++ [x] Rename email to messages, people to persons
++ [x] Sort out models for message, doi request and retrieval records
++ [x] Implement an automated mail fetch (run from cron)
++ [x] Implement email to doi request process (run from cron)
++ [x] Implement doi request to retrieval process (run from cron)
++ [ ] Add check to see if a given doi exists in the EPrints collection
 + [ ] Create a dashboard page for linked to tasks
     + [ ] Inbox (Retrieve submissions.author emails)
        + [ ] Sort by date, sort by sender, sort by unprocessed
