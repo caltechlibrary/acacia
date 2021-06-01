@@ -11,7 +11,27 @@ import sys
 import mysql.connector
 from mysql.connector import errorcode
 
-from .connections import ConnectionInfo
+from . import cmds
+
+class EPrintsSSH:
+    host = None
+    repo_id = None
+
+    def __init__(self, host = None, repo_id = None):
+        self.host = host       # SSH host, e.g. 'user@example.edu'
+        self.repo_id = repo_id # EPrint repository id, e.g. caltechauthors
+
+    def get_eprint_id_by_doi(self, doi):
+        cmd = ['ssh', self.host, f'''"get-eprint_id-by-doi.bash {self.repo_id} {doi}"''' ]
+        out, err = cmds.run(cmd)
+        if err:
+            print(f'''ERROR: "{' '.join(cmd)}", {err}''')
+            out = None
+        if out:
+            print(f'DEBUG out -> {out}')
+        else:
+            out = None
+        return out
 
 
 class EPrintsDB:

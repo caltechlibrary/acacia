@@ -100,6 +100,10 @@ class Doi(Model):
     updated = DateTimeField(default=datetime.now)
     # When the record was created
     created = DateTimeField(default=datetime.now)
+    # EPrints eprint_id if known
+    eprint_id = CharField(default = None)
+    # EPrints repository id if known
+    repo_id = CharField(default = None)
 
     class Meta():
         database = _db

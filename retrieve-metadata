@@ -12,10 +12,14 @@ from datetime import datetime
 
 from acacia.settings import settings_example
 from acacia.doi import DOIProcessor
+from acacia.eprints import EPrintsSSH
 
 from decouple import config
 
 _db = config('DATABASE', 'acacia.db')
+ssh_host = config('EPRINT_SSH', None)
+repo_id = config('EPRINT_REPO_ID', None)
+
 
 def usage(app_name, db_name, exit_code = None):
     '''Describe how process_email.py works'''
@@ -102,6 +106,17 @@ def apply(app_name, _db, args):
                 rec.status = 'ready'
                 rec.updated = now
                 doi_cnt += 1
+            src, err = eprints_ssh.get_eprint_id_by_doi(rec.doi)
+            if err:
+                msg = f'ERROR get_eprint_id_by_doi({rec.doi}): {err}'
+                print(msg)
+                if dry_run:
+                    sys.exit(1)
+                else:
+                    err_cnt += 1
+            else:
+                rec.repo_id = repo_id
+                rec.eprint_id = src
             rec.save()
             item_cnt += 1
     if dry_run:
