@@ -4,13 +4,13 @@ Acacia
 Application
 -----------
 
-- [Overview](../README.html)
+- [Overview](../README.md)
 - [License](../LICENSE)
-- [Installation](../INSTALL.html)
-- [Contributing](../CONTRIBUTING.html)
-- [Available Commands](commands.html)
-- [Package Layout](package-layout.html)
-- [People Manager](people-manager.html)
+- [Installation](../INSTALL.md)
+- [Contributing](../CONTRIBUTING.md)
+- [Available Commands](commands.md)
+- [Package Layout](package-layout.md)
+- [People Manager](people-manager.md)
 
 Trouble shooting
 ----------------
