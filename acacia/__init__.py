@@ -23,9 +23,9 @@ file "LICENSE" for more information.
 #  ╰────────────────────── Notice ── Notice ── Notice ─────────────────────╯
 
 __version__     = '0.0.0'
-__description__ = 'An implementation of Controlled Digital Lending'
+__description__ = 'A content submission system for CaltechAUTHORS using DOI metadata retrieval.'
 __url__         = 'https://github.com/caltechlibrary/acacia'
-__author__      = 'Robert S. Doiel, Michael Hucka, Tommy Keswick, Stephen Davison'
+__author__      = 'Robert S. Doiel, Michael Hucka, Thomas E Morrell, Tommy Keswick'
 __email__       = 'helpdesk@library.caltech.edu'
 __license__     = 'BSD 3-clause'
 
