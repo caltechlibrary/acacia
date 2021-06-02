@@ -1,11 +1,14 @@
-# =============================================================================
+# =========================================================================
 # @file    Makefile
 # @brief   Makefile for some steps in creating new releases on GitHub
 # @created 2021-06-02
 # @license Please see the file named LICENSE in the project directory
 # @website https://github.com/caltechlibrary/acacia
-# =============================================================================
+# =========================================================================
 
+ifeq ($(EDITOR), )
+  EDITOR = vi
+endif
 # Before we go any further, test if certain programs are available.
 # The following is based on the approach posted by Jonathan Ben-Avraham to
 # Stack Overflow in 2014 at https://stackoverflow.com/a/25668869
