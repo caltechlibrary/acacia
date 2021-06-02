@@ -28,10 +28,11 @@ Installation
 Requirements
 
 + Python3
++ SQLite3
 + IMAP email account (and access credentials)
 + Emails with list of DOI, one per line
 + software in this repository setup to run periodically (e.g. via cron, systemd or launchd)
-+ eprinttools' doi2eprintxml to retrieve the metadata associated with a DOI from CrossRef or DataCite
++ [EPrint Tools](https://github.com/caltechlibrary/eprinttools)'s `doi2eprintxml` to retrieve the metadata associated with a DOI from CrossRef or DataCite
 
 Details to be determined.
 
@@ -90,7 +91,7 @@ submit an request via the issue tracker.
 License
 -------
 
-Copyright (c) 2020, Caltech
+Copyright (c) 2021, Caltech
 All rights not granted herein are expressly reserved by Caltech.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

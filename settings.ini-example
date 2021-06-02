@@ -39,7 +39,9 @@ EMAIL = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_ADDRESS'
 SECRET = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_PASSWORD'
 
 # Location of the doi2eprintxml command line program.
-DOI2EPRINTXML = ./bin/doi2eprintxml
+# NOTE: if this is not in your path you need to specify the 
+# full path to the program.
+DOI2EPRINTXML = doi2eprintxml
 
 # EPrints MySQL DB connection string
 #EPRINT_DATABASE = 'mysql://DB_USER:DB_PASSWORD@hostname.example.edu/DB_NAME'

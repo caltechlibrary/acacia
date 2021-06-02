@@ -7,7 +7,7 @@ Application
 - [Overview](../README.md)
 - [License](../LICENSE)
 - [Installation](../INSTALL.md)
-- [Requires software](requirements.md)
+- [Required software](requirements.md)
 - [Contributing](../CONTRIBUTING.md)
 - [Available Commands](commands.md)
 - [Package Layout](package-layout.md)
