@@ -1,0 +1,361 @@
+#!/usr/bin/env python3
+# =============================================================================
+# @file    run-server
+# @brief   Wrapper around mod_wsgi-express to start Acacia server for testing
+# @created 2021-01-12
+# @license Please see the file named LICENSE in the project directory
+# @website https://github.com/caltechlibrary/acacia
+#
+# Important note about the code that follows.  When Bottle is running in
+# auto-reload mode (which is what we invoke in our debug mode), the main
+# process spawns a new child process using the same command line arguments
+# used to start the main process.  All module-level code is executed at least
+# twice -- in other words, the code in this file is executed twice when
+# running in Bottle's default server.  It's not an issue for efficiency
+# because this is only used to start the process (so we really don't care too
+# much if some things are done twice needlessly), but nevertheless, some care
+# is needed to avoid doing things that would cause problems if performed
+# twice.  It's possible to determine whether the current process is the
+# parent or child process by testing for the environment variable BOTTLE_CHILD.
+# =============================================================================
+
+# Initial imports. More things are imported later below.
+
+import pkg_resources
+import os
+from   os.path import exists, dirname, join, basename
+import sys
+from   sys import exit
+
+
+# Sanity-check the run-time environment before attempting anything else.
+# .............................................................................
+
+if sys.version_info.major < 3 or sys.version_info.minor < 8:
+    print('‼️  Acacia requires Python version 3.8 or higher')
+    exit(1)
+
+here  = dirname(sys.argv[0])
+where = 'the current directory' if here == '.' else here
+
+if not exists(join(here, 'requirements.txt')):
+    print('‼️  Expected to be in same directory as requirements.txt')
+    exit(1)
+else:
+    with open('requirements.txt', 'r') as req_file:
+        try:
+            pkg_resources.require(req_file)
+        except pkg_resources.DistributionNotFound as ex:
+            print('‼️  Not all Python dependencies have been installed.')
+            print('‼️  Please run "pip3 install -r requirements.txt" or equivalent.')
+            exit(1)
+
+if not exists(join(here, 'settings.ini')):
+    print(f'‼️  File "settings.ini" not found in {where}.')
+    print(f'‼️  Please create one starting with file "settings.ini-example".')
+    exit(1)
+
+
+# Global defaults.
+# .............................................................................
+
+_DEFAULT_BASE_URL = 'http://localhost:8080'
+
+
+# Main entry point.
+# .............................................................................
+# Import 3rd-party dependencies here, after the tests above for their existence
+# in the user's environment.  Importing them here and not at the top of the
+# file is against Pythonic best practices, but IMHO, testing for the packages
+# first (above) lets us give a more informative error if anything is missing.
+
+from   boltons.debugutils import pdb_on_signal
+import bottle
+from   bottle import request
+from   commonpy.data_utils import timestamp
+from   commonpy.file_utils import readable
+from   commonpy.string_utils import antiformat
+from   decouple import config
+from   mod_wsgi.server import cmd_start_server as mod_wsgi_start
+import os
+import plac
+from   rich import box
+from   rich.box import DOUBLE_EDGE
+from   rich.console import Console
+from   rich.panel import Panel
+from   shutil import get_terminal_size
+from   sidetrack import set_debug, log, logr
+from   yurl import URL
+
+from   acacia import acacia, print_version
+
+
+@plac.annotations(
+    adapter    = ('use file "A" as the WSGI adapter (default: adapter.wsgi)', 'option', 'a'),
+    base_url   = (f'set the server address (default: {_DEFAULT_BASE_URL})',   'option', 'b'),
+    database   = ('use "D" as the database file',                             'option', 'd'),
+    manifests  = ('look for manifest files in directory "F"',                 'option', 'f'),
+    iiif_url   = ('use "I" as the IIIF server endpoint',                      'option', 'i'),
+    mode       = ('run mode: normal, verbose, or debug (default: normal)',    'option', 'm'),
+    debug_user = ('identity of staff user in debug mode (default: none)',     'option', 'u'),
+    version    = ('print version info and exit',                              'flag',   'V'),
+)
+
+def main(adapter = 'A', base_url = 'B', database = 'D', manifests = 'F',
+         iiif_url = 'I', mode = 'M', debug_user = 'U', version = False):
+    '''Convenient interface for running the Acacia server during development.
+
+This starts a local server running Acacia. It always looks for a file named
+"settings.ini" in the current directory and reads it to set various Acacia
+configuration variables. The command-line options to run-server can override
+some of the configuration values in "settings.ini".
+
+Run modes
+~~~~~~~~~
+
+There are 3 run modes available. Two of the modes can be selected from the
+settings.ini file, but are overriden via the option -m on the command line.
+If no -m option is given, then this program uses the RUN_MODE value from
+settings.ini. In addition, this program offers a third run mode only available
+using the -m option. The possible run modes and their effects are as follows:
+
+"normal": uses mod_wsgi-express without debugging options. The server
+  will run multiple threads, will not reload if source files are changed,
+  will not reload templates if they are changed, and will not stop for
+  exceptions. It looks for a file named "adapter.wsgi" in the current
+  directory and passes it to mod_wsgi. This mode is a close approximation
+  to running Acacia in a basic Apache2 mod_wsgi environment, with adapter.wsgi.
+
+"verbose": like normal mode, but will produce detailed logging to the terminal.
+  This mode is useful for testing Acacia using adapter.wsgi in mod_wsgi.
+  Verbose mode is invoked using the option -m verbose, or setting RUN_MODE
+  to "verbose" in settings.ini. (Using -m verbose overrides settings.ini.)
+
+"debug": this uses Bottle's development server instead of mod_wsgi-express
+  and turns on maximum debugging options. This mode does NOT use
+  adapter.wsgi. It will turn off template caching, will drop into pdb upon
+  exceptions, and unlike mod_wsgi-express, the Bottle server will also
+  automatically reload any changed source files. In addition, the reloan
+  wait time and loan expirations are set to 1 minute (overriding values set
+  on individual items), and finally, the statistics gathering will include
+  loans by staff users. (Normally, staff users are not included in the
+  statistics to avoid skewing the results.) Debug mode is invoked using the
+  option -m debug. It has no corresponding RUN_MODE value in settings.ini.
+
+Since debug mode uses Bottle's default server, the normal authentication
+mechanism is nonfunctional and you will not be able to access most pages
+unless you define a person using Acacia's people-manager interface and tell
+run-server the identity of that user.  To do this, use option -u with the
+name of the user you defined.  Here is an example of running in debug mode:
+
+  people-manager add uname="debuguser" role="library"
+  run-server -m debug -u debuguser
+
+Database file, manifests directory, and IIIF server URL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+A number of additional command-line options allow you to override values set in
+settings.ini. These are:
+
+ -d: override the value of DATABASE_FILE
+ -f: override the value of MANIFEST_DIR
+ -i: override the value of IIIF_BASE_URL
+
+Please consult the comments in settings.ini or the Acacia documentation for more
+information about the purpose of these configuration variables.
+
+Additional options
+~~~~~~~~~~~~~~~~~~
+
+In a live server, the default base URL for Acacia is normally set by the Apache2
+configuration. For the local server started by this program, the default is
+http://localhost:8080. The option -b can be used to change this. The value
+given to -b should contain the protocol, hostname, port (if needed) and any
+additional path elements of the root of Acacia on the server; e.g.,
+"https://library.example.edu/acacia". (Note: the path component is ignored when
+running in debug mode.)
+
+By default, run-server looks for a WSGI adapter named "adapter.wsgi" in the
+current directory. The option -a tells run-server to use a different file.
+
+If given the -V option, this program will print the version and other
+information, and exit without doing anything else.
+
+Command-line arguments summary
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+'''
+    # Do preliminary steps and handle early exits -----------------------------
+
+    child = 'BOTTLE_CHILD' in os.environ
+
+    if version:
+        print_version()
+        exit(0)
+
+    base_url   = _DEFAULT_BASE_URL if base_url == 'B' else base_url
+    parsed_url = URL(base_url)
+    scheme     = parsed_url.scheme
+    host       = parsed_url.host
+    port       = parsed_url.port or ('80' if scheme == 'http' else '443')
+    extra_path = parsed_url.path
+    if not host:
+        print(f'‼️  Unable to parse -b value "{base_url}" -- quitting.')
+        exit(1)
+
+    mode = config('RUN_MODE', default = 'normal') if mode == 'M' else mode
+    if mode not in ['normal', 'verbose', 'debug']:
+        print(f'‼️  Unknown mode "{mode}" -- quitting.')
+        exit(1)
+    if mode in ['verbose', 'debug']:
+        set_debug(True, '-', show_package = True)
+    if mode == 'debug':
+        import faulthandler
+        faulthandler.enable()
+
+    debug_user = None if debug_user == 'U' else debug_user
+
+    adapter_file = join(here, 'adapter.wsgi') if adapter == 'A' else adapter
+    if not exists(adapter_file) or not readable(adapter_file):
+        print(f'‼️  File not found or not readable: {adapter_file}')
+        exit(1)
+
+    if database != 'D':
+        if exists(database) and readable(database):
+            os.environ['DATABASE_FILE'] = database
+        else:
+            print(f'‼️  Database file not found or not readable: "{database}"')
+            exit(1)
+
+    if manifests != 'F':
+        if exists(manifests) and readable(manifests):
+            os.environ['MANIFEST_DIR'] = manifests
+        else:
+            print(f'‼️  Manifests directory not found or not readable: "{manifests}"')
+            exit(1)
+
+    if iiif_url != 'I':
+        if iiif_url.startswith('http'):
+            os.environ['IIIF_BASE_URL'] = iiif_url
+        else:
+            print(f'‼️  Value does not look like a URL: "{iiif_url}"')
+            exit(1)
+
+    if mode != 'debug':
+        print_safety_warning()
+    elif not child:
+        print_geeky_logo()
+
+    # Do the real work --------------------------------------------------------
+
+    if not child:
+        log('='*8 + f' started {timestamp()} ' + '='*8)
+        log(f'given base_url = {base_url}, mode = {mode}')
+
+    try:
+        if mode == 'debug':
+            start_bottle_server(scheme, host, port, extra_path, debug_user)
+        else:
+            start_wsgi_server(scheme, host, port, extra_path, adapter_file, mode)
+    except Exception as ex:
+        exception = sys.exc_info()
+        msg = antiformat(exception[1])
+        if mode == 'debug':
+            from traceback import format_exception
+            details = ''.join(format_exception(*exception))
+            print(f'Exception: {msg}\n{details}')
+        else:
+            print(f'‼️  Encountered error {exception[0].__name__}: {msg}')
+
+    if not child:
+        log('_'*8 + f' stopped {timestamp()} ' + '_'*8)
+
+
+def start_wsgi_server(scheme, host, port, extra_path, adapter_file, mode):
+    # mod_wsgi-express doesn't have a direct way to set parameters; you have
+    # to construct a command line parsed by mod_wsgi_start(...).  Oh well.
+    args = [adapter_file, '--host', host, '--port', port,
+            '--setenv', 'RUN_MODE', mode]
+    if extra_path:
+        args += ['--mount-point', extra_path]
+    if mode == 'verbose':
+        args += ['--setenv', 'VERBOSE', 'True', '--server-status']
+        args += ['--log-level', 'debug', '--log-to-terminal']
+        args += ['--startup-log', '--access-log']
+        args += ['--error-log-format', '[%{%H:%M:%S}t] %M']
+        args += ['--access-log-format', '[%{%a %b %0e %H:%M:%S %Y}t] %h \"%r\" %>s']
+        print_settings(mode, adapter_file)
+
+    logr(f'starting mod_wsgi with arguments: {" ".join(args)}')
+    mod_wsgi_start(args)
+
+
+def start_bottle_server(scheme, host, port, extra_path, debug_user):
+    # We only ever run the Bottle server in debug and verbose mode, so no
+    # need to test that here or change behaviors.  However, be mindful that
+    # Bottle will spawn a child process and execute everything a second time.
+
+    child = ('BOTTLE_CHILD' in os.environ)
+    log(f'running {"child " if child else ""}server process')
+
+    # Configure Bottle for debugging and also not to ignore exceptions.
+    # Also set a property, acacia.debug, that we can reference in server code.
+    bottle.debug(True)
+    acacia.catchall = False
+    acacia.debug_mode = True
+
+    # Set our special "base_url" attribute on our acacia application object.
+    # Note: Bottle doesn't have a way to pass extra_path, so it's ignored here.
+    acacia.base_url = f'{scheme}://{host}'
+    if port not in ['80', '443']:
+        acacia.base_url = f'{acacia.base_url}:{port}'
+
+    @acacia.hook('before_request')
+    def add_remote_user():
+        request.environ['REMOTE_USER'] = debug_user
+
+    if not child:
+        print_settings('debug')
+
+    bottle.run(acacia, host = host, port = int(port), reloader = True)
+
+
+# Miscellaneous utilities.
+# .............................................................................
+
+def print_safety_warning():
+    name = basename(sys.argv[0])
+    text = ("⚠️  REMINDER: DON'T USE THIS AS A PUBLIC SERVER. ⚠️\n"
+            + f'"{name}" starts a server with weak security. \n'
+            + 'It is intended for testing and debugging only.\n'
+            + 'For production, set up Apache with adapter.wsgi.')
+    terminal_width = get_terminal_size().columns
+    panel_width = 55 if terminal_width > 55 else terminal_width
+    padding = min(abs(panel_width - len(text) - 2) // 2, 2)
+    Console().print(Panel(text, width = panel_width, padding = (0, padding),
+                          style = 'orange_red1'))
+
+
+def print_settings(mode, adapter_file = None):
+    server = 'Bottle' if mode == 'debug' else 'mod_wsgi-express'
+    adapter = adapter_file or '(not applicable)'
+    settings = ('\n  Current settings are:\n'
+                + f'    Run mode:      {mode} (using {server} server)\n'
+                + f'    WSGI adapter:  {adapter}\n'
+                + f'    DATABASE_FILE: {config("DATABASE_FILE")}\n'
+                + f'    MANIFEST_DIR:  {config("MANIFEST_DIR")}\n'
+                + f'    IIIF_BASE_URL: {config("IIIF_BASE_URL")}')
+    log(settings)
+
+def print_geeky_logo():
+    text = '''
+ ______  _____ ______  _______
+ |     \   |   |_____] |______
+ |_____/ __|__ |_____] ______|
+'''
+    Console().print(text, style='dark_orange')
+
+
+# Main invocation.
+# .............................................................................
+
+plac.call(main)

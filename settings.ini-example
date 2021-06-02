@@ -16,6 +16,8 @@
 # Path to the sqlite database, relative to here.
 DATABASE_FILE = acacia.db
 
+
+
 # Email details. This is to access the mailbox of the submissions
 # email account.
 
@@ -48,4 +50,11 @@ DOI2EPRINTXML = doi2eprintxml
 # EPrints SSH API
 EPRINT_SSH = USER@HOSTNAME
 EPRINT_REPO_ID = EPRINT_REPO_ID
+
+# The following run mode options are recognized:
+#   "normal":  use adapter.wsgi without special options
+#   "verbose": use adapter.wsgi with verbose logging options
+# When started using the program run-server included with DIBS, this value
+# maybe overriden by command-line options given to run-server.
+RUN_MODE = normal
 

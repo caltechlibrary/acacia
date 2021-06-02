@@ -63,3 +63,4 @@ settings.ini
 __pycache__
 example_data_formats
 bin/
+*.bak
