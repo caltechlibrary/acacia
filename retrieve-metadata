@@ -91,34 +91,36 @@ def apply(app_name, _db, args):
     else:
         for rec in records:
             now = datetime.now()
-            src, err = doi_processor.get_metadata(rec.doi, dry_run = dry_run)
-            if err:
-                msg = f'ERROR get_metadata({rec.doi}) {now.isoformat()}: {err}'
-                print(msg)
-                if dry_run:
-                    sys.exit(1)
+            if not rec.metadata:
+                src, err = doi_processor.get_metadata(rec.doi, dry_run = dry_run)
+                if err:
+                    msg = f'ERROR get_metadata({rec.doi}) {now.isoformat()}: {err}'
+                    print(msg)
+                    if dry_run:
+                        sys.exit(1)
+                    else:
+                        err_cnt += 1
+                    rec.status = 'processing_error'
+                    rec.notes += msg + "\n"
+                    rec.updated = now
                 else:
-                    err_cnt += 1
-                rec.status = 'processing_error'
-                rec.notes += msg + "\n"
-                rec.updated = now
-            else:
-                rec.metadata = src
-                rec.status = 'ready'
-                rec.updated = now
-                doi_cnt += 1
-            src, err = eprints_ssh.get_eprint_id_by_doi(rec.doi)
-            if err:
-                msg = f'ERROR get_eprint_id_by_doi({rec.doi}): {err}'
-                print(msg)
-                if dry_run:
-                    sys.exit(1)
+                    rec.metadata = src
+                    rec.status = 'ready'
+                    rec.updated = now
+                    doi_cnt += 1
+            if not rec.eprint_id:
+                src, err = eprints_ssh.get_eprint_id_by_doi(rec.doi)
+                if err:
+                    msg = f'ERROR get_eprint_id_by_doi({rec.doi}): {err}'
+                    print(msg)
+                    if dry_run:
+                        sys.exit(1)
+                    else:
+                        err_cnt += 1
                 else:
-                    err_cnt += 1
-            else:
-                rec.repo_id = repo_id
-                rec.eprint_id = src
-            rec.save()
+                    rec.repo_id = repo_id
+                    rec.eprint_id = src
+                rec.save()
             item_cnt += 1
     if dry_run:
         print(f'Dry run: no records saved.')
