@@ -12,28 +12,6 @@ file "LICENSE" for more information.
 import bottle
 from   bottle import Bottle, HTTPResponse, static_file, template
 from   bottle import request, response, redirect, route, get, post, error
-from   commonpy.network_utils import net
-from   datetime import datetime as dt
-from   datetime import timedelta as delta
-from   dateutil import tz
-from   decouple import config
-from   enum import Enum, auto
-from   expiringdict import ExpiringDict
-from   fdsend import send_file
-import functools
-from   humanize import naturaldelta
-import inspect
-from   io import BytesIO
-import json
-import os
-from   os.path import realpath, dirname, join, exists, isabs
-from   peewee import *
-import random
-from   sidetrack import log, logr
-from   str2bool import str2bool
-import string
-import sys
-from   textwrap import shorten
 
 from . import __version__
 
@@ -60,12 +38,6 @@ _SERVER_ROOT = realpath(join(dirname(__file__), os.pardir))
 # template files.  Rather surprisingly, the only way to tell Bottle where to
 # find the templates is to set this Bottle package-level variable.
 bottle.TEMPLATE_PATH.append(join(_SERVER_ROOT, 'acacia', 'templates'))
-
-# Where we send users to give feedback.
-_FEEDBACK_URL = config('FEEDBACK_URL', default = '/')
-
-# Where we send users for help.
-_HELP_URL = config('HELP_URL', default = 'https://caltechlibrary.github.io/acacia')
 
 
 # General-purpose utilities used repeatedly.
@@ -94,70 +66,19 @@ def debug_mode():
 
 
 
-# Bespoke, locally-sourced, artisanal Bottle plugins.
-# .............................................................................
-# Bottle's "plugins" are basically like Python decorators.  They're most
-# useful when you have a decorator that you would otherwise want to put on
-# every route (and which would therefore clutter your source code with a lot
-# of repetitive calls to @foo decorators).  Bottle calls the plugins in the
-# Bottle @get/@post/@route functions, and like Python decorators, a given
-# plugin is only applied once to a given route (because what a plugin does is
-# wrap a function with another function).  Tip: if you also have decorators
-# that you want be added to a route, put the decorators highest, above the
-# call to @acacia.get/@acacia.post.
 
-class BottlePluginBase(object):
-    '''Base class for Bottle plugins for Acacia.'''
-    # This sets the Bottle API version. It defaults to v.1. See
-    # https://bottlepy.org/docs/dev/plugindev.html#plugin-api-changes
-    api = 2
+#
+# URL end points
+# .....................................................................
+#
 
-
-class RouteTracer(BottlePluginBase):
-    '''Write a log entry for this route invocation.'''
-
-    def apply(self, callback, route):
-        def route_tracer(*args, **kwargs):
-            person = person_from_environ(request.environ)
-            log(f'{route.method} {route.rule} invoked'
-                + (f' by {person.uname}' if person else ''))
-            return callback(*args, **kwargs)
-
-        return route_tracer
-
-
-# Hook in the plugins above into all routes.
-acacia.install(RouteTracer())
-
-# The remaining plugins below are applied selectively to specific routes only.
-
-
-class VerifyStaffUser(BottlePluginBase):
-    '''Redirect to an error page if the user lacks sufficient priviledges.'''
-    def apply(self, callback, route):
-        def staff_person_plugin_wrapper(*args, **kwargs):
-            person = person_from_environ(request.environ)
-            if person is None:
-                log(f'person is None')
-                return page('error', person, summary = 'authentication failure',
-                            message = f'Unrecognized user identity.')
-            if not staff_user(person):
-                log(f'{request.path} invoked by non-staff user {person.uname}')
-                redirect(f'{acacia.base_url}/notallowed')
-                return
-            return callback(*args, **kwargs)
-        return staff_person_plugin_wrapper
-
-
-# Administrative interface endpoints.
-# .............................................................................
-
-# A note about authentication: the entire Acacia application is assumed to be
-# behind a server that implements authentication, for example using SSO.
-# This means we never need to log a person in: they will be authenticated by
-# SSO before they can get to Acacia pages.  However, once in Acacia, we do need
-# to provide a way for them to un-authenticate themselves.  This is the
-# reason for the asymmetry between /logout and (lack of) login.
+# A note about authentication: the entire Acacia application is assumed
+# to be behind a server that implements authentication, for example
+# using SSO. This means we never need to log a person in: they will be
+# authenticated by SSO before they can get to Acacia pages.  However,
+# once in Acacia, we do need to provide a way for them to un-authenticate
+# themselves.  This is the reason for the asymmetry between /logout
+# and (lack of) login.
 
 @acacia.post('/logout')
 def logout():
@@ -169,68 +90,66 @@ def logout():
     else:
         redirect('/')
 
+#
+# NOTE: End points for Acacia need to provide for four page activities
+# 
+# 1. Dashboard provides a page that lists activities (this is a static page)
+# 2. Dois lists pending DOI to be exported to EPrints
+#    - Per row cells
+#      - DOI linked to the https/doi.org URL
+#      - link to DOI record at CrossRef or DataCite
+#      - Link to view the PDF to download, a select box to include PDF
+#        in bundle of specific DOI to be bundled for export
+#      - Checkbox to include in a export bundle of EPrints XML
+#      - Checkbox to include PDF a export bundle
+#      - Button to put DOI in trash
+# 3. Bundles lists export bundles ready to download
+#    - Per row cells
+#      - button to trash bundle
+# 4. Logout (we rely on SSO or BasicAUTH so only need a Logout function)
+#
+# For each activy there waybe both GET and POST reponses to handle.
+#
+# NOTE: Email retrieval and processing into DOI is handled automatically
+# via a cronjob.  The Web UI only needs to manage actions on specific
+# DOI.
+#
 
-@acacia.get('/', apply = VerifyStaffUser())
-@acacia.get('/manage', apply = VerifyStaffUser())
-def manage_items():
-    '''Manage the DOI retrieval requests.'''
-    return page('manage') 
+@acacia.get('/list')
+@acacia.get('/list/<filter_by:name>')
+@acacia.get('/list/<filter_by:name>/<sort_by:name>')
+def get_list(filter_by = None, sort_by = None, msg = None):
+    '''Display a list of DOIs to be processed further.'''
+    return page('list', msg = None, content = content)
 
+@acacia.post('/list')
+@acacia.get('/list/<filter_by:name>')
+@acacia.get('/list/<filter_by:name>/<sort_by:name>')
+def process_list( filter_by = None, sort_by = None):
+    ''' Process DOI should act on selections of list, it needs
+        to trigger the generation of export bundles which are
+        then emailed to the requesting librarian '''
+    opts, options = [], ''
+    if filter_by:
+        opts.append(filter_by)
+    if sort_by:
+        opts.append(sort_by)
+    if len(opts) > 0:
+        options = '/' + '/'.join(opts)
+    return redirect(f'/list{options}', msg = "processed")
 
-@acacia.get('/add', apply = VerifyStaffUser())
-def add():
-    '''Display a page to add a new DOI retrieval request.'''
-    return page('edit', action = 'add', doi = None)
-
-
-@acacia.get('/edit/<doi>', apply = VerifyStaffUser())
-def edit(doi):
-    '''Display a page to edit a DOI retreival request.'''
-#FIXME: retrieve the DOI object include the DOI and object_url
-    doi = {"doi": "123340/1223345.03333", "object_url": "https://example.edu/my.pdf" }
-    return page('edit', action = 'edit', **doi)
-
-
-@acacia.post('/update/add', apply = VerifyStaffUser())
-@acacia.post('/update/edit', apply = VerifyStaffUser())
-def update_item():
-    '''Handle http POST requests for adding/editing DOI retrieval requests.'''
-    if 'cancel' in request.POST:
-        log(f'user clicked Cancel button')
-        redirect(f'{acacia.base_url}/manage')
-        return
-
-    # The HTML form validates the data types, but the POST might come from
-    # elsewhere, so we always need to sanity-check the values.
-
-# FIXME: Need to implement adding/updating a DOI POST
-    doi_str = request.POST.doi.strip()
-    object_url = request.POST.pdf.string()
-    redirect(f'{acacia.base_url}/manage')
-
-
-@acacia.post('/remove', apply = VerifyStaffUser())
-def remove_item():
-    '''Handle HTTP POST request to remove a DOI retrieval request.'''
-# FIXME: Need to implement remove DOI POST
-    doi_str = request.POST.doi.strip()
-    redirect(f'{acacia.base_url}/manage')
-
-
-
-# User endpoints.
-# .............................................................................
-
-@acacia.get('/about')
-def general_page(name = '/'):
-    '''Display the About page.'''
-    return page('about')
+@acacia.get('/status/<rec_id:int>')
+def get_status(rec_id = None):
+    '''JSON response of individual object, used to update status such as bundle ready'''
+    return '{}' # This would be a JSON object representing updates to a row
 
 
 
 # Error pages.
-# .............................................................................
-# Note: the Bottle session plugin does not seem to supply session arg to @error.
+# .........................................................................
+# NOTE: the Bottle session plugin does not seem to supply session arg
+# to @error.
+#
 
 @acacia.get('/notallowed')
 @acacia.post('/notallowed')
@@ -253,14 +172,27 @@ def error405(error):
                            'not have permission to perform the action.'))
 
 
-# Miscellaneous static pages.
-# .............................................................................
+#
+# Static web pages needed in Web UI
+# ........................................................................
+#
+
+@acacia.get('/') 
+@acacia.get('/dashbord')
+def manage_items():
+    '''Manage provides a dashbaord of available activities.'''
+# Load static dashboard page
+    return static_file('static/dashboard.html')
+
+@acacia.get('/about')
+def general_page(name = '/'):
+    '''Display the About page.'''
+    return static_file('static/about.html')
 
 @acacia.get('/favicon.ico')
 def favicon():
     '''Return the favicon.'''
     return static_file('favicon.ico', root = 'acacia/static')
-
 
 @acacia.get('/static/<filename:re:[-a-zA-Z0-9]+.(ico|png|jpg|svg)>')
 def include_file(filename):
