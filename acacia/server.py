@@ -8,6 +8,7 @@ Copyright (c) 2021 by the California Institute of Technology.  This code
 is open-source software released under a 3-clause BSD license.  Please see the
 file "LICENSE" for more information.
 '''
+import os
 
 import bottle
 from   bottle import Bottle, HTTPResponse, static_file, template
@@ -31,13 +32,13 @@ from .eprints import EPrintsSSH
 acacia = Bottle()
 
 # Construct the path to the server root, which we use to construct other paths.
-_SERVER_ROOT = realpath(join(dirname(__file__), os.pardir))
+_SERVER_ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__), os.pardir))
 
 # Tell Bottle where to find templates.  This is necessary for both the Bottle
 # template() command to work and also to get %include to work inside our .tpl
 # template files.  Rather surprisingly, the only way to tell Bottle where to
 # find the templates is to set this Bottle package-level variable.
-bottle.TEMPLATE_PATH.append(join(_SERVER_ROOT, 'acacia', 'templates'))
+bottle.TEMPLATE_PATH.append(os.path.join(_SERVER_ROOT, 'acacia', 'templates'))
 
 
 # General-purpose utilities used repeatedly.
@@ -116,15 +117,15 @@ def logout():
 #
 
 @acacia.get('/list')
-@acacia.get('/list/<filter_by:name>')
-@acacia.get('/list/<filter_by:name>/<sort_by:name>')
+@acacia.get('/list/<filter_by>')
+@acacia.get('/list/<filter_by>/<sort_by>')
 def get_list(filter_by = None, sort_by = None, msg = None):
     '''Display a list of DOIs to be processed further.'''
     return page('list', msg = None, content = content)
 
 @acacia.post('/list')
-@acacia.get('/list/<filter_by:name>')
-@acacia.get('/list/<filter_by:name>/<sort_by:name>')
+@acacia.get('/list/<filter_by>')
+@acacia.get('/list/<filter_by>/<sort_by>')
 def process_list( filter_by = None, sort_by = None):
     ''' Process DOI should act on selections of list, it needs
         to trigger the generation of export bundles which are

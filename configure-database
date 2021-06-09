@@ -18,7 +18,7 @@ from acacia.doi import setup_doi_table, upgrade_doi_table
 
 def usage(app_name, db_name, exit_code = None):
     '''describe how configure-database works'''
-    printf('''
+    print(f'''
 USAGE: {app_name} [OPTIONS]
 
 This program will created the necessary SQLite3 database

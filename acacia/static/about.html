@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{title}}</title>
+    <title>About to ACACIA</title>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/static/css/site.css">
 </head>
@@ -10,12 +10,46 @@
 <a href="http://library.caltech.edu" title="link to Caltech Library Homepage"><img src="/static/assets/liblogo.gif" alt="Caltech Library logo"></a>
 </header>
 <nav>
-{{nav}}
+<ul>
+<li>
+<a href="/dashboard">Home</a>
+</li>
+<li>
+<a href="/list">Manage DOI</a>
+</li>
+<li>
+<a href="/about">About</a>
+</li>
+<li>
+<a href="/logout">Logout</a>
+</li>
+</ul>
 </nav>
 
 <section>
-  <div class="summary>{{summary}}</div>
-  <div class="message">{{message}}</div>
+<h1 id="welcome-to-acacia">
+Welcome to ACACIA
+</h1>
+<p>
+Acacia is a micro service for processing submission requests to <a href="https://authors.library.caltech.edu">CaltechAUTHORS</a> based on a EMail submissions of DOI and a link to a PDF.
+</p>
+<h2 id="developers">
+Developers
+</h2>
+<ul>
+<li>
+Robert Doiel
+</li>
+<li>
+Tom Morell
+</li>
+<li>
+Mike Hucka
+</li>
+<li>
+Tommy Keswick
+</li>
+</ul>
 </section>
 
 <footer>
