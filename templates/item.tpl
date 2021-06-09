@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{title}}</title>
+    <title>${title}</title>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="/static/css/site.css">
+    <link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
 <header>
-<a href="http://library.caltech.edu" title="link to Caltech Library Homepage"><img src="/static/assets/liblogo.gif" alt="Caltech Library logo"></a>
+<a href="http://library.caltech.edu" title="link to Caltech Library Homepage"><img src="/assets/liblogo.gif" alt="Caltech Library logo"></a>
 </header>
 <nav>
-{{nav}}
+${if(nav)}${nav}${endif}
 </nav>
 
 <section>
-  <div class="summary>{{summary}}</div>
-  <div class="message">{{message}}</div>
+${body}
 </section>
 
 <footer>

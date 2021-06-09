@@ -38,7 +38,8 @@ _SERVER_ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__), os.pardi
 # template() command to work and also to get %include to work inside our .tpl
 # template files.  Rather surprisingly, the only way to tell Bottle where to
 # find the templates is to set this Bottle package-level variable.
-bottle.TEMPLATE_PATH.append(os.path.join(_SERVER_ROOT, 'acacia', 'templates'))
+bottle.TEMPLATE_PATH.append(os.path.join(_SERVER_ROOT, 'templates'))
+
 
 
 # General-purpose utilities used repeatedly.
@@ -121,7 +122,8 @@ def logout():
 @acacia.get('/list/<filter_by>/<sort_by>')
 def get_list(filter_by = None, sort_by = None, msg = None):
     '''Display a list of DOIs to be processed further.'''
-    return page('list', msg = None, content = content)
+    items = [] # DEBUG need to build an item list here.
+    return page('list', items = items, msg = None, content = content)
 
 @acacia.post('/list')
 @acacia.get('/list/<filter_by>')
@@ -183,33 +185,36 @@ def error405(error):
 def manage_items():
     '''Manage provides a dashbaord of available activities.'''
 # Load static dashboard page
-    return static_file('static/dashboard.html')
+    return static_file('dashboard.html', root = os.path.join(_SERVER_ROOT, 'htdocsa'))
 
 @acacia.get('/about')
 def general_page(name = '/'):
     '''Display the About page.'''
-    return static_file('static/about.html')
+    return static_file('about.html', root = os.path.join(_SERVER_ROOT, 'htdocs'))
 
 @acacia.get('/favicon.ico')
 def favicon():
     '''Return the favicon.'''
-    return static_file('favicon.ico', root = 'acacia/static')
+    return static_file('favicon.ico', root = os.path.join(_SERVER_ROOT, 'htdocs/media'))
 
-@acacia.get('/static/<filename:re:[-a-zA-Z0-9]+.(ico|png|jpg|svg)>')
+@acacia.get('/media/<filename:re:[-a-zA-Z0-9]+.(ico|png|jpg|svg)>')
 def include_file(filename):
     '''Return a static file'''
-    log(f'returning included file {filename}')
-    return static_file(filename, root = 'acacia/static')
+    p = os.path.join(_SERVER_ROOT, 'htdocs', 'media')
+    log(f'returning media file {filename} {p}')
+    return static_file(filename, root = p)
 
-@acacia.get('/static/assets/<filename:re:[-a-zA-Z0-9]+.(gif|png|jpg|svg)>')
+@acacia.get('/assets/<filename:re:[-a-zA-Z0-9]+.(gif|png|jpg|svg)>')
 def included_assets_file(filename):
     '''Return a static file used with %include in a template.'''
-    log(f'returning included assets file {filename}')
-    return static_file(filename, root = 'acacia/static/assets')
+    p = os.path.join(_SERVER_ROOT, 'htdocs', 'assets')
+    log(f'returning assets file {filename} {p}')
+    return static_file(filename, root = p)
 
-@acacia.get('/static/css/<filename:re:[-a-zA-Z0-9]+.(css)>')
+@acacia.get('/css/<filename:re:[-a-zA-Z0-9]+.(css)>')
 def included_css_file(filename):
     '''Return a static file used with %include in a template.'''
-    log(f'returning included CSS file {filename}')
-    return static_file(filename, root = 'acacia/static/css')
+    p = os.path.join(_SERVER_ROOT, 'htdocs', 'css')
+    log(f'returning CSS file {filename} {p}')
+    return static_file(filename, root = p)
 

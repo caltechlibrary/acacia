@@ -5,9 +5,9 @@
 # Markdown sources using Pandoc.
 #
 for BNAME in "about" "dashboard"; do
-  mkpage "body=acacia/static/${BNAME}.md" \
-         "nav=acacia/static/nav.md" \
+  mkpage "body=htdocs/${BNAME}.md" \
+         "nav=htdocs/nav.md" \
 	 page.tmpl \
-         >"acacia/static/${BNAME}.html"
+         >"htdocs/${BNAME}.html"
 done
 
