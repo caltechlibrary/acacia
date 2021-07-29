@@ -1,0 +1,37 @@
+
+The email address used for ACM submissions is    
+
+    submissions.authors@library.caltech.edu
+
+
+Project participants:
+
+Tom Gibson <tgibson@hq.acm.org>
+Robert Doiel <rsdoiel@library.caltech.edu>
+George Porter <george@library.caltech.edu>
+Tom Morrell <tmorrell@library.caltech.edu>
+
+Concepts (taken from an email by George, 2020-1016)
+
+```
+Regarding the message content, Robert had shared this with me:
+
+I can't find them specifically mentioned in my emails but from a short note I have to myself I have three fields, DOI, PDF url and license. These would be delimited, one record per line of plain text.
+
+On our end we're planning to write a Python script that will take the EMail message, parse the body line by line, split on the delimiter and act on the three columns to retrieve the data and import them into EPrints automagically.
+```
+
+Requiments (taken from an email by Tom Gibson, 2020-12-220)
+
+```
+There are a few requirements for our system to deposit a paper into the repository of an institution participating in the AC Open program:
+
+1. An author (corresponding or affiliated) must have an email with the appropriate domain(s).  In your case, this would be caltech.edu, cms.caltech.edu, cs.caltech.edu, or jpl.caltech.edu.
+2. The paper must be eligible for open access status / apc payments
+3. The participating institution the author is affiliated with must have an active / non-expired contract at the time of the paper’s publication.
+
+Requirement #2 above is what keeps the example papers you gave from being eligible for repository deposit.  If you’d like to discuss this further, I can send you the contact information for some people here at ACM that are in a better position to talk business.
+```
+
+
+
