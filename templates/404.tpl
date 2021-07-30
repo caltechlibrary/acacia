@@ -14,7 +14,9 @@
 </nav>
 
 <section>
-{{body}}
+  <h1>Page not found</h1>
+  <p>I am sorry, not sure what you are looking for.</p>
+  <p><small>(Code {{code}}: {{message}})</small></p>
 </section>
 
 <footer>

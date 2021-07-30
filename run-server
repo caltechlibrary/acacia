@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# =============================================================================
+# ==========================================================================
 # @file    run-server
 # @brief   Wrapper around mod_wsgi-express to start Acacia server for testing
 # @created 2021-01-12
@@ -17,7 +17,7 @@
 # is needed to avoid doing things that would cause problems if performed
 # twice.  It's possible to determine whether the current process is the
 # parent or child process by testing for the environment variable BOTTLE_CHILD.
-# =============================================================================
+# ==========================================================================
 
 # Initial imports. More things are imported later below.
 
@@ -29,7 +29,7 @@ from   sys import exit
 
 
 # Sanity-check the run-time environment before attempting anything else.
-# .............................................................................
+# ..........................................................................
 
 if sys.version_info.major < 3 or sys.version_info.minor < 8:
     print('‼️  Acacia requires Python version 3.8 or higher')
@@ -57,7 +57,7 @@ if not exists(join(here, 'settings.ini')):
 
 
 # Global defaults.
-# .............................................................................
+# ..........................................................................
 
 _DEFAULT_BASE_URL = 'http://localhost:8080'
 
@@ -151,29 +151,16 @@ name of the user you defined.  Here is an example of running in debug mode:
   people-manager add uname="debuguser" role="library"
   run-server -m debug -u debuguser
 
-Database file, manifests directory, and IIIF server URL
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Options
+~~~~~~~
 
-A number of additional command-line options allow you to override values set in
-settings.ini. These are:
-
- -d: override the value of DATABASE_FILE
- -f: override the value of MANIFEST_DIR
- -i: override the value of IIIF_BASE_URL
-
-Please consult the comments in settings.ini or the Acacia documentation for more
-information about the purpose of these configuration variables.
-
-Additional options
-~~~~~~~~~~~~~~~~~~
-
-In a live server, the default base URL for Acacia is normally set by the Apache2
-configuration. For the local server started by this program, the default is
-http://localhost:8080. The option -b can be used to change this. The value
-given to -b should contain the protocol, hostname, port (if needed) and any
-additional path elements of the root of Acacia on the server; e.g.,
-"https://library.example.edu/acacia". (Note: the path component is ignored when
-running in debug mode.)
+In a live server, the default base URL for Acacia is normally set by the
+Apache2 configuration. For the local server started by this program, the
+default is http://localhost:8080. The option -b can be used to change this. 
+The value given to -b should contain the protocol, hostname, port (if
+needed) and any additional path elements of the root of Acacia on the
+server; e.g., "https://library.example.edu/acacia". (Note: the path
+component is ignored when running in debug mode.)
 
 By default, run-server looks for a WSGI adapter named "adapter.wsgi" in the
 current directory. The option -a tells run-server to use a different file.
@@ -226,26 +213,12 @@ Command-line arguments summary
             print(f'‼️  Database file not found or not readable: "{database}"')
             exit(1)
 
-    if manifests != 'F':
-        if exists(manifests) and readable(manifests):
-            os.environ['MANIFEST_DIR'] = manifests
-        else:
-            print(f'‼️  Manifests directory not found or not readable: "{manifests}"')
-            exit(1)
-
-    if iiif_url != 'I':
-        if iiif_url.startswith('http'):
-            os.environ['IIIF_BASE_URL'] = iiif_url
-        else:
-            print(f'‼️  Value does not look like a URL: "{iiif_url}"')
-            exit(1)
-
     if mode != 'debug':
         print_safety_warning()
     elif not child:
         print_geeky_logo()
 
-    # Do the real work --------------------------------------------------------
+# Do the real work --------------------------------------------------------
 
     if not child:
         log('='*8 + f' started {timestamp()} ' + '='*8)
@@ -320,7 +293,7 @@ def start_bottle_server(scheme, host, port, extra_path, debug_user):
 
 
 # Miscellaneous utilities.
-# .............................................................................
+# ..........................................................................
 
 def print_safety_warning():
     name = basename(sys.argv[0])
@@ -341,21 +314,17 @@ def print_settings(mode, adapter_file = None):
     settings = ('\n  Current settings are:\n'
                 + f'    Run mode:      {mode} (using {server} server)\n'
                 + f'    WSGI adapter:  {adapter}\n'
-                + f'    DATABASE_FILE: {config("DATABASE_FILE")}\n'
-                + f'    MANIFEST_DIR:  {config("MANIFEST_DIR")}\n'
-                + f'    IIIF_BASE_URL: {config("IIIF_BASE_URL")}')
+                + f'    DATABASE_FILE: {config("DATABASE_FILE")}\n')
     log(settings)
 
 def print_geeky_logo():
     text = '''
- ______  _____ ______  _______
- |     \   |   |_____] |______
- |_____/ __|__ |_____] ______|
+Welcome to Acacia.
 '''
     Console().print(text, style='dark_orange')
 
 
 # Main invocation.
-# .............................................................................
+# ..........................................................................
 
 plac.call(main)

@@ -86,6 +86,8 @@ class Doi(Model):
     object_url = CharField(default = '')
     # message id used for submission (if submitted via email)
     m_id = CharField(default = '')
+    # message from used for submission (if submitted via email)
+    m_from = CharField(default = '')
     # Workflow status
     status = Workflow(default = 'unprocessed')
     # bundle-name, this is a machine generated associated with a download
@@ -177,6 +179,7 @@ class DOIProcessor:
                             d.doi = doi
                             d.created = datetime.now()
                         d.m_id = m.m_id
+                        d.m_from = m.m_from
                         if url != None:
                             d.object_url = url
                         if err:

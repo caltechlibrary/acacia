@@ -20,7 +20,8 @@ Table of contents
 Introduction
 ------------
 
-_Acacia_ is an internal Caltech Library project to find a _very_ lightweight solution for accepting publications into [CaltechAUTHORS](https://authors.library.caltech.edu) via a list of DOI. The basic idea is for ACM Open to email a list of DOI, one per line, to a known email address at Caltech Library where a bot then reads the email (via procmail or something similar), converts the DOIs into metadata, and harvests the article PDF for submission into the CaltechAUTHORS EPrints repository.
+_Acacia_ is an internal Caltech Library project to find a _very_ lightweight solution for accepting publications into [CaltechAUTHORS](https://authors.library.caltech.edu) via a list of DOI. The basic idea started as a way for ACM Open to email a list of DOI, one per line, to a known email address at Caltech Library where a bot then reads the email (via procmail or something similar), converts the DOIs into metadata, and harvests the article PDF for submission into the CaltechAUTHORS EPrints repository. We believe this approach can be applied more broadly to other types of submissions.
+
 
 Installation
 ------------
@@ -106,7 +107,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 
 Authors and history
----------------------------
+-------------------
 
 + Mike Hucka
 + R. S. Doiel

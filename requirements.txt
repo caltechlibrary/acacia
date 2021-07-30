@@ -30,7 +30,5 @@ python-decouple >= 3.4
 rich            >= 9.2.0
 sidetrack       >= 1.4.0
 str2bool        >= 1.1
-# topi            >= 1.0.1
-# yurl            >= 1.0.0
 werkzeug        >= 1.0.1
 

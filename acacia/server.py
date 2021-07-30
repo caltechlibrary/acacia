@@ -9,6 +9,7 @@ is open-source software released under a 3-clause BSD license.  Please see the
 file "LICENSE" for more information.
 '''
 import os
+import logging
 
 import bottle
 from   bottle import Bottle, HTTPResponse, static_file, template
@@ -22,6 +23,9 @@ from .roles import role_to_redirect, has_role, staff_user
 from .messages import Message, EMailProcessor
 from .doi import Workflow, Doi, DOIProcessor
 from .eprints import EPrintsSSH
+
+if __debug__:
+    from sidetrack import set_debug, log
 
 
 # General configuration and initialization.
@@ -40,7 +44,7 @@ _SERVER_ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__), os.pardi
 # find the templates is to set this Bottle package-level variable.
 bottle.TEMPLATE_PATH.append(os.path.join(_SERVER_ROOT, 'templates'))
 
-
+_HELP_URL = '/help/'
 
 # General-purpose utilities used repeatedly.
 # .............................................................................
@@ -51,6 +55,7 @@ def page(name, **kargs):
 # maybe this should happend once in a bottle plugin and all requests
 # should have a person object or person as None.
     person = person_from_environ(request.environ)
+    log(f'DEBUG person -> {person}')
     logged_in = (person != None and person.uname != '')
     if kargs.get('browser_no_cache', False):
         response.add_header('Expires', '0')
@@ -66,8 +71,6 @@ def debug_mode():
     '''Return True if we're running Bottle's default server in debug mode.'''
     return getattr(acacia, 'debug_mode', False)
 
-
-
 
 #
 # URL end points
@@ -117,31 +120,52 @@ def logout():
 # DOI.
 #
 
-@acacia.get('/list')
-@acacia.get('/list/<filter_by>')
-@acacia.get('/list/<filter_by>/<sort_by>')
-def get_list(filter_by = None, sort_by = None, msg = None):
-    '''Display a list of DOIs to be processed further.'''
-    items = [] # DEBUG need to build an item list here.
-    return page('list', items = items, msg = None, content = content)
-
-@acacia.post('/list')
-@acacia.get('/list/<filter_by>')
-@acacia.get('/list/<filter_by>/<sort_by>')
-def process_list( filter_by = None, sort_by = None):
-    ''' Process DOI should act on selections of list, it needs
-        to trigger the generation of export bundles which are
-        then emailed to the requesting librarian '''
-    opts, options = [], ''
+@acacia.get('/messages')
+@acacia.get('/messages/')
+@acacia.get('/messages/<filter_by>')
+@acacia.get('/messages/<filter_by>/<sort_by>')
+def list_messages(filter_by = None, sort_by = None):
+    ''' List the messages that have been retrieved for processing'''
+    log(f'DEBUG list messsages, filter = {filter_by}, sort_by = {sort_by}')
+    opts = []
     if filter_by:
         opts.append(filter_by)
     if sort_by:
         opts.append(sort_by)
-    if len(opts) > 0:
-        options = '/' + '/'.join(opts)
-    return redirect(f'/list{options}', msg = "processed")
+    items = []
+    for item in Message.select():
+        items.append(item)
+    description = 'DEBUG MESSAGE filter/sort DESCRIPTION GOES HERE'
+    return page('messages', title = 'Manage Messages', description = description, items = items)
 
-@acacia.get('/status/<rec_id:int>')
+@acacia.get('/message/<msg_id:int>')
+def get_message(msg_id = None):
+    '''Get the message record'''
+    return '{}' # this would be a JSON object representing the message.
+
+
+@acacia.get('/list')
+@acacia.get('/list/')
+@acacia.get('/list/<filter_by>')
+@acacia.get('/list/<filter_by>/<sort_by>')
+def list_items( filter_by = None, sort_by = None):
+    ''' Process DOI should act on selections of list, it needs
+        to trigger the generation of export bundles which are
+        then emailed to the requesting librarian '''
+    log(f'DEBUG List requested, filter = {filter_by}, sort_by = {sort_by}')
+    opts = []
+    if filter_by:
+        opts.append(filter_by)
+    if sort_by:
+        opts.append(sort_by)
+    #FIXME: need to apply options and describe 
+    items = []
+    for item in Doi.select():
+        items.append(item)
+    description = 'DEBUG DOI RECORDS filter/sort DESCRIPTION GOES HERE'
+    return page('list', title = 'Manage DOI', description = description, items = items)
+
+@acacia.get('/item/<rec_id:int>')
 def get_status(rec_id = None):
     '''JSON response of individual object, used to update status such as bundle ready'''
     return '{}' # This would be a JSON object representing updates to a row
@@ -164,13 +188,13 @@ def not_allowed():
 @acacia.error(404)
 def error404(error):
     log(f'{request.method} called on {request.path}, resulting in {error}')
-    return page('404', code = error.status_code, message = error.body)
+    return page('404', title = 'Acacia Error', code = error.status_code, message = error.body)
 
 
 @acacia.error(405)
 def error405(error):
     log(f'{request.method} called on {request.path}, resulting in {error}')
-    return page('error', summary = 'method not allowed',
+    return page('error', title = "Acacia Error", summary = 'method not allowed',
                 message = ('The requested method does not exist or you do not '
                            'not have permission to perform the action.'))
 
@@ -181,40 +205,31 @@ def error405(error):
 #
 
 @acacia.get('/') 
-@acacia.get('/dashbord')
+def dashboard():
+    '''Manage provides a dashbaord of available activities.'''
+# Load static dashboard page
+    return static_file('dashboard.html', root = os.path.join(_SERVER_ROOT, 'htdocs'))
+
+
+@acacia.get('/about')
+@acacia.get('/about/')
 def manage_items():
     '''Manage provides a dashbaord of available activities.'''
 # Load static dashboard page
-    return static_file('dashboard.html', root = os.path.join(_SERVER_ROOT, 'htdocsa'))
-
-@acacia.get('/about')
-def general_page(name = '/'):
-    '''Display the About page.'''
     return static_file('about.html', root = os.path.join(_SERVER_ROOT, 'htdocs'))
+
 
 @acacia.get('/favicon.ico')
 def favicon():
     '''Return the favicon.'''
     return static_file('favicon.ico', root = os.path.join(_SERVER_ROOT, 'htdocs/media'))
 
-@acacia.get('/media/<filename:re:[-a-zA-Z0-9]+.(ico|png|jpg|svg)>')
-def include_file(filename):
+
+# Handle our static accets in htdocs/css, htdocs/assets, htdocs/media, htdocs/help
+@acacia.get('/<folder:re:(assets|css|about|media|help)>/')
+@acacia.get('/<folder:re:(assets|css|about|media|help)>/<filename:re:[-a-zA-Z0-9]+.(gif|ico|png|jpg|svg|css|js|html|md)>')
+def include_file(folder, filename = 'index.html'):
     '''Return a static file'''
-    p = os.path.join(_SERVER_ROOT, 'htdocs', 'media')
-    log(f'returning media file {filename} {p}')
+    p = os.path.join(_SERVER_ROOT, 'htdocs', folder)
+    log(f'returning {folder} file {filename} {p}')
     return static_file(filename, root = p)
-
-@acacia.get('/assets/<filename:re:[-a-zA-Z0-9]+.(gif|png|jpg|svg)>')
-def included_assets_file(filename):
-    '''Return a static file used with %include in a template.'''
-    p = os.path.join(_SERVER_ROOT, 'htdocs', 'assets')
-    log(f'returning assets file {filename} {p}')
-    return static_file(filename, root = p)
-
-@acacia.get('/css/<filename:re:[-a-zA-Z0-9]+.(css)>')
-def included_css_file(filename):
-    '''Return a static file used with %include in a template.'''
-    p = os.path.join(_SERVER_ROOT, 'htdocs', 'css')
-    log(f'returning CSS file {filename} {p}')
-    return static_file(filename, root = p)
-

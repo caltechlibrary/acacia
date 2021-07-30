@@ -14,7 +14,23 @@
 </nav>
 
 <section>
-{{body}}
+<h1>Message Report</h1>
+<p>{{description}}</p>
+<table>
+<tr> <th>Date</th> <th>From</th> <th>Subject</th> <th>Processed?</th></tr>
+% for item in items:
+   <tr>
+   <td>{{item.m_date[0:11]}}</td>
+   <td>{{item.m_from}}</td>
+   <td>{{item.m_subject}}</td>
+   <td>
+% if item.m_processed: 
+✔️
+% end
+</td>
+   </tr>
+% end
+</table>
 </section>
 
 <footer>
