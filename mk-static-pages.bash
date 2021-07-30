@@ -17,4 +17,6 @@ done
 
 # Update templates/nav.tpl
 pandoc htdocs/nav.md > templates/nav.tpl
+pandoc forms/add-doi.md > templates/add-doi.tpl
+pandoc forms/doi-submitted.md > templates/doi-submitted.tpl
 

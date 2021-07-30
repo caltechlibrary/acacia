@@ -55,7 +55,6 @@ def page(name, **kargs):
 # maybe this should happend once in a bottle plugin and all requests
 # should have a person object or person as None.
     person = person_from_environ(request.environ)
-    log(f'DEBUG person -> {person}')
     logged_in = (person != None and person.uname != '')
     if kargs.get('browser_no_cache', False):
         response.add_header('Expires', '0')
@@ -119,6 +118,20 @@ def logout():
 # via a cronjob.  The Web UI only needs to manage actions on specific
 # DOI.
 #
+
+@acacia.get('/add-doi')
+def get_add_a_doi():
+    '''Display the form to add a DOI'''
+    uname = "rsdoiel@library.caltech.edu" # FIXME: Dummy data
+    return page('form.tpl', title="Add DOI", uname = uname, form = 'add-doi')
+
+@acacia.post('/add-doi')
+def do_add_a_doi():
+    '''Process submission of DOI and object URL'''
+    doi = 'DOI_GOES_HERE' # FIXME: Dummy data
+    return page('form.tpl', title="DOI Submitted", doi = doi, form = 'doi-submitted')
+
+
 
 @acacia.get('/messages')
 @acacia.get('/messages/')
