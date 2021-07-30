@@ -22,7 +22,7 @@
     <th>Status</th>
     <th>DOI</th>
     <th>URL to object</th>
-    <th>EPrint ID</th>
+    <th>EPrint Record</th>
     <th>Export name</th>
 </tr>
 % for item in items: 
@@ -41,7 +41,7 @@
 % if item.eprint_id != None:
 <a href="https://authors.library.caltech.edu/{{item.eprint_id}}">{{item.eprint_id}}</a>
 % else:
-None Available
+None found
 % end
 </td>
 <td>{{item.bundle_name}}</td>

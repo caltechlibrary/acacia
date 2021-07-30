@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>…</title>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+<header>
+<a href="http://library.caltech.edu" title="link to Caltech Library Homepage"><img src="/assets/liblogo.gif" alt="Caltech Library logo"></a>
+</header>
+<nav>
+<ul>
+<li>
+<a href="/">Home</a>
+</li>
+<li>
+<a href="/messages/">Message Report</a>
+</li>
+<li>
+<a href="/list">DOI Report</a>
+</li>
+<li>
+<a href="/help/">Help</a>
+</li>
+<li>
+<a href="/about">About</a>
+</li>
+<li>
+<a href="/logout">Logout</a>
+</li>
+</ul>
+</nav>
+
+<section>
+<h1 id="available-reports">
+Available Reports
+</h1>
+<p>
+Two reports are currently provided via Acacia’s web application.
+</p>
+<ol start="2" type="1">
+<li>
+Message Report
+</li>
+<li>
+DOI Report
+</li>
+</ol>
+<h2 id="message-report">
+Message Report
+</h2>
+<p>
+The purpose of the message report is to show which messages Acacia knows about. The retrieval of email from the <a href="email:submissions.authors@library.caltech.edu">submissions.authors@library.caltech.edu</a> account is done automatically through the day. This report shows what messages have been retrieved and on what day they were retrieved. It also includes a column “Processed”. If you see a ✔️ in the column that means the message was processed and any DOI found have been extracted and placed into the DOI Report.
+</p>
+<h2 id="doi-report">
+DOI Report
+</h2>
+<p>
+The DOI Report shows the DOI that Acacia knows about and the status of processing that DOI. A number steps are done before the DOI is “ready” for generating EPrints XML. If the status is shown as “ready” you can select the DOI for export. Links to both the DOI URL and any provided Digital Object is included. Note that for most publishers you need to be “on Caltech Network” to have access. If you are working off campus you can use the <a href="">VPN</a> to route all your interenet traffic through campus. This should allow you to retrieve any digital objects identified explicitly by URL.
+</p>
+<p>
+After reviewing the DOI and retrieving the desired digital object to your local machine you can check the “export” checkbox. When your ready to export then you can press the “export doi” button and an EPrints XML will be generated you can download. NOTE: when you generate the EPrints XML it sets the name of the “export bundle” when you refresh the DOI report page. This way you can easily retieve the EPrints XML later or know that it is ready for export.
+</p>
+<p>
+If the DOI record is importing successfully into EPrints the column with the EPrints ID should populate with a link to authors.library.caltech.edu. Those records do not need to be exported again. You can curate them directly in eprints.
+</p>
+</section>
+
+<footer>
+<span>&copy; 2021 <a href="https://www.library.caltech.edu/copyright">Caltech Library</a></span>
+<address>1200 E California Blvd, Mail Code 1-32, Pasadena, CA 91125-3200</address>
+<span><a href="mailto:library@caltech.edu">Email Us</a></span> 
+<span>Phone: <a href="tel:+1-626-395-3405">(626)395-3405</a></span>
+</footer>
+</body>
+</html>

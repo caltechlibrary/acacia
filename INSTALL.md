@@ -23,4 +23,11 @@ requirements.txt file.
     python3 -m pip install -r requirements.txt
 ```
 
+You need version 1.0.1 or better of EPrint Tools for retrieving
+and processing data from CrossRef and DataCite. You can install
+that by visiting [github.com/caltechlibrary/eprinttools/releases](https://github.com/caltechlibrary/eprinttools/releases) and downloading
+and install the verison of the tools suited to your computer.
+The program `doi2epritxml` needs to be copied to the `bin` folder
+of Acacia.
+
 

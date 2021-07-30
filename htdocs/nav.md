@@ -1,8 +1,7 @@
 
 - [Home](/)
-- [Add a DOI](/add-a-doi)
-- [DOI Report](/list)
 - [Message Report](/messages/)
+- [DOI Report](/list)
 - [Help](/help/)
 - [About](/about)
 - [Logout](/logout)
