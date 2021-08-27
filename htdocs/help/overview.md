@@ -1,15 +1,16 @@
 Acacia -- Overview
 ==================
 
-Acacia is a system for managing submissions for currently
-targetting CaltechAUTHORS EPrints Repositories. The purpose
-of Acacia is to encourage submissions by requiring a minimum
-of information. That minimum is currently set as the DOI and
-URL to the digital object identified by the DOI.
+Acacia is a system for managing submissions of DOI for
+[CaltechAUTHORS](https://authors.library.caltech.edu) currently
+an EPrints Repository. The purpose of Acacia is to encourage content
+submissions by requiring a minimum of information. That minimum is
+currently set as the DOI and URL to the digital object identified
+by the DOI.
 
-This simple submission requirements allows for easy inguest of
-content by use of EMail and simple web forms. For EMail submissions
-a person or form sends a message to 
+These simple submission requirements allow for easy inguest of
+content by using of EMail or simple web forms. For EMail submissions
+a person or form sends a message to
 [submissions.authors@library.caltech.edu](email:submissions.authors@library.caltech.edu). In the text (body) of the message they need to
 include one or more lines starting  with a DOI, followed by
 a pipe symbol and URL to the digital object. The pipe and
@@ -18,13 +19,9 @@ URL maybe omitted.
 Acacia includes a process that regularly checks the email address
 above and processes new emails retrieving the metadata of the
 DOI. This submitted DOI can then be reviewed by Library Staff
-via a web application hosted on apps.library.caltech.edu. 
-Submissions can then be edited and exported for ingest into
-EPrints via EPrints XML or flagged for removed.
-
-<!-- Acacia also provides a form for staff to manually create a new
-submission where a DOI isn't known. In this way Acacia can be used
-as a staging ground to manage EPrint content. -->
+via a web application hosted on apps.library.caltech.edu.
+Submissions can then be exported for ingest into EPrints 
+via EPrints XML or flagged for removal.
 
 
 Email Submissions

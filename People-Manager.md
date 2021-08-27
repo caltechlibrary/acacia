@@ -3,14 +3,15 @@
 
 Acacia is intended to be used with a single sign-on system
 (SSO) but there remains a need to create and manage access
-to service accounts outside of SSO. This includes assigning
-application level roles while still using SSO for authentication.
+to service accounts outside of SSO and provided attributes.
+In particular assigning application level roles while still
+using SSO for authentication and user identification.
 
 Since modifying user access is an infrequent activity managing
 people associated with the Acacia web application is handled through
 a simple command line tool. This minimized the need for either
 exposing user management to the web (removing an attack surface).
-On the back end CLI are easy to build and require minimal support
+The back end CLI are easy to build and require minimal support
 as they are used by system administrative staff.
 
 ## Person Data Model
@@ -19,14 +20,14 @@ Acacia supports a simple Person data model. It consists of the following
 attributes.
 
 uname
-: The username, e.g. email addresses, associated with accessing Acacia
+: (required) The username, e.g. email addresses, associated with accessing Acacia
 
 secret
 : If SSO is not being used this is that password used to authenticate.
 a empty password means the account is disabled unless SSO is used.
 
 display_name
-: The display name on screen, e.g. "Jane Doe"
+: (optional, will default to uname) The display name on screen, e.g. "Jane Doe"
 
 role
 : This is text string used to associate a role. Initially there is
@@ -34,8 +35,11 @@ one role allowing administrative access and that role is "library".
 If the role field is an empty string no role is assigned so patron
 is implied.
 
+email
+: (required) This is the email address to association with Acacia submitted Doi
+
 updated
-: This is a timestamp of when the Person object was last updated
+: (required, system managed) This is a timestamp of when the Person object was last updated
 
 No additional information is stored in the Person model. This is
 based on all identifying information becoming toxic over time.
@@ -56,6 +60,7 @@ at the same time.  Here is an example of adding a user name
 ./people-manager add \
     uname=janedoe \
     display_name="Jane M. Doe" \
+    email = 'janedoe@university.example.edu' \
     role="library"
 ```
 
@@ -70,6 +75,7 @@ type the password before the command completes).
 ./people-manager add \
     uname=janedoe \
     display_name="Jane M. Doe" \
+    email = 'janedoe@university.example.edu' \
     role="library" \
     secret=
 ```
@@ -81,6 +87,7 @@ for each field you could type the command as
 ./people-manager add \
     uname= \
     display_name= \
+    email= \
     role= \
     secret=
 ```

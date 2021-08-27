@@ -28,6 +28,7 @@ Installation
 
 Requirements
 
++ [EPrint Tools >= v1.0](https://github.com/caltechlibrary/eprinttools/releases)
 + Python3
 + SQLite3
 + IMAP email account (and access credentials)

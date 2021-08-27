@@ -24,6 +24,9 @@ _db = SqliteDatabase(config('DATABASE', 'acacia.db'))
 # e.g. 'Wed, 15 Jul 2020 12:13:29 -0700'
 dt_email_format = '%a, %d %b %Y %H:%M:%S %z'
 
+def validate_doi(doi):
+    return idutils.is_doi(doi)
+
 def setup_doi_table(db_name, table_name = 'doi'):
     '''setup a SQLite3 database table'''
     db = SqliteDatabase(db_name)

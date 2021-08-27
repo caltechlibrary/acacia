@@ -94,8 +94,6 @@ from   acacia import acacia, print_version
     adapter    = ('use file "A" as the WSGI adapter (default: adapter.wsgi)', 'option', 'a'),
     base_url   = (f'set the server address (default: {_DEFAULT_BASE_URL})',   'option', 'b'),
     database   = ('use "D" as the database file',                             'option', 'd'),
-    manifests  = ('look for manifest files in directory "F"',                 'option', 'f'),
-    iiif_url   = ('use "I" as the IIIF server endpoint',                      'option', 'i'),
     mode       = ('run mode: normal, verbose, or debug (default: normal)',    'option', 'm'),
     debug_user = ('identity of staff user in debug mode (default: none)',     'option', 'u'),
     version    = ('print version info and exit',                              'flag',   'V'),

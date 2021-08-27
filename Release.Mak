@@ -43,10 +43,6 @@ tmp_file  := $(shell mktemp /tmp/release-notes-$(name).XXXXXX)
 
 $(info Gathering data ... Done.)
 
-
-website:
-	./mk-static-pages.bash
-
 # make release ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 release: | test-branch release-on-github print-instructions

@@ -74,6 +74,7 @@ class Person(Model):
     uname = CharField()  # user name, e.g. janedoe
     role = CharField()   # role is usually empty or "library"
     display_name = CharField() # display_name, optional
+    email = CharField() # The email address to use for DOI form submission
     updated = TimestampField() # last successful login timestamp
 
     def has_role(self, required_role):
@@ -89,10 +90,11 @@ class GuestPerson():
     '''GuestPerson is an object for non-staff people.  It has the same
     signature but is not persisted in the person table of the database.
     '''
-    def __init__(self, uname = '', display_name = '', role = ''):
+    def __init__(self, uname = '', display_name = '', role = '', email = ''):
         self.uname = uname               # user name, e.g. janedoe
         self.display_name = display_name # display_name, optional
         self.role = role                 # role is empty or "staff"
+        self.email = email
         self.updated = datetime.now()
 
     def has_role(self, required_role):
@@ -177,20 +179,22 @@ class PersonManager:
             else:
                 print(f'''
         Username: {row.uname}
-    Display Name: {row.display_name}
+            Name: {row.display_name} <{row.email}>
             Role: {row.role}
          Updated: {row.updated}
     ''')
         else:
-            print(f'''Username\tDisplay Name\tRole\tUpdated''')
+            print(f'''Username\tName\tRole\tUpdated''')
             query = (Person.select().order_by(Person.display_name))
             for row in query:
-                print(f'''{row.uname}\t{row.display_name}\t{row.role}\t{row.updated}''')
+                print(f'''{row.uname}\t{row.display_name} <{row.email}>\t{row.role}\t{row.updated}''')
     
     def add_people(self, kv):
         if not 'uname' in kv:
             print(f'''ERROR: uname is required''')
             sys.exit(1)
+        if not 'email' in kv:
+            print(f'''ERROR: email is required''')
         if ('secret' in kv):
             if self.htpasswd != None:
                 self._update_htpasswd(kv['uname'], kv['secret'])
@@ -199,7 +203,9 @@ class PersonManager:
         for key in [ 'role', 'display_name' ]:
             if not key in kv:
                 kv[key] = ''
-        user = Person(uname = kv['uname'], role = kv['role'], display_name = kv['display_name'])
+        if not 'display_name' in kv:
+            kv['display_name'] = uname
+        user = Person(uname = kv['uname'], role = kv['role'], display_name = kv['display_name'], email = kv['email'])
         user.save()
     
     def update_people(self, kv):

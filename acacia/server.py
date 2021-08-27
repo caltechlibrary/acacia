@@ -10,6 +10,7 @@ file "LICENSE" for more information.
 '''
 import os
 import logging
+from time import strftime
 
 import bottle
 from   bottle import Bottle, HTTPResponse, static_file, template
@@ -21,7 +22,7 @@ from . import __version__
 from .persons import Person, person_from_environ
 from .roles import role_to_redirect, has_role, staff_user
 from .messages import Message, EMailProcessor
-from .doi import Workflow, Doi, DOIProcessor
+from .doi import Workflow, Doi, DOIProcessor, validate_doi
 from .eprints import EPrintsSSH
 
 if __debug__:
@@ -122,14 +123,50 @@ def logout():
 @acacia.get('/add-doi')
 def get_add_a_doi():
     '''Display the form to add a DOI'''
-    uname = "rsdoiel@library.caltech.edu" # FIXME: Dummy data
-    return page('form.tpl', title="Add DOI", uname = uname, form = 'add-doi')
+    person = person_from_environ(request.environ)
+    logged_in = (person != None and person.uname != '')
+    if not logged_in:
+        redirect(f'/Shibboleth.sso/Logout')
+    return page('form.tpl', title="Add DOI", uname = person.uname, form = 'add-doi')
 
 @acacia.post('/add-doi')
 def do_add_a_doi():
     '''Process submission of DOI and object URL'''
-    doi = 'DOI_GOES_HERE' # FIXME: Dummy data
-    return page('form.tpl', title="DOI Submitted", doi = doi, form = 'doi-submitted')
+    error_message = None # Assume no errors to start.
+# Get user info
+    person = person_from_environ(request.environ)
+    logged_in = (person != None and person.uname != '')
+    if not logged_in:
+        redirect(f'/Shibboleth.sso/Logout')
+# Get form info
+    uname = person.uname
+    doi = request.forms.get("doi")
+    object_url = request.forms.get("object_url")
+    log(f'DEBUG (user: {uname}) doi: {doi} object_url: {object_url}')
+# validate and save
+    if validate_doi(doi):        
+        # check if DOI already exists
+        rec = Doi.get_or_none(Doi.doi == doi)
+        if rec == None:
+            # We're good, we can create a record
+            rec, created = Doi.get_or_create(
+                doi = doi,
+                object_url = object_url,
+                notes = f'Submitted by {person.display_name} via Acacia form.',
+                m_from = f'{person.display_name} <{person.email}>')
+        else:
+            error_message = f'The DOI "{doi}" has previously been submitted.'
+            return page('form.tpl', title="Doi previously submitted",
+                uname = uname, doi = doi, object_url= object_url,
+                error_message = error_message, form = 'doi-submitted')
+    else:
+        error_message = f'The DOI "{doi}" is not valid.'
+        return page('form.tpl', title="Doi not valid",
+                uname = uname, doi = doi, object_url= object_url,
+                error_message = error_message, form = 'doi-submitted')
+    return page('form.tpl', title="DOI Submitted", uname = uname,
+        doi = doi, object_url = object_url, error_message = None, 
+        form = 'doi-submitted')
 
 
 
@@ -149,7 +186,7 @@ def list_messages(filter_by = None, sort_by = None):
     for item in Message.select():
         items.append(item)
     description = 'DEBUG MESSAGE filter/sort DESCRIPTION GOES HERE'
-    return page('messages', title = 'Manage Messages', description = description, items = items)
+    return page('messages', title = 'Manage Messages', description = description, items = items, error_message = None)
 
 @acacia.get('/message/<msg_id:int>')
 def get_message(msg_id = None):
@@ -175,7 +212,7 @@ def list_items( filter_by = None, sort_by = None):
     items = []
     for item in Doi.select():
         items.append(item)
-    description = 'DEBUG DOI RECORDS filter/sort DESCRIPTION GOES HERE'
+    description = 'DEBUG status of last processing runs should go here.' # FIXME: Add information about sorts and filter here
     return page('list', title = 'Manage DOI', description = description, items = items)
 
 @acacia.get('/item/<rec_id:int>')
