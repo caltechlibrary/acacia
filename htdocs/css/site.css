@@ -38,6 +38,11 @@ header {
      vertical-align: middle;
 }
 
+header span {
+    padding: 0;
+    margin: 0;
+}
+
 header img {
      position: relative;
      display: inline;
@@ -274,3 +279,11 @@ footer a, footer a:link, footer a:visited, footer a:active, footer a:focus, foot
      text-decoration: none;
 }
 
+#library_logo {
+    float:left;
+}
+
+#project_logo {
+    float: right;
+    padding-right:2.0em;
+}

@@ -11,10 +11,10 @@ Message Report
 
 The purpose of the message report is to show which messages Acacia
 knows about. The retrieval of email from the [submissions.authors@library.caltech.edu](email:submissions.authors@library.caltech.edu) account is
-done automatically through the day. This report shows what messages
+done automatically throughout the day. This report shows what messages
 have been retrieved and on what day they were retrieved. It also
 includes a column "Processed". If you see a ✔️ in the column that means
-the message was processed and any DOI found have been extracted and
+the message was processed and any DOI found has been extracted and
 placed into the DOI Report.
 
 
@@ -27,8 +27,8 @@ of processing that DOI. A number steps are done before the DOI is
 "ready" you can select the DOI for export.  Links to both the DOI
 URL and any provided Digital Object is included.  Note that for
 most publishers you need to be "on Caltech Network" to have access.
-If you are working off campus you can use the [VPN]() to route
-all your interenet traffic through campus. This should allow you
+If you are working off campus you can use the [VPN](https://www.imss.caltech.edu/services/wired-wireless-remote-access/Virtual-Private-Network-VPN)
+to route all your interenet traffic through campus. This should allow you
 to retrieve any digital objects identified explicitly by URL.
 
 After reviewing the DOI and retrieving the desired digital object
@@ -41,5 +41,5 @@ retieve the EPrints XML later or know that it is ready for export.
 
 If the DOI record is importing successfully into EPrints the column
 with the EPrints ID should populate with a link to authors.library.caltech.edu. Those records do not need to be exported again. You can 
-curate them directly in eprints.
+curate them directly in EPrints.
 

@@ -13,12 +13,13 @@ endif
 # The following is based on the approach posted by Jonathan Ben-Avraham to
 # Stack Overflow in 2014 at https://stackoverflow.com/a/25668869
 
-PROGRAMS_NEEDED = curl gh git jq sed
+PROGRAMS_NEEDED = curl gh git jq sed mkpage pandoc
 TEST := $(foreach p,$(PROGRAMS_NEEDED),\
 	  $(if $(shell which $(p)),_,$(error Cannot find program "$(p)")))
 
 
-# Gather values that we need ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Gather values that we need ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 $(info Gathering data -- this takes a few moments ...)
 
@@ -43,7 +44,10 @@ tmp_file  := $(shell mktemp /tmp/release-notes-$(name).XXXXXX)
 $(info Gathering data ... Done.)
 
 
-# make release ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+website:
+	./mk-static-pages.bash
+
+# make release ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 release: | test-branch release-on-github print-instructions
 
