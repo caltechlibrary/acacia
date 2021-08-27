@@ -5,11 +5,11 @@ title : Welcome to Acacia
 Welcome to ACACIA
 =================
 
-- [Overview](/help/overview.html)
-- [Add a DOI](/add-doi)
-- [Message Report](/messages/)
-- [DOI Report](/list/)
-- [Help](/help/)
-- [About](/about)
-- [Logout](/logout)
+- [Overview](/acacia/help/overview.html)
+- [Add a DOI](/acacia/add-doi)
+- [Message Report](/acacia/messages/)
+- [DOI Report](/acacia/list/)
+- [Help](/acacia/help/)
+- [About](/acacia/about)
+- [Logout](/acacia/logout)
 

@@ -26,10 +26,10 @@ fi
 
 for BNAME in $(find htdocs -type f | grep '.md$' | sed -E 's/htdocs\///;s/\.md$//'); do
   if [ "${BNAME}" != "nav" ]; then
-  mkpage "body=htdocs/${BNAME}.md" \
+    mkpage "body=htdocs/${BNAME}.md" \
          "nav=htdocs/nav.md" \
 	 page.tmpl \
-         >"htdocs/${BNAME}.html"
+         >"htdocs/${BNAME}.html" || exit 1
   fi
 done
 

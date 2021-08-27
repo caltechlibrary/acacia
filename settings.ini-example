@@ -13,6 +13,12 @@
 # ========================================================================
 
 [settings]
+
+# Base url for site
+# NOTE: This is needed in part to render the static content for via mkpage
+# and Pandoc
+BASE_URL = http://localhost:8080
+
 # Path to the sqlite database, relative to here.
 DATABASE_FILE = acacia.db
 
