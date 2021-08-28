@@ -44,6 +44,8 @@ Each account (person) has several fields associated with it.
 
     uname          their login name like "ml@example.edu"
     display_name   their human readable name, "Maxine L."
+    email          the email address to use with Acacia (may be
+                   different from what Shibboleth provides)
     role           their application role, e.g. "library", "patron"
     secret         if Apache Basic Auth is setup, their pass phrase
 
@@ -65,7 +67,10 @@ EXAMPLES
 Add an account "rsdoiel" with a "display_name",
 "role".
 
-   {app_name} add uname=rsdoiel display_name='R. S. Doiel' role=library
+   {app_name} add uname=rsdoiel \
+       display_name='R. S. Doiel' \
+       email=rsdoiel@caltech.edu \
+       role=library
 
 Update "rsdoiel" to include a password (you'll be prompted
 for the password)..

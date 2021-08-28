@@ -3,7 +3,7 @@
 <head>
     <title>{{title}}</title>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="{{acacia.base_url}}/css/site.css">
+    <link rel="stylesheet" href="/acacia/css/site.css">
 </head>
 <body>
 <header>

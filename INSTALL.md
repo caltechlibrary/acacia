@@ -9,9 +9,8 @@ currently implemented. The general recipe is
 3. Change into the repostiory directory on your machine
 4. run Python 3's pip to install dependencies
 5. Configure the Acacia database
-6. Configure the user database
-7. Setup user accounts.
-8. Setup/run the web service
+6. Setup user accounts.
+7. Setup/run the web service
 
 This is an example shell session of taking the following step 2 through
 8 in a development environment.  NOTE: It assume's eprinttools already
@@ -22,7 +21,6 @@ git clone git@github.com:caltechlibrary/acacia
 cd acacia
 python3 -m pip install -r requirements.txt
 ./configure-database
-./people-manager setup
 ./people-manager add 
     uname=$USER \
     display_name="Test user" \
