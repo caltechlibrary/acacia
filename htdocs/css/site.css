@@ -31,16 +31,20 @@ body {
 header {
      position: relative;
      display: block;
+     width: 100%;
+     height: 105px;
      color: white;
      background-color: white;
      z-index: 2;
-     height: 105px;
      vertical-align: middle;
 }
 
 header span {
     padding: 0;
-    margin: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    margin-right: 2.0em;
 }
 
 header img {
@@ -82,16 +86,16 @@ a:active, a:hover, a:focus {
 }
 
 nav {
-     position: relative;
-     display: block;
-     width: 100%;
-     margin: 0;
-     padding: 0;
-     font-size: 0.78em;
-     vertical-align: middle;
-     color: black;
-     background-color: #AAA99F; /* #76777B;*/
-     text-align: left;
+    position: relative;
+    display: block;
+    width: 105%;
+    margin: 0;
+    padding: 0;
+    font-size: 0.78em;
+    vertical-align: middle;
+    color: black;
+    background-color: #AAA99F; /* #76777B;*/
+    text-align: left;
 }
 
 nav div {
@@ -125,16 +129,18 @@ nav div h2 {
 
 nav div > ul {
      display: none;
-     padding-left: 0.24em;
      text-align: left;
 }
 
 nav ul {
-     display: inline-block;
-     padding-left: 0.24em;
-     list-style-type: none;
-     text-align: left;
-     text-decoration: none; 
+    display: inline-block;
+    height: auto;
+    width: auto;
+    padding-right: 0;
+    margin-right: 0;
+    list-style-type: none;
+    text-align: left;
+    text-decoration: none; 
 }
 
 nav ul li {
@@ -279,11 +285,21 @@ footer a, footer a:link, footer a:visited, footer a:active, footer a:focus, foot
      text-decoration: none;
 }
 
+table th {
+    text-align: left;
+    /* text-transform: uppercase; */
+    padding-right: 2.0em; 
+    margin-right: 2.0em;
+}
+
+table td {
+    height: auto;
+    width: auto;
+}
+
 #library_logo {
-    float:left;
 }
 
 #project_logo {
     float: right;
-    padding-right:2.0em;
 }

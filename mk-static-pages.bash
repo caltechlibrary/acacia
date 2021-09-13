@@ -23,11 +23,19 @@ if [ "${MKPAGE}" = "" ]; then
     exit 1
 fi
 
+BASE_URL=""
+if [ -f "settings.ini" ]; then
+    BASE_URL=$(grep -E 'BASE_URL\s+=\s+' settings.ini | cut -d = -f 2 | sed -E 's/ //g')
+fi
+
+# Build navigation base on nav.tmpl and BASE_URL
+mkpage "base_url=text:${BASE_URL}" nav.tmpl >htdocs/nav.md
 
 for BNAME in $(find htdocs -type f | grep '.md$' | sed -E 's/htdocs\///;s/\.md$//'); do
   if [ "${BNAME}" != "nav" ]; then
     mkpage "body=htdocs/${BNAME}.md" \
          "nav=htdocs/nav.md" \
+         "base_url=text:${BASE_URL}" \
 	 page.tmpl \
          >"htdocs/${BNAME}.html" || exit 1
   fi

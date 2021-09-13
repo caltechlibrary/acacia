@@ -5,6 +5,40 @@ Action Items
 next
 ----
 
-- Need `BASE_URL` integrating into settings.ini and in mk-static-pages.bash.
+**Automated processing**
+
++ [x] Figure out how to connect from Python to Google SMTP service to read the submissions.authors@library.caltech.edu. According to the configuration in Thunderbird OAuth2 is being used to authenticate.
++ [x] Rename email to messages, people to persons
++ [x] Sort out models for message, DOI request and retrieval records
++ [x] Implement an automated mail fetch (run from cron)
++ [x] Implement email to DOI request process (run from cron)
++ [x] Implement DOI request to retrieval process (run from cron)
+    + currently via SSH and a script on the old EPrints box
+    + [x] Test EPrintsSSH to see if I can retrieve valid EPrints id
++ [ ] Switch to implementation of DOI EPrints lookup via MySQL direct access
+    + [x] An EPrintsDB object for working at the MySQL level
+    + [ ] Requires MySQL 8 not MySQL 5 due to old password problem
+    + [ ] Test EPrintsDB object for all its functionality
+
+**Staff managed processing**
+
+- [x] Need `BASE_URL` integrating into settings.ini and in mk-static-pages.bash.
     - On dev box app is in root but in production it'll be under the "/acacia/" directory
+    - Also need to handle base url in pandoc and bottler templates
++ [ ] Create a dashboard page for linked to tasks
+    + [ ] Inbox (Retrieve submissions.author emails)
+       + [ ] Sort by date, sort by sender, sort by unprocessed
+       + [ ] Filter on "unprocessed"
+       + [ ] Filter on "processed"
+       + [ ] Filter by sender
+    + [ ] Convert emails to DOI retrieval records
+        + [ ] Show link to DOI, PDF, who it came from, process state
+        + [ ] Select DOI to process
+        + [ ] Generate and EPrints XML
+            + [ ] Page should include DOI, title, link to PDF and download link for EPrints XML for set
+            + [ ] Accept the DOI and flag as processed
+        + [ ] Update processed status
+        + [ ] Archive processed records
+
+
 
