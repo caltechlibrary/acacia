@@ -56,6 +56,28 @@ to run the automated processes
  
 Normally these processes would be run in this order. Probably run them about every 15 to 30 minutes during business hours.  It is also possible to trigger these script on demand. That's something that should be explored in the pilot use of this experimental application.
 
+You can run these scripts via cron.
+
+```bash
+    #!/bin/bash
+    
+    #
+    # Workflow processes requests that come in via the submit email account
+    # as well as those DOI added manually. 
+    #
+    # 1. Get emails messages
+    # 2. Convert email messages to doi
+    # 3. Retrieve metadata for each doi
+    #
+    export PATH="/bin:/usr/bin:/usr/local/bin"
+    cd /Sites/acacia
+    if [ "$1" = "full" ]; then
+    ./get-messages
+    ./messages-to-doi
+    fi
+    ./retrieve-metadata
+```
+
 EPrint Tools
 ------------
 
