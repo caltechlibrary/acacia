@@ -12,6 +12,8 @@ import os
 import logging
 from time import strftime
 
+from decouple import config
+
 import bottle
 from   bottle import Bottle, HTTPResponse, static_file, template
 from   bottle import request, response, redirect, route, get, post, error
@@ -66,6 +68,11 @@ def page(name, **kargs):
                     logged_in = logged_in, staff_user = staff_user(person),
                     help_url = _HELP_URL, **kargs)
 
+def xml_page(data, **kargs):
+    content_type = 'application/xml'
+    content_type = kargs.get('content_type', 'application/xml')
+    response.add_header('Content-Type', content_type)
+    return data
 
 def debug_mode():
     '''Return True if we're running Bottle's default server in debug mode.'''
@@ -176,6 +183,7 @@ def do_add_a_doi():
 @acacia.get('/messages/<filter_by>/<sort_by>')
 def list_messages(filter_by = None, sort_by = None):
     ''' List the messages that have been retrieved for processing'''
+    submit_email = config('SUBMIT_EMAIL', '')
     log(f'DEBUG list messsages, filter = {filter_by}, sort_by = {sort_by}')
     opts = []
     if filter_by:
@@ -185,7 +193,8 @@ def list_messages(filter_by = None, sort_by = None):
     items = []
     for item in Message.select():
         items.append(item)
-    description = 'DEBUG MESSAGE filter/sort DESCRIPTION GOES HERE'
+    description = f'''This is a list of all the emails retrieved from {submit_email}. You can manage those messages from your mail client.
+'''
     return page('messages', title = 'Manage Messages', description = description, items = items, error_message = None)
 
 @acacia.get('/message/<msg_id:int>')
@@ -212,8 +221,17 @@ def list_items( filter_by = None, sort_by = None):
     items = []
     for item in Doi.select():
         items.append(item)
-    description = 'DEBUG status of last processing runs should go here.' # FIXME: Add information about sorts and filter here
+    description = f'''This is a list of DOIs that Acacia knows about.''' # FIXME: Add information about sorts and filter here and workflow
     return page('list', title = 'Manage DOI', description = description, items = items)
+
+@acacia.get('/eprint-xml/<rec_id:int>')
+def get_eprint_xml(rec_id = None):
+    '''Retrieve the EPrint XML saved as "metadata" in the doi object'''
+    rec = Doi.get_by_id(str(rec_id))
+    if rec != None:
+        return xml_page(data = '''<?xml version='1.0' encoding='utf-8'?>''' + "\n" + rec.metadata, content_type = 'text/plain')
+    return page('error', title = "EPrint XML", summary = 'access error',
+                message = ('EPrint XML not available'))
 
 @acacia.get('/item/<rec_id:int>')
 def get_status(rec_id = None):

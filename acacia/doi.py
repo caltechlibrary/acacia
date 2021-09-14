@@ -65,7 +65,7 @@ def populate_field(key, msg, default = ''):
         field = default
     return field
 
-workflow_states = [ 'unprocessed', 'processing_error', 'ready', 'edit', 'bundled', 'hold', 'completed', 'trash' ]
+workflow_states = [ 'pending', 'processing_error', 'ready', 'trash' ]
 
 class Workflow(Field):
     field_type = 'workflow'
@@ -95,9 +95,8 @@ class Doi(Model):
     status = Workflow(default = 'unprocessed')
     # bundle-name, this is a machine generated associated with a download
     bundle_name = CharField(default = '')
-    # JSON of metadata retrieved from either CrossRef or DataCite
-    # structure id based `doi2eprintxml -json DOI`, this can be
-    # rendered as EPrintXML via `epfmt -xml < DOI.json > DOI.xml`
+    # EPrint XML for metadata retrieved from either CrossRef or DataCite
+    # structure id based `doi2eprintxml DOI`
     metadata = TextField(default = '')
     # Any processing notes
     notes = TextField(default = '')
@@ -201,7 +200,9 @@ class DOIProcessor:
         if dry_run:
             print(f'Dry run, no data fetched with doi2eprintxml')
             return None, None
-        cmd = [ 'doi2eprintxml', '-json', doi ]
+        #cmd = [ 'doi2eprintxml', '-json', doi ]
+        cmd = [ 'doi2eprintxml', '-clsrules=falsse', doi ]
         return cmds.run(cmd)
+
 
 

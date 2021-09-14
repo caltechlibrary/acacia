@@ -21,6 +21,10 @@ The "settings.ini" file should look something like
 # Path to the sqlite database, relative to here.
 DATABASE_FILE = acacia.db
 
+# BASE_URL this is the URL including path prefix which is used
+# in linking the application together.
+BASE_PREFIX = http://localhost:8080
+
 # Email details. This is to access the mailbox of the submissions
 # email account.
 
@@ -40,9 +44,9 @@ SMTP_SSL_PORT = 465
 SMTP_TLS_PORT = 587
 
 # Account info
-# FIXME: You will need change the values for EMAIL and PASSWORD
+# FIXME: You will need change the values for SUBMIT_EMAIL and PASSWORD
 DISPLAY_NAME = "Author Submissions Bot"
-EMAIL = "CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_ADDRESS"
+SUBMIT_EMAIL = "CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_ADDRESS"
 PASSWORD = "CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_PASSWORD"
 ```
 ''')

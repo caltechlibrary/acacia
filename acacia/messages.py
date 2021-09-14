@@ -103,7 +103,7 @@ class EMailProcessor():
         self.smtp_ssl_port = config('SMTP_SSL_PORT', 465)
         self.smtp_tls_port = config('SMTP_TLS_PORT', 587)
         self.display_name = config('DISPLAY_NAME', '')
-        self.email = config('EMAIL', '')
+        self.email = config('SUBMIT_EMAIL', '')
         self.secret = config('SECRET', '')
 
     def get_mail(self, smtp_dry_run = False):

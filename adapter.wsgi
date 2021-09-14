@@ -72,6 +72,7 @@ def acacia_application(env, start_response):
         path   = get_script_name(env)
         acacia.base_url = f'{scheme}://{host}{path}'
         log(f'acacia.base_url = {acacia.base_url}')
+        
 
         # Mark this done.
         acacia._config_done = True

@@ -43,7 +43,7 @@ SMTP_TLS_PORT = 587
 # Account info
 # FIXME: you need to EMAIL and SECRET appropriately
 DISPLAY_NAME = 'Author Submissions Bot'
-EMAIL = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_ADDRESS'
+SUBMIT_EMAIL = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_ADDRESS'
 SECRET = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_PASSWORD'
 
 # Location of the doi2eprintxml command line program.

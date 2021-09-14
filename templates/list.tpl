@@ -23,29 +23,43 @@
     <th>Status</th>
     <th>DOI</th>
     <th>URL to object</th>
-    <th>EPrint Record</th>
-    <th>Export name</th>
+    <th>Export</th>
 </tr>
 % for item in items: 
 <tr>
-   <td>{{item.m_from}}</td>
-   <td>{{item.status}}</td>
-   <td><a href="https://doi.org/{{item.doi}}">{{item.doi}}</a></td>
-   <td><a href="{{item.object_url}}">
-% if len(item.object_url) > 60:
-{{item.object_url.replace('https://', '')[0:60]}} ...
+   <td>
+% if ("<" in item.m_from) and (item.m_from.split('<', 2)[0] != ""):
+   {{item.m_from.split('<', 2)[0]}}
 % else:
-{{item.object_url.replace('https://', '')}}
+   {{item.m_from}}
+% end
+   </td>
+   <td>
+% if item.status == "ready":
+   % if item.eprint_id == None:
+    {{item.status}}
+   % else:
+<a href="https://authors.library.caltech.edu/{{item.eprint_id}}" target="_blank">EPrint {{item.eprint_id}}</a>
+   % end
+% elif item.status == "unprocessed":
+    pending
+% else:
+   {{item.status}}
+% end
+   </td>
+   <td>
+       <a href="https://doi.org/{{item.doi}}" target="_blank">{{item.doi}}</a>
+   </td>
+   <td><a href="{{item.object_url}}">
+% if len(item.object_url) > 0:
+{{item.object_url.replace('http://', '').replace('https://', '').split(sep="/", maxsplit=2)[0]}}
 % end
 </a></td>
-<td>
-% if item.eprint_id != None:
-<a href="https://authors.library.caltech.edu/{{item.eprint_id}}">{{item.eprint_id}}</a>
-% else:
-None found
+   <td>
+% if item.status == "ready":
+   <a href="{{base_url}}/eprint-xml/{{item.id}}" target="_blank">EPrint XML</a>
 % end
-</td>
-<td>{{item.bundle_name}}</td>
+   </td>
 </tr>
 % end
 </table>
