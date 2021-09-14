@@ -1,23 +1,23 @@
 <ul>
 <li>
-<a href="http://localhost:8080/">Home</a>
+<a href="https://apps.library.caltech.edu/acacia/">Home</a>
 </li>
 <li>
-<a href="http://localhost:8080/add-doi">Add DOI</a>
+<a href="https://apps.library.caltech.edu/acacia/add-doi">Add DOI</a>
 </li>
 <li>
-<a href="http://localhost:8080/messages/">Messages</a>
+<a href="https://apps.library.caltech.edu/acacia/messages/">Messages</a>
 </li>
 <li>
-<a href="http://localhost:8080/list">DOI list</a>
+<a href="https://apps.library.caltech.edu/acacia/list">DOI list</a>
 </li>
 <li>
-<a href="http://localhost:8080/help/">Help</a>
+<a href="https://apps.library.caltech.edu/acacia/help/">Help</a>
 </li>
 <li>
-<a href="http://localhost:8080/about">About</a>
+<a href="https://apps.library.caltech.edu/acacia/about">About</a>
 </li>
 <li>
-<a href="http://localhost:8080/logout">Logout</a>
+<a href="/Shibboleth.sso/Logout">Logout</a>
 </li>
 </ul>
