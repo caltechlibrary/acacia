@@ -36,7 +36,7 @@ Requirements
 + software in this repository setup to run periodically (e.g. via cron, systemd or launchd)
 + [EPrint Tools](https://github.com/caltechlibrary/eprinttools)'s `doi2eprintxml` to retrieve the metadata associated with a DOI from CrossRef or DataCite (version 1.0.1 or better)
 
-See [INSTALL.md](install.html) for full details.
+See [INSTALL.md](INSTALL.md) for full details.
 
 Usage
 -----
