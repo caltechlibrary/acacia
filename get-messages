@@ -13,7 +13,7 @@ from decouple import config
 
 _db = config('DATABASE', 'acacia.db')
 
-user = config('EMAIL', 'demo@example.edu')
+user = config('SUBMIT_EMAIL', 'demo@example.edu')
 
 def usage(app_name, db_name, exit_code = None):
     '''Describe how get-messages cli works'''
