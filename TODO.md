@@ -15,10 +15,6 @@ next
 + [x] Implement DOI request to retrieval process (run from cron)
     + currently via SSH and a script on the old EPrints box
     + [x] Test EPrintsSSH to see if I can retrieve valid EPrints id
-+ [ ] Switch to implementation of DOI EPrints lookup via MySQL direct access
-    + [x] An EPrintsDB object for working at the MySQL level
-    + [ ] Requires MySQL 8 not MySQL 5 due to old password problem
-    + [ ] Test EPrintsDB object for all its functionality
 
 **Staff managed processing**
 
@@ -27,18 +23,18 @@ next
     - Also need to handle base url in pandoc and bottler templates
 + [ ] Create a dashboard page for linked to tasks
     + [ ] Inbox (Retrieve submissions.author emails)
-       + [ ] Sort by date, sort by sender, sort by unprocessed
-       + [ ] Filter on "unprocessed"
-       + [ ] Filter on "processed"
-       + [ ] Filter by sender
+        + [ ] Provide a means of triggering `get-messages` script
+        + [ ] Provide a means of triggering `messages-to-doi` script
+        + [ ] Provide a way to clear the message table
+        + [x] List contents retrieved from email account
     + [ ] Convert emails to DOI retrieval records
-        + [ ] Show link to DOI, PDF, who it came from, process state
-        + [ ] Select DOI to process
-        + [ ] Generate and EPrints XML
-            + [ ] Page should include DOI, title, link to PDF and download link for EPrints XML for set
-            + [ ] Accept the DOI and flag as processed
-        + [ ] Update processed status
-        + [ ] Archive processed records
+        + [ ] Provide a means of triggering `retrieve-metadata` script
+        + [ ] Provide button to move to trash/processed
+        + [x] List contents DOI queued in Acacia
+        + [x] Show link to DOI
+        + [x] Show link Object URL if provided
+        + [x] Show status or EPrint URL if eprint record exists
+        + [x] Show link to generated EPrints XML
 
 
 
