@@ -30,7 +30,7 @@
     <th>From</th>
     <th>Status</th>
     <th>DOI</th>
-    <th>URL to object</th>
+    <th>URL to PDF</th>
     <th>Export</th>
     <th class="action">&nbsp;</th>
 </tr>
