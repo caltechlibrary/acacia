@@ -15,6 +15,13 @@
 </nav>
 
 <section>
+<p>
+<!-- 
+<button><a href="{{base_url}}/get-messages">Get Messages</a></button>
+<button><a href="{{base_url}}/message-to-doi">Parse Messages</a></button>
+-->
+<button><a href="{{base_url}}/retrieve-metadata">Retrieve Messages</a></button>
+</p>
 <h1>DOI Report</h1>
 <p>{{description}}</p>
 <table>
@@ -59,6 +66,9 @@
 % if item.status == "ready":
    <a href="{{base_url}}/eprint-xml/{{item.id}}" target="_blank">EPrint XML</a>
 % end
+   </td>
+   <td>
+       <button><a href="{{base_url}}/remove-doi/{{item.id}}">Remove</a></button>
    </td>
 </tr>
 % end

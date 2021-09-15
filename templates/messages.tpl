@@ -15,20 +15,38 @@
 </nav>
 
 <section>
+<p>
+<button><a href="{{base_url}}/get-messages">Get Messages</a></button>
+<button><a href="{{base_url}}/message-to-doi">Parse Messages</a></button>
+<!--
+<button><a href="{{base_url}}/retrieve-metadata">Retrieve Messages</a></button>
+-->
+</p>
 <h1>Message Report</h1>
 <p>{{description}}</p>
 <table>
-<tr> <th>Date</th> <th>From</th> <th>Subject</th> <th>Processed?</th></tr>
+<tr>
+    <th class="from">From</th>
+    <th class="status">Status</th>
+    <th class="subject">Subject</th>
+    <th class="datestamp">Date</th>
+</tr>
 % for item in items:
    <tr>
-   <td>{{item.m_date[0:11]}}</td>
-   <td>{{item.m_from}}</td>
-   <td>{{item.m_subject}}</td>
-   <td>
+   <td class="from">
+    % if len(item.m_from) > 0:
+        {{item.m_from.split('<', 2)[0]}}
+    % end
+   </td>
+   <td class="status">
 % if item.m_processed: 
 ✔️
 % end
-</td>
+   </td>
+   <td class="subject">{{item.m_subject}}</td>
+   <td class="datestamp">
+   {{item.m_date[0:11]}}
+   </td>
    </tr>
 % end
 </table>

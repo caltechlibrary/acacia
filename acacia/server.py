@@ -197,11 +197,6 @@ def list_messages(filter_by = None, sort_by = None):
 '''
     return page('messages', title = 'Manage Messages', description = description, items = items, error_message = None)
 
-@acacia.get('/message/<msg_id:int>')
-def get_message(msg_id = None):
-    '''Get the message record'''
-    return '{}' # this would be a JSON object representing the message.
-
 
 @acacia.get('/list')
 @acacia.get('/list/')
@@ -221,7 +216,9 @@ def list_items( filter_by = None, sort_by = None):
     items = []
     for item in Doi.select():
         items.append(item)
-    description = f'''This is a list of DOIs that Acacia knows about.''' # FIXME: Add information about sorts and filter here and workflow
+    description = f'''
+This is a list of DOIs that Acacia knows about.
+'''
     return page('list', title = 'Manage DOI', description = description, items = items)
 
 @acacia.get('/eprint-xml/<rec_id:int>')
@@ -233,10 +230,19 @@ def get_eprint_xml(rec_id = None):
     return page('error', title = "EPrint XML", summary = 'access error',
                 message = ('EPrint XML not available'))
 
-@acacia.get('/item/<rec_id:int>')
-def get_status(rec_id = None):
-    '''JSON response of individual object, used to update status such as bundle ready'''
-    return '{}' # This would be a JSON object representing updates to a row
+@acacia.get('/remove-doi/<rec_id:int>')
+def remove_doi(rec_id = None):
+    '''Remove the requested record'''
+    base_url = config('BASE_URL', '')
+    if rec_id != None:
+        rec = Doi.get_by_id(str(rec_id))
+        if rec != None:
+            query = Doi.delete().where(Doi.id == rec_id)
+            query.execute()
+        redirect(f'/list')
+    else:
+        return page('error', title='Delete request', summary ='deletion failed', message = (f'Record {rec_id} not found'))
+    return page('error', title='Delete request', summary ='deletion failed', message = (f'Missing record ID in URL'))
 
 
 

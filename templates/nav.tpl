@@ -14,9 +14,7 @@
 <li>
 <a href="http://localhost:8080/help/">Help</a>
 </li>
-<li>
-<a href="http://localhost:8080/about">About</a>
-</li>
+<!-- <li><a href="http://localhost:8080/about">About</a></li> -->
 <li>
 <a href="/Shibboleth.sso/Logout">Logout</a>
 </li>

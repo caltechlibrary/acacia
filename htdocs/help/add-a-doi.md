@@ -1,7 +1,7 @@
 Add a DOI
 =========
 
-Doi can be submitted in two ways. First is send an email
+DOI can be submitted in two ways. First is send an email
 to [submissions.authors@library.caltech.edu](email:submissions.authors@library.caltech.edu) or click on the [Add a DOI](/add-a-doi) link
 in the navigation above.
 

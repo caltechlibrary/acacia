@@ -297,6 +297,10 @@ table td {
     width: auto;
 }
 
+.datestamp {
+    white-space: nowrap;
+}
+
 #library_logo {
 }
 

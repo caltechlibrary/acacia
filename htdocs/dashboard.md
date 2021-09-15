@@ -5,12 +5,13 @@ title : Welcome to Acacia
 Welcome to ACACIA
 =================
 
-- [Overview](help/overview.html)
-- [Add a DOI](add-doi)
-- Reports
-    - [Messages](messages/)
-    - [DOI List](list/)
-- [Help](help/)
-- [About](about)
-- [Logout](logout)
+Acaca is a micro webservice for managing CaltechAUTHORS submissions
+via DOI.
 
+- [Add a DOI](add-doi)
+- [Messages](messages/)
+- [DOI List](list/)
+- [Help](help/)
+    - [Overview](help/overview.html)
+    - [About Acacia](about)
+- [Logout](logout)

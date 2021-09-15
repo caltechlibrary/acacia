@@ -3,8 +3,11 @@ Acacia -- Help
 
 1. [Overview](overview.html)
 2. [Add a DOI](add-a-doi.html)
-3. [Reports](reports.html)
-4. [Export submissions to EPrints](export-to-eprints.html)
+3. Retrieving DOI EMail submissions
+4. Extracting DOI from retrieved EMail submissions
+5. Retrieving DOI metadata from CrossRef and DataCite
+6. [Reports](reports.html)
+7. [Export submissions to EPrints](export-to-eprints.html)
 
 DLD - Developer notes
 ---------------------
