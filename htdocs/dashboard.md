@@ -11,20 +11,12 @@ via DOI.
 Workflows
 ---------
 
-Two workflows are provided depending on where the DOI(s) originate
-before getting into processing the DOI(s).
-
 - EMail
     1. [Get Messages](get-messages)
     2. [Messages to DOI](messages-to-doi)
     3. [Review message list](messages/)
 - Data Entry
     1. [Add a DOI](add-doi)
-
-This is followed by actually processing the DOI(s) by retrieving
-metadata from CrossRef/DataCite and then using the generated EPrint XML
-for importing into [CaltechAUTHORS](https://authors.library.caltech.edu).
-
 - Processing submitted DOI
     1. [Retrieve Metadata](retrieve-metadata)
     2. [Review DOI list](list/)

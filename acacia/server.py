@@ -185,7 +185,7 @@ def do_add_a_doi():
 def get_messages():
     mail_processor = EMailProcessor()
     if mail_processor.get_mail():
-        redirect('/messages')
+        redirect(f'{acacia.base_url}/messages')
     return page('error', title="Get Messages", summary = "Error retrieving EMAIL submissions", description = (
         f'EMail account: {mail_processor.email}',
         f'SMTP hostname: {mail_processor.smtp_host}'))
@@ -196,7 +196,7 @@ def message_to_doi():
     doi_processor = DOIProcessor()
     records = mail_processor.get_unprocessed()
     if len(records) == 0:
-        redirect('/messages/')
+        redirect(f'{acacia.base_url}/messages/')
     errors = []
     err_cnt, item_cnt, doi_cnt = 0, 0, 0
     for rec in records:
@@ -210,7 +210,7 @@ def message_to_doi():
         doi_cnt += n
         item_cnt += 1
     if err_cnt == 0:
-        redirect('/messages/')
+        redirect(f'{acacia.base_url}/messages/')
     return page('error', title='Messages to DOI', summary = "Error converting email messages into DOI records", description = (f'''{errors.join(" ")}'''))
 
 
@@ -221,7 +221,7 @@ def message_reset(rec_id = None):
         if record != None:
             record.m_processed = False
             record.save()
-    redirect('/messages')
+    redirect(f'{acacia.base_url}/messages')
 
 @acacia.get('/message-remove/<rec_id:int>')
 def message_remove(rec_id = None):
@@ -230,7 +230,7 @@ def message_remove(rec_id = None):
         if rec != None:
             query = Message.delete().where(Message.id == rec_id)
             query.execute()
-        redirect('/messages/')
+        redirect(f'{acacia.base_url}/messages/')
     else:
         return page('error', title='Delete Message', summary ='deletion failed', message = (f'Message {rec_id} not found'))
     return page('error', title='Delete Message', summary ='deletion failed', message = (f'Missing record ID in URL'))
@@ -272,11 +272,11 @@ def get_metadata():
                 rec.save()
             item_cnt += 1
         if err_cnt == 0:
-            redirect('/list')
+            redirect(f'{acacia.base_url}/list')
         return page('error', title = 'Retrieve Metadata',
             summary = 'Error retrieving metadata',
             description = errors)
-    redirect('/list')
+    redirect(f'{acacia.base_url}/list')
         
 
 @acacia.get('/messages')
@@ -332,13 +332,14 @@ def get_eprint_xml(rec_id = None):
 
 @acacia.get('/doi-reset/<rec_id:int>')
 def doi_reset(rec_id = None):
+
     if rec_id != None:
         record = Doi.get_by_id(str(rec_id))
         if record != None:
             record.metadata = ""
             record.status = 'unprocessed'
             record.save()
-    redirect('/list/')
+    redirect(f'{acacia.base_url}/list/')
 
 @acacia.get('/doi-remove/<rec_id:int>')
 def doi_remove(rec_id = None):
@@ -349,7 +350,7 @@ def doi_remove(rec_id = None):
         if rec != None:
             query = Doi.delete().where(Doi.id == rec_id)
             query.execute()
-        redirect(f'/list')
+        redirect(f'{acacia.base_url}/list')
     else:
         return page('error', title='Delete request', summary ='deletion failed', message = (f'Record {rec_id} not found'))
     return page('error', title='Delete request', summary ='deletion failed', message = (f'Missing record ID in URL'))
