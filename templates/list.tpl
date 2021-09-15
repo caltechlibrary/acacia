@@ -18,22 +18,29 @@
 <p>
 <!-- 
 <button><a href="{{base_url}}/get-messages">Get Messages</a></button>
-<button><a href="{{base_url}}/message-to-doi">Parse Messages</a></button>
+<button><a href="{{base_url}}/messages-to-doi">Parse Messages</a></button>
 -->
-<button><a href="{{base_url}}/retrieve-metadata">Retrieve Messages</a></button>
+<button><a href="{{base_url}}/retrieve-metadata">Retrieve Metadata</a></button>
 </p>
 <h1>DOI Report</h1>
 <p>{{description}}</p>
 <table>
 <tr>
+    <th class="action">&nbsp;</th>
     <th>From</th>
     <th>Status</th>
     <th>DOI</th>
     <th>URL to object</th>
     <th>Export</th>
+    <th class="action">&nbsp;</th>
 </tr>
 % for item in items: 
 <tr>
+   <td>
+   % if item.status == "ready":
+   <button><a href="{{base_url}}/doi-reset/{{item.id}}">reset</a></button>
+   % end
+   </td>
    <td>
 % if ("<" in item.m_from) and (item.m_from.split('<', 2)[0] != ""):
    {{item.m_from.split('<', 2)[0]}}
@@ -68,7 +75,7 @@
 % end
    </td>
    <td>
-       <button><a href="{{base_url}}/remove-doi/{{item.id}}">Remove</a></button>
+       <button><a href="{{base_url}}/doi-remove/{{item.id}}">Remove</a></button>
    </td>
 </tr>
 % end

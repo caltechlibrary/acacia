@@ -41,29 +41,100 @@ Welcome to ACACIA
 <p>
 Acaca is a micro webservice for managing CaltechAUTHORS submissions via DOI.
 </p>
+<h2 id="workflows">
+Workflows
+</h2>
+<p>
+Two workflows are provided depending on where the DOI(s) originate before getting into processing the DOI(s).
+</p>
 <ul>
+<li>
+EMail
+<ol type="1">
+<li>
+<a href="get-messages">Get Messages</a>
+</li>
+<li>
+<a href="messages-to-doi">Messages to DOI</a>
+</li>
+<li>
+<a href="messages/">Review message list</a>
+</li>
+</ol>
+</li>
+<li>
+Data Entry
+<ol type="1">
 <li>
 <a href="add-doi">Add a DOI</a>
 </li>
+</ol>
+</li>
+</ul>
+<p>
+This is followed by actually processing the DOI(s) by retrieving metadata from CrossRef/DataCite and then using the generated EPrint XML for importing into <a href="https://authors.library.caltech.edu">CaltechAUTHORS</a>.
+</p>
+<ul>
+<li>
+Processing submitted DOI
+<ol type="1">
+<li>
+<a href="retrieve-metadata">Retrieve Metadata</a>
+</li>
+<li>
+<a href="list/">Review DOI list</a>
+</li>
+<li>
+For each DOI record in the list
+<ol type="a">
+<li>
+Review the DOI, Object URL and any existing EPrints record
+</li>
+<li>
+If no-EPrints record exists click the Export link “EPrint XML” and save locally
+</li>
+<li>
+Download any related PDF for digital materials from either the DOI link or Object URL link (if one is provided)
+</li>
+<li>
+Import the EPrint XML and PDF into <a href="https://authors.library.library.caltech.edu">CaltechAUTHORS</a>
+</li>
+<li>
+Confirm EPrints import was successful
+</li>
+<li>
+In the DOI row in Acacia click the “remove” button to remove the row from the list
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="reports">
+Reports
+</h2>
+<ul>
 <li>
 <a href="messages/">Messages</a>
 </li>
 <li>
 <a href="list/">DOI List</a>
 </li>
+</ul>
+<h2 id="misc">
+Misc
+</h2>
+<ul>
 <li>
 <a href="help/">Help</a>
 <ul>
 <li>
 <a href="help/overview.html">Overview</a>
 </li>
-<li>
-<a href="about">About Acacia</a>
-</li>
 </ul>
 </li>
 <li>
-<a href="logout">Logout</a>
+<a href="about">About Acacia</a>
 </li>
 </ul>
 </section>

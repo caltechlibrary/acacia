@@ -287,6 +287,7 @@ footer a, footer a:link, footer a:visited, footer a:active, footer a:focus, foot
 
 table th {
     text-align: left;
+    vertical-align: text-bottom;
     /* text-transform: uppercase; */
     padding-right: 2.0em; 
     margin-right: 2.0em;
@@ -295,6 +296,31 @@ table th {
 table td {
     height: auto;
     width: auto;
+    vertical-align: text-top;
+}
+
+form div label {
+    display: inline-block;
+    text-align: right;
+    min-width: 10%;
+}
+
+form div input {
+    text-align: left;
+    min-width: 30%;
+}
+
+form p {
+    text-align: center;
+    max-width: 50%;
+}
+form p input {
+    text-align: center;
+}
+
+.subject {
+    white-space: wrap;
+    max-width: 18.0em;
 }
 
 .datestamp {

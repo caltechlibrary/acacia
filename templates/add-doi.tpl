@@ -5,7 +5,8 @@
 <div>
 <label>DOI</label> <input type="text" name="doi" value="" title="Enter a DOI here">
 </div>
-<label>URL to Object</label> <input type="text" name="object_url" value="" title="Enter the URL for the digital object">
+<div>
+<label>URL for PDF</label> <input type="text" name="object_url" value="" title="Enter the direct URL for the primary digital object">
 </div>
 </div>
 <p>
