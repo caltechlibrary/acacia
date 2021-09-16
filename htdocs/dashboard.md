@@ -5,19 +5,19 @@ title : Welcome to Acacia
 Welcome to ACACIA
 =================
 
-Acaca generates EPrints XML based on the [DOI](https://doi.org) and the metadata from [CrossRef](https://crossref.org) and [DataCite](https://datacite.org). Acacia supports retrieving data by providing one or more DOI via EMail or through a simple data entry form.  The collected DOI can be used to look up metadata from CrossRef and DataCite resulting in EPrint XML suitable for importting into [CaltechAUATHORS](https://authors.library.caltech.edu).
+Acaca is a tool for converting DOI metadata into EPrints XML. The [DOI](https://doi.org) metadata is retrieved from [CrossRef](https://crossref.org) and [DataCite](https://datacite.org). Acacia supports collecting DOI via EMail or through a simple data entry form.  The collected DOI can be used to look up metadata from CrossRef and DataCite resulting in EPrint XML suitable for importting into [CaltechAUATHORS](https://authors.library.caltech.edu).
 
 Workflows
 ---------
 
 - EMail
-    1. [Get Messages](get-messages)
-    2. [Convert Messages to DOI](messages-to-doi)
-    3. [Review message list](messages/)
+    1. Get [Messages](get-messages)
+    2. Convert [Messages to DOI](messages-to-doi)
+    3. Review [Messages Report](messages/)
 - Data Entry
     1. [Add a DOI](add-doi)
 - Retrieving metadata and generating EPrints XML
-    1. [Review the collected DOI](list/)
+    1. Review the [DOI Report](list/)
     2. For each DOI collected
         a. Review the link contents for DOI, URL of PDF
         b. If OK and you see the "look up" button, press it
@@ -35,7 +35,7 @@ Reports
 -------
 
 - [Messages](messages/)
-- [DOI List](list/)
+- [DOI](list/)
 
 Misc
 ----

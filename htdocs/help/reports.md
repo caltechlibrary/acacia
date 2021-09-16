@@ -3,11 +3,11 @@ Available Reports
 
 Two reports are currently provided via Acacia's web application.
 
-2. Message Report 
-1. DOI Report
+1. [Message Report](../messages)
+2. [DOI Report](../list)
 
-Message Report
---------------
+Working with Messages Report
+----------------------------
 
 The purpose of the message report is to show which messages Acacia
 knows about. The retrieval of email from the [submissions.authors@library.caltech.edu](email:submissions.authors@library.caltech.edu) account is
@@ -18,28 +18,22 @@ the message was processed and any DOI found has been extracted and
 placed into the DOI Report.
 
 
-DOI Report
-----------
+Working with the DOI Report
+---------------------------
 
 The DOI Report shows the DOI that Acacia knows about and the status
-of processing that DOI. A number steps are done before the DOI is
-"ready" for generating EPrints XML.  If the status is shown as
-"ready" you can select the DOI for export.  Links to both the DOI
-URL and any provided Digital Object is included.  Note that for
-most publishers you need to be "on Caltech Network" to have access.
-If you are working off campus you can use the [VPN](https://www.imss.caltech.edu/services/wired-wireless-remote-access/Virtual-Private-Network-VPN)
-to route all your interenet traffic through campus. This should allow you
-to retrieve any digital objects identified explicitly by URL.
+of processing that DOI. The first step for new DOI is indicated by the
+a status of "pending" and a button labeled "look up". For each DOI with
+a the "look up" button press the button. This will cause Acacia to then
+check CrossRef and DataCite for any metadata available for that DOI and
+if avialable generate appropraite EPrints XML.
 
-After reviewing the DOI and retrieving the desired digital object
-to your local machine you can check the "export" checkbox. When your
-ready to export then you can press the "export doi" button and an
-EPrints XML will be generated you can download.  NOTE: when you
-generate the EPrints XML it sets the name of the "export bundle"
-when you refresh the DOI report page. This way you can easily
-retieve the EPrints XML later or know that it is ready for export.
+The second step is taken when you see the status of "ready".
+If ready you should see a link for EPrints XML. Click the link and download
+the EPrints XML for the DOI. Also download PDFs from either the DOI link or URL to PDF link (if available).  
 
-If the DOI record is importing successfully into EPrints the column
-with the EPrints ID should populate with a link to authors.library.caltech.edu. Those records do not need to be exported again. You can 
-curate them directly in EPrints.
+The third step is to take the EPrints XML and downloaded PDF and import them into [CaltechAUTHORS](https://authors.library.catech.edu) like you would using the `doi2eprintsxml` tool.
+
+Once you've imported the material successfully into EPrints switch back to 
+Acacia's [DOI Report](../list) and press the "remove" button on the row with the DOI you just imported.
 

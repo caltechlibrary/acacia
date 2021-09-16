@@ -3,13 +3,13 @@
 <a href="https://apps.library.caltech.edu/acacia/">Home</a>
 </li>
 <li>
-<a href="https://apps.library.caltech.edu/acacia/add-doi">Add DOI</a>
+<a href="https://apps.library.caltech.edu/acacia/add-doi">Add a DOI</a>
 </li>
 <li>
-<a href="https://apps.library.caltech.edu/acacia/messages/">Messages</a>
+<a href="https://apps.library.caltech.edu/acacia/messages/">Messages Report</a>
 </li>
 <li>
-<a href="https://apps.library.caltech.edu/acacia/list">DOI list</a>
+<a href="https://apps.library.caltech.edu/acacia/list">DOI Report</a>
 </li>
 <li>
 <a href="https://apps.library.caltech.edu/acacia/help/">Help</a>
