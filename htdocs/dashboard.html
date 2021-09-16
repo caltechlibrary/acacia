@@ -3,31 +3,31 @@
 <head>
     <title>Welcome to Acacia</title>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://apps.library.caltech.edu/acacia/css/site.css">
+    <link rel="stylesheet" href="http://localhost:8080/css/site.css">
 </head>
 <body>
 <header>
-<span id="library_logo"><a href="http://library.caltech.edu" title="link to Caltech Library Homepage"><img src="https://apps.library.caltech.edu/acacia/assets/liblogo.gif" alt="Caltech Library logo"></a></span>
-<span id="project_logo"><img src="https://apps.library.caltech.edu/acacia/assets/acacia-icon.svg" alt="Acacia project logo"></span>
+<span id="library_logo"><a href="http://library.caltech.edu" title="link to Caltech Library Homepage"><img src="http://localhost:8080/assets/liblogo.gif" alt="Caltech Library logo"></a></span>
+<span id="project_logo"><img src="http://localhost:8080/assets/acacia-icon.svg" alt="Acacia project logo"></span>
 </header>
 <nav>
 <ul>
 <li>
-<a href="https://apps.library.caltech.edu/acacia/">Home</a>
+<a href="http://localhost:8080/">Home</a>
 </li>
 <li>
-<a href="https://apps.library.caltech.edu/acacia/add-doi">Add DOI</a>
+<a href="http://localhost:8080/add-doi">Add DOI</a>
 </li>
 <li>
-<a href="https://apps.library.caltech.edu/acacia/messages/">Messages</a>
+<a href="http://localhost:8080/messages/">Messages</a>
 </li>
 <li>
-<a href="https://apps.library.caltech.edu/acacia/list">DOI list</a>
+<a href="http://localhost:8080/list">DOI list</a>
 </li>
 <li>
-<a href="https://apps.library.caltech.edu/acacia/help/">Help</a>
+<a href="http://localhost:8080/help/">Help</a>
 </li>
-<!-- <li><a href="https://apps.library.caltech.edu/acacia/about">About</a></li> -->
+<!-- <li><a href="http://localhost:8080/about">About</a></li> -->
 <li>
 <a href="/Shibboleth.sso/Logout">Logout</a>
 </li>
@@ -39,7 +39,7 @@
 Welcome to ACACIA
 </h1>
 <p>
-Acaca is a micro webservice for managing CaltechAUTHORS submissions via DOI.
+Acaca is a micro webservice for managing <a href="https://authors.library.caltech.edu">CaltechAUTHORS</a> submissions via DOI retrieving metadata from <a href="https://crossref.org">CrossRef</a> and <a href="https://datacite.org">DataCite</a>. Acacia supports retrieving data by providing one or more DOI via EMail or through a simple data entry form. The collected DOI can be used to retrieve metadata from CrossRef and DataCite resulting in EPrint XML suitable for importting into CaltechAUATHORS.
 </p>
 <h2 id="workflows">
 Workflows
@@ -68,7 +68,7 @@ Data Entry
 </ol>
 </li>
 <li>
-Processing submitted DOI
+Retrieving metadata and generating EPrints XML
 <ol type="1">
 <li>
 <a href="retrieve-metadata">Retrieve Metadata</a>

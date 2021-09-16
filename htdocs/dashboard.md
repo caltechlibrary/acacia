@@ -5,8 +5,7 @@ title : Welcome to Acacia
 Welcome to ACACIA
 =================
 
-Acaca is a micro webservice for managing CaltechAUTHORS submissions
-via DOI.
+Acaca is a micro webservice for managing [CaltechAUTHORS](https://authors.library.caltech.edu) submissions via DOI retrieving metadata from [CrossRef](https://crossref.org) and [DataCite](https://datacite.org). Acacia supports retrieving data by providing one or more DOI via EMail or through a simple data entry form.  The collected DOI can be used to retrieve metadata from CrossRef and DataCite resulting in EPrint XML suitable for importting into CaltechAUATHORS.
 
 Workflows
 ---------
@@ -17,7 +16,7 @@ Workflows
     3. [Review message list](messages/)
 - Data Entry
     1. [Add a DOI](add-doi)
-- Processing submitted DOI
+- Retrieving metadata and generating EPrints XML
     1. [Retrieve Metadata](retrieve-metadata)
     2. [Review DOI list](list/)
     3. For each DOI record in the list
