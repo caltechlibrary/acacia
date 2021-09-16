@@ -91,7 +91,7 @@ from   acacia import acacia, print_version
 
 
 @plac.annotations(
-    adapter    = ('use file "A" as the WSGI adapter (default: adapter.wsgi)', 'option', 'a'),
+    adapter    = ('use file "A" as the WSGI adapter (default: acacia.wsgi)', 'option', 'a'),
     base_url   = (f'set the server address (default: {_DEFAULT_BASE_URL})',   'option', 'b'),
     database   = ('use "D" as the database file',                             'option', 'd'),
     mode       = ('run mode: normal, verbose, or debug (default: normal)',    'option', 'm'),
@@ -120,18 +120,18 @@ using the -m option. The possible run modes and their effects are as follows:
 "normal": uses mod_wsgi-express without debugging options. The server
   will run multiple threads, will not reload if source files are changed,
   will not reload templates if they are changed, and will not stop for
-  exceptions. It looks for a file named "adapter.wsgi" in the current
+  exceptions. It looks for a file named "acacia.wsgi" in the current
   directory and passes it to mod_wsgi. This mode is a close approximation
-  to running Acacia in a basic Apache2 mod_wsgi environment, with adapter.wsgi.
+  to running Acacia in a basic Apache2 mod_wsgi environment, with acacia.wsgi.
 
 "verbose": like normal mode, but will produce detailed logging to the terminal.
-  This mode is useful for testing Acacia using adapter.wsgi in mod_wsgi.
+  This mode is useful for testing Acacia using acacia.wsgi in mod_wsgi.
   Verbose mode is invoked using the option -m verbose, or setting RUN_MODE
   to "verbose" in settings.ini. (Using -m verbose overrides settings.ini.)
 
 "debug": this uses Bottle's development server instead of mod_wsgi-express
   and turns on maximum debugging options. This mode does NOT use
-  adapter.wsgi. It will turn off template caching, will drop into pdb upon
+  acacia.wsgi. It will turn off template caching, will drop into pdb upon
   exceptions, and unlike mod_wsgi-express, the Bottle server will also
   automatically reload any changed source files. In addition, the reloan
   wait time and loan expirations are set to 1 minute (overriding values set
@@ -160,7 +160,7 @@ needed) and any additional path elements of the root of Acacia on the
 server; e.g., "https://library.example.edu/acacia". (Note: the path
 component is ignored when running in debug mode.)
 
-By default, run-server looks for a WSGI adapter named "adapter.wsgi" in the
+By default, run-server looks for a WSGI adapter named "acacia.wsgi" in the
 current directory. The option -a tells run-server to use a different file.
 
 If given the -V option, this program will print the version and other
@@ -199,7 +199,7 @@ Command-line arguments summary
 
     debug_user = None if debug_user == 'U' else debug_user
 
-    adapter_file = join(here, 'adapter.wsgi') if adapter == 'A' else adapter
+    adapter_file = join(here, 'acacia.wsgi') if adapter == 'A' else adapter
     if not exists(adapter_file) or not readable(adapter_file):
         print(f'‼️  File not found or not readable: {adapter_file}')
         exit(1)
@@ -298,7 +298,7 @@ def print_safety_warning():
     text = ("⚠️  REMINDER: DON'T USE THIS AS A PUBLIC SERVER. ⚠️\n"
             + f'"{name}" starts a server with weak security. \n'
             + 'It is intended for testing and debugging only.\n'
-            + 'For production, set up Apache with adapter.wsgi.')
+            + 'For production, set up Apache with acacia.wsgi.')
     terminal_width = get_terminal_size().columns
     panel_width = 55 if terminal_width > 55 else terminal_width
     padding = min(abs(panel_width - len(text) - 2) // 2, 2)

@@ -297,7 +297,8 @@ def get_metadata(rec_id = None):
                 record.status = 'ready'
                 record.updated = now
             if not record.eprint_id:
-                eprint_id, err = eprints_ssh.get_eprint_id_by_doi(record.doi)
+                #eprint_id, err = eprints_ssh.get_eprint_id_by_doi(record.doi)
+                eprint_id, err = None,None # DEBUG
                 if err:
                     msg = f'ERROR get_eprint_id_by_doi({record.doi}): {err}'
                     errors.append(msg)
@@ -314,7 +315,7 @@ def get_metadata(rec_id = None):
             errors.append('record not found in DOI table')
     if len(errors) > 0:
         return page('error', title = 'Retrieve Metadata',
-            summary = 'Error retrieving metadata', description = errors) 
+            summary = 'Error retrieving metadata', description = errors, message = errors) 
     redirect(f'{acacia.base_url}/list')
         
 
