@@ -236,46 +236,85 @@ def message_remove(rec_id = None):
     return page('error', title='Delete Message', summary ='deletion failed', message = (f'Missing record ID in URL'))
 
 
-
 @acacia.get('/retrieve-metadata')
-def get_metadata():
+@acacia.get('/retrieve-metadata/')
+@acacia.get('/retrieve-metadata/<rec_id:int>')
+def get_metadata(rec_id = None):
     doi_processor = DOIProcessor()
-    records = doi_processor.get_unprocessed()
-    if len(records) > 0:
-        err_cnt, item_cnt, doi_cnt = 0, 0, 0
-        errors = []
-        for rec in records:
-            now = datetime.now()
-            if rec.status != 'ready' or not rec.metadata:
-                src, err = doi_processor.get_metadata(rec.doi)
+    errors = []
+    if rec_id == None:
+        records = doi_processor.get_unprocessed()
+        if len(records) > 0:
+            err_cnt, item_cnt, doi_cnt = 0, 0, 0
+            for record in records:
+                now = datetime.now()
+                if record.status != 'ready' or not record.metadata:
+                    src, err = doi_processor.get_metadata(record.doi)
+                    if err:
+                        msg = f'ERROR get_metadata({record.doi}) {now.isoformat()}: {err}'
+                        errors.append(msg)
+                        err_cnt += 1
+                        record.status = 'processing_error'
+                        record.notes += msg + "\n"
+                        record.updated = now
+                    else:
+                        record.metadata = src
+                        record.status = 'ready'
+                        record.updated = now
+                        doi_cnt += 1
+                if not record.eprint_id:
+                    eprint_id, err = eprints_ssh.get_eprint_id_by_doi(record.doi)
+                    if err:
+                        msg = f'ERROR get_eprint_id_by_doi({record.doi}): {err}'
+                        errors.append(msg)
+                        record.status = 'processing_error'
+                        record.notes += msg + "\n"
+                        record.updated = now
+                        err_cnt += 1
+                    elif eprint_id != None:
+                        record.repo_id = repo_id
+                        record.eprint_id = eprint_id
+                    record.save()
+                item_cnt += 1
+            if err_cnt == 0:
+                redirect(f'{acacia.base_url}/list')
+    else:
+        now = datetime.now()
+        log(f'DEBUG retrieve individual record {rec_id}')
+        record = Doi.get_or_none(Doi.id == str(rec_id))
+        if record != None:
+            log(f'DEBUG retrieving metadata for {record.doi}')
+            metadata, err = doi_processor.get_metadata(record.doi)
+            if err:
+                msg = f'ERROR get_metadata({record.doi}) {now.isoformat}: {err}'
+                errors.append(msg)
+                record.status = 'processing_error'
+                record.notes += msg + "\n"
+                record.updated = now
+            else:
+                record.repo_id = repo_id
+                record.metadata = metadata
+                record.status = 'ready'
+                record.updated = now
+            if not record.eprint_id:
+                eprint_id, err = eprints_ssh.get_eprint_id_by_doi(record.doi)
                 if err:
-                    msg = f'ERROR get_metadata({rec.doi}) {now.isoformat()}: {err}'
+                    msg = f'ERROR get_eprint_id_by_doi({record.doi}): {err}'
                     errors.append(msg)
-                    err_cnt += 1
-                    rec.status = 'processing_error'
-                    rec.notes += msg + "\n"
-                    rec.updated = now
-                else:
-                    rec.metadata = src
-                    rec.status = 'ready'
-                    rec.updated = now
-                    doi_cnt += 1
-            if not rec.eprint_id:
-                src, err = eprints_ssh.get_eprint_id_by_doi(rec.doi)
-                if err:
-                    msg = f'ERROR get_eprint_id_by_doi({rec.doi}): {err}'
-                    errors.append(msg)
-                    err_cnt += 1
-                else:
-                    rec.repo_id = repo_id
-                    rec.eprint_id = src
-                rec.save()
-            item_cnt += 1
-        if err_cnt == 0:
-            redirect(f'{acacia.base_url}/list')
+                    record.status = 'processing_error'
+                    record.notes += msg + "\n"
+                    record.updated = now
+                elif eprint_id != None:
+                    log(f'DEBUG updating eprint_id: {eprint_id}')
+                    record.repo_id = repo_id
+                    record.eprint_id = eprint_id
+            log(f'DEBUG updating {record.doi}, record id {record.id}')
+            record.save()
+        else:
+            errors.append('record not found in DOI table')
+    if len(errors) > 0:
         return page('error', title = 'Retrieve Metadata',
-            summary = 'Error retrieving metadata',
-            description = errors)
+            summary = 'Error retrieving metadata', description = errors) 
     redirect(f'{acacia.base_url}/list')
         
 

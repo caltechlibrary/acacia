@@ -2,5 +2,5 @@ DOI Submitted
 =============
 
 Thank you for submitting {{doi}}.
-You can view the process status in the [DOI Report](/list/).
+You can view the process status in the [DOI Report]({{base_url}}/list/).
 

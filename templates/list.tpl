@@ -19,8 +19,8 @@
 <!-- 
 <button><a href="{{base_url}}/get-messages">Get Messages</a></button>
 <button><a href="{{base_url}}/messages-to-doi">Parse Messages</a></button>
--->
 <button><a href="{{base_url}}/retrieve-metadata">Retrieve Metadata</a></button>
+-->
 </p>
 <h1>DOI Report</h1>
 <p>{{description}}</p>
@@ -38,7 +38,9 @@
 <tr>
    <td>
    % if item.status == "ready":
-   <button><a href="{{base_url}}/doi-reset/{{item.id}}">reset</a></button>
+   <button><a href="{{base_url}}/doi-reset/{{item.id}}" title="Clear the retrieved metadata from record">reset</a></button>
+   % else:
+   <button><a href="{{base_url}}/retrieve-metadata/{{item.id}}" title="retrieve the metadata via CrossRef or DataCite">Get DOI</a></button>
    % end
    </td>
    <td>
