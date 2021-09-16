@@ -91,10 +91,10 @@ class GuestPerson():
     signature but is not persisted in the person table of the database.
     '''
     def __init__(self, uname = '', display_name = '', role = '', email = ''):
-        self.uname = uname               # user name, e.g. janedoe
+        self.uname = uname               # user name, e.g. janedoe (or Shib ID)
         self.display_name = display_name # display_name, optional
         self.role = role                 # role is empty or "staff"
-        self.email = email
+        self.email = email               # email, maybe different from Shib ID
         self.updated = datetime.now()
 
     def has_role(self, required_role):
@@ -193,14 +193,12 @@ class PersonManager:
         if not 'uname' in kv:
             print(f'''ERROR: uname is required''')
             sys.exit(1)
-        if not 'email' in kv:
-            print(f'''ERROR: email is required''')
         if ('secret' in kv):
             if self.htpasswd != None:
                 self._update_htpasswd(kv['uname'], kv['secret'])
             else:
                 print(f'WARNING: secrets not supported')
-        for key in [ 'role', 'display_name' ]:
+        for key in [ 'role', 'display_name', 'email' ]:
             if not key in kv:
                 kv[key] = ''
         if not 'display_name' in kv:
