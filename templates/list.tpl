@@ -73,7 +73,7 @@
 </a></td>
    <td>
 % if item.status == "ready":
-   <a href="{{base_url}}/eprint-xml/{{item.id}}" target="_blank">EPrint XML</a>
+   <a download="acacia-{{item.id}}.xml" href="{{base_url}}/eprint-xml/{{item.id}}">EPrint XML</a>
 % end
    </td>
    <td>
