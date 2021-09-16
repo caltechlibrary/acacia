@@ -40,7 +40,7 @@
    % if item.status == "ready":
    <button><a href="{{base_url}}/doi-reset/{{item.id}}" title="Clear the retrieved metadata from record">reset</a></button>
    % else:
-   <button><a href="{{base_url}}/retrieve-metadata/{{item.id}}" title="retrieve the metadata via CrossRef or DataCite">Lookup</a></button>
+   <button><a href="{{base_url}}/retrieve-metadata/{{item.id}}" title="retrieve the metadata via CrossRef or DataCite">look up</a></button>
    % end
    </td>
    <td>
