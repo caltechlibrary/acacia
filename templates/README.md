@@ -1,4 +1,4 @@
-Convensions for Acacia templates
+Conventions for Acacia templates
 ================================
 
 - item.tpl is used for displaying both item level content

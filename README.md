@@ -62,7 +62,7 @@ The downloadable bundle is a zip file that contains any PDF
 retrieved, an EPrints XML document for importing into EPrints,
 a CSV manifest file for what was included and status information
 (e.g. HTTP error codes) for material retrieved and placed into the
-bundle. Once the bundle is successfully generated the doi record
+bundle. Once the bundle is successfully generated the DOI record
 is marketed as processed.
 
 

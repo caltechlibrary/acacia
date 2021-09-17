@@ -2,7 +2,7 @@ For Developers
 ==============
 
 This documentation is for the people developing and maintaining
-Acacia at Caltech Library. The audiance is application developers
+Acacia at Caltech Library. The audience is application developers
 in the Digital Library group at Caltech Library.
 
 - Source code at [GitHub](https://github.com/caltechlibrary/acacia)

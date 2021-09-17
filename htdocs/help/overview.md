@@ -9,7 +9,7 @@ currently set as the DOI and URL to the digital object identified
 by the DOI.
 
 These simple submission requirements allow for easy ingest of
-content by using of EMail or simple web forms. For EMail submissions
+content by using of Email or simple web forms. For Email submissions
 a person or form sends a message to
 [submissions.authors@library.caltech.edu](email:submissions.authors@library.caltech.edu). In the text (body) of the message they need to
 include one or more lines starting  with a DOI, followed by

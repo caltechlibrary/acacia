@@ -6,11 +6,11 @@ Acacia is intended to be used with a single sign-on system
 to service accounts outside of SSO. This includes assigning
 application level roles while still using SSO for authentication.
 
-Since modifing user access is an infrequent activity managing
+Since modifying user access is an infrequent activity managing
 people associated with the Acacia web application is handled through
 a simple command line tool. This minimized the need for either
-exposing user management to the web (removing an attack serface).
-On the backend CLI are easy to build and require minimal support
+exposing user management to the web (removing an attack surface).
+On the back end CLI are easy to build and require minimal support
 as they are used by system administrative staff.
 
 Person Data Model
@@ -20,7 +20,7 @@ Acacia supports a simple Person data model. It consists of the following
 attributes.
 
 uname
-: The username, e.g. email addresss, associated with accessing Acacia
+: The username, e.g. email address, associated with accessing Acacia
 
 secret
 : If SSO is not being used this is that password used to authenticate.
@@ -30,10 +30,10 @@ display_name
 : The display name on screen, e.g. "Jane Doe"
 
 role
-: This is text string used to assocated a role. Initially there is
+: This is text string used to associated a role. Initially there is
 one role allowing administrative access and that role is "library".
 If the role field is an empty string no role is assigned so patron
-is emplied.
+is implied.
 
 updated
 : This is a timestamp of when the Person object was last updated
@@ -48,7 +48,7 @@ angle of attack and data toxicity.
 Adding People
 -------------
 
-The "add" verb tells the people manager cli you want to add
+The "add" verb tells the people manager CLI you want to add
 someone to the person table. The minimum field required is
 the "uname".  You many also provide the remaining model fields
 at the same time.  Here is an example of adding a user name
@@ -102,7 +102,7 @@ Acacia use the "list" verb.
 ./people-manager list
 ```
 
-To list an inidividual person you need to know their "uname".
+To list an individual person you need to know their "uname".
 If I want to look up the user with a uname of "janedoe" I would
 do so by adding the "uname" key value pair on the command line.
 
@@ -110,7 +110,7 @@ do so by adding the "uname" key value pair on the command line.
 ./people-manager list uname=janedoe
 ```
 
-NOTE: the secert field is **not** displayed.
+NOTE: the secret field is **not** displayed.
 
 Updating People
 ---------------

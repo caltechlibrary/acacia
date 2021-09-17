@@ -26,7 +26,7 @@ of processing that DOI. The first step for new DOI is indicated by the
 a status of "pending" and a button labeled "look up". For each DOI with
 a the "look up" button press the button. This will cause Acacia to then
 check CrossRef and DataCite for any metadata available for that DOI and
-if avialable generate appropraite EPrints XML.
+if available generate appropriate EPrints XML.
 
 The second step is taken when you see the status of "ready".
 If ready you should see a link for EPrints XML. Click the link and download

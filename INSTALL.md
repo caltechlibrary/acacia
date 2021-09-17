@@ -17,7 +17,7 @@ currently implemented. The general recipe is
 
 1. Download and install [eprinttools](https://github.com/caltechlibrary/eprinttools/releases) per eprinttools [instructions](https://github.com/caltechlibrary/eprinttools/blob/main/INSTALL.md)
 2. Clone the Acacia git [repository](https://github.com/caltechlibrary/acacia) to your machine
-3. Change into the repostiory directory on your machine
+3. Change into the repository directory on your machine
 4. Copy settings.ini-example to settings.ini
 5. Edit settings.ini to conform to your installation
 6. Generate the HTML pages per site configuration
@@ -27,7 +27,7 @@ currently implemented. The general recipe is
 10. Setup/run the web service
 
 This is an example shell session of taking the following step 2 through
-8 in a development environment.  NOTE: It assume's eprinttools already
+8 in a development environment.  NOTE: It assumes eprinttools already
 has been installed.
 
 ```bash
@@ -62,7 +62,7 @@ should be some single sign on system like Shibboleth. But in showing
 potential system users the application you could just use Apache Basic Auth
 behind SSL.
 
-Concult your Apache 2 documentation for details on both.
+Consult your Apache 2 documentation for details on both.
 
 In a production like environment you need to setup several cron jobs
 to run the automated processes
@@ -73,7 +73,7 @@ to run the automated processes
  
 Normally these processes would be run in this order. Probably run them about every 15 to 30 minutes during business hours.  It is also possible to trigger these script on demand. That's something that should be explored in the pilot use of this experimental application.
 
-You can run these scripts via cron to run nightly. Note the retreieve-metadata script can cause the web application to be briefly unavailable when it causing Apache to return a 500 error. This is probably a result of the time that the SQlite3 database is locked and unreadable by Apache's WSGI service.
+You can run these scripts via cron to run nightly. Note the retrieve-metadata script can cause the web application to be briefly unavailable when it causing Apache to return a 500 error. This is probably a result of the time that the SQlite3 database is locked and unreadable by Apache's WSGI service.
 
 ```bash
     #!/bin/bash
@@ -102,7 +102,7 @@ Acacia depends on EPrinttools already being installed.
 You need version 1.0.1 or better of EPrint Tools for retrieving
 and processing data from CrossRef and DataCite. You can install
 that by visiting [github.com/caltechlibrary/eprinttools/releases](https://github.com/caltechlibrary/eprinttools/releases) and downloading
-and install the verison of the tools suited to your computer.
+and install the version of the tools suited to your computer.
 The program `doi2epritxml` needs to be copied to the `bin` folder
 of Acacia.
 

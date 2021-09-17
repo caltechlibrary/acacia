@@ -18,6 +18,6 @@ Continue Reading
 
 - [Up](./ "Table of Contents")
 - [Next](reports.html "Reports")
-- [Prev](submissions.html "DOI EMail submissions")
+- [Prev](submissions.html "DOI Email submissions")
 
 </div>

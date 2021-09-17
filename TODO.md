@@ -9,10 +9,10 @@ next
 
 - [x] Enforce who can use Acacia by role
 - [ ] Documentation cleanup
-    - [ ] Proofread and copyedit
+    - [ ] Proofread and copy edit
     - [x] Organize documentation around activities
-    - [ ] Improve installation instructures
-    - [ ] Writeup idea map for future versions
+    - [ ] Improve installation instructions
+    - [ ] Write up idea map for future versions
 
 Completed
 ---------
@@ -32,7 +32,7 @@ Completed
 
 - [x] Need `BASE_URL` integrating into settings.ini and in mk-static-pages.bash.
     - On dev box app is in root but in production it'll be under the "/acacia/" directory
-    - Also need to handle base url in pandoc and bottler templates
+    - Also need to handle base URL in Pandoc and bottler templates
 - [x] Create a dashboard page for linked to tasks
     - [x] Inbox (Retrieve submissions.author emails)
         - [x] Provide a means of triggering `get-messages` script
@@ -42,7 +42,7 @@ Completed
     - [x] Process DOI
         - [x] Show link to DOI
         - [x] Show link Object URL if provided
-        - [x] Show status or EPrint URL if eprint record exists
+        - [x] Show status or EPrints URL if eprint record exists
         - [x] Show link to retrieved EPrints XML
         - [x] Provide a means of triggering `retrieve-metadata` script
         - [x] Provide a means to retrieve the individual DOI records

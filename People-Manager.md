@@ -1,45 +1,42 @@
-
-# People Manager
+Developers -- People Manager
+============================
 
 Acacia is intended to be used with a single sign-on system
 (SSO) but there remains a need to create and manage access
-to service accounts outside of SSO and provided attributes.
-In particular assigning application level roles while still
-using SSO for authentication and user identification.
+to service accounts outside of SSO. This includes assigning
+application level roles while still using SSO for authentication.
 
 Since modifying user access is an infrequent activity managing
 people associated with the Acacia web application is handled through
 a simple command line tool. This minimized the need for either
 exposing user management to the web (removing an attack surface).
-The back end CLI are easy to build and require minimal support
+On the back end CLI are easy to build and require minimal support
 as they are used by system administrative staff.
 
-## Person Data Model
+Person Data Model
+-----------------
 
 Acacia supports a simple Person data model. It consists of the following
 attributes.
 
 uname
-: (required) The username, e.g. email addresses, associated with accessing Acacia
+: The username, e.g. email address, associated with accessing Acacia
 
 secret
 : If SSO is not being used this is that password used to authenticate.
 a empty password means the account is disabled unless SSO is used.
 
 display_name
-: (optional, will default to uname) The display name on screen, e.g. "Jane Doe"
+: The display name on screen, e.g. "Jane Doe"
 
 role
-: This is text string used to associate a role. Initially there is
+: This is text string used to associated a role. Initially there is
 one role allowing administrative access and that role is "library".
 If the role field is an empty string no role is assigned so patron
 is implied.
 
-email
-: (required) This is the email address to association with Acacia submitted Doi
-
 updated
-: (required, system managed) This is a timestamp of when the Person object was last updated
+: This is a timestamp of when the Person object was last updated
 
 No additional information is stored in the Person model. This is
 based on all identifying information becoming toxic over time.
@@ -48,7 +45,8 @@ the Person module data. If SSO is used for library staff then no
 password needs to be stored in the person table removing one more
 angle of attack and data toxicity.
 
-## Adding People
+Adding People
+-------------
 
 The "add" verb tells the people manager CLI you want to add
 someone to the person table. The minimum field required is
@@ -60,7 +58,6 @@ at the same time.  Here is an example of adding a user name
 ./people-manager add \
     uname=janedoe \
     display_name="Jane M. Doe" \
-    email = 'janedoe@university.example.edu' \
     role="library"
 ```
 
@@ -75,7 +72,6 @@ type the password before the command completes).
 ./people-manager add \
     uname=janedoe \
     display_name="Jane M. Doe" \
-    email = 'janedoe@university.example.edu' \
     role="library" \
     secret=
 ```
@@ -87,7 +83,6 @@ for each field you could type the command as
 ./people-manager add \
     uname= \
     display_name= \
-    email= \
     role= \
     secret=
 ```
@@ -96,7 +91,8 @@ You would then be prompted for each value individually (sorta
 like the Linux `adduser` command).
 
 
-## Listing People
+Listing People
+--------------
 
 Acacia provided the command line program `people-manager` to manage
 the Person objects in the system.  To list the people defined in
@@ -116,7 +112,8 @@ do so by adding the "uname" key value pair on the command line.
 
 NOTE: the secret field is **not** displayed.
 
-## Updating People
+Updating People
+---------------
 
 You can update model attributes individually. Use the "update" verb
 instead of "add". This will update an existing Person model. The uname
@@ -139,7 +136,8 @@ Or to prompt for the display name attribute.
 ```
 
 
-## Removing People
+Removing People
+---------------
 
 To remove a person from the person table you need to know their uname.
 The verb to remove someone is "remove". To remove janedoe from the
@@ -149,3 +147,13 @@ table you would do the following.
     ./people-manager remove uname=jandoe
 ```
 
+<div class="paging">
+
+Continue Reading
+----------------
+
+- [Up](developers.html "Developer documentation")
+- [Next](static-content.html "Updating Static Content")
+- [Prev](package-layout.html "Project Layout")
+
+</div>

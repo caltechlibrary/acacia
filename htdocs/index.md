@@ -2,21 +2,21 @@
 title : Welcome to Acacia
 ---
 
-Welcome to ACACIA
+Welcome to Acacia
 =================
 
-Acaca is a tool for converting DOI metadata into EPrints XML. The [DOI](https://doi.org) metadata is retrieved from [CrossRef](https://crossref.org) and [DataCite](https://datacite.org). Acacia supports collecting DOI via EMail or through a simple data entry form.  The collected DOI can be used to look up metadata from CrossRef and DataCite resulting in EPrint XML suitable for importing into [CaltechAUTHORS](https://authors.library.caltech.edu).
+Acacia is a tool for converting DOI metadata into EPrint XML. The [DOI](https://doi.org) metadata is retrieved from [CrossRef](https://crossref.org) and [DataCite](https://datacite.org). Acacia supports collecting DOI via Email or through a simple data entry form.  The collected DOI can be used to look up metadata from CrossRef and DataCite resulting in EPrint XML suitable for importing into [CaltechAUTHORS](https://authors.library.caltech.edu).
 
 Workflows
 ---------
 
-- EMail
+- Email
     1. Get [Messages](get-messages)
     2. Convert [Messages to DOI](messages-to-doi)
     3. Review [Messages Report](messages/)
 - Data Entry
     1. [Add a DOI](add-doi)
-- Retrieving metadata and generating EPrints XML
+- Retrieving metadata and generating EPrint XML
     1. Review the [DOI Report](list/)
     2. For each DOI collected
         a. Review the link contents for DOI, URL of PDF
