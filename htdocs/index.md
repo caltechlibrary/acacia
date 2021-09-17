@@ -26,7 +26,7 @@ Workflows
         e. Open a browser window for [CaltechAUTHORS](https://authors.library.library.caltech.edu)
         f. Import the EPrint XML you downloaded
         g. Add the PDF, if you downloaded one, to the EPrints record
-        h. Switch back to Acacia's [DOI list](./list)
+        h. Switch back to Acacia's [DOI Report](./list)
         i. In the row with DOI row in Acacia click the "remove" button to remove the DOI from the list
 
 
