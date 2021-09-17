@@ -6,7 +6,7 @@ Table of contents
 
 1. [Overview](overview.html)
 2. [Adding a DOI](add-a-doi.html)
-3. [DOI EMail submissions](submissions.html)
+3. [DOI Email submissions](submissions.html)
 4. [Retrieving metadata from CrossRef and DataCite](retrieving-metadata.html)
 5. [Reports](reports.html)
 6. [Export submissions to EPrints](export-to-eprints.html)
