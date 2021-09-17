@@ -458,12 +458,12 @@ def error405(error):
 #
 
 @acacia.get('/') 
-def dashboard():
+def home_page():
     '''Manage provides a dashbaord of available activities.'''
     person = person_from_environ(request.environ)
     required_roles(person, [ 'staff', 'library' ])
 # Load static dashboard page
-    return static_file('dashboard.html', root = os.path.join(_SERVER_ROOT, 'htdocs'))
+    return static_file('index.html', root = os.path.join(_SERVER_ROOT, 'htdocs'))
 
 
 @acacia.get('/about')
