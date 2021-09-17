@@ -7,11 +7,11 @@ Application
 - [Overview](../README.md)
 - [License](../LICENSE)
 - [Installation](../INSTALL.md)
-- [Required software](requirements.md)
+- [Required software](../htdocs/help/requirements.md)
 - [Contributing](../CONTRIBUTING.md)
-- [Available Commands](commands.md)
-- [Package Layout](package-layout.md)
-- [People Manager](people-manager.md)
+- [Available Commands](../htdocs/help/commands.md)
+- [Package Layout](../htdocs/help/package-layout.md)
+- [People Manager](../htdocs/help/people-manager.md)
 
 Trouble shooting
 ----------------

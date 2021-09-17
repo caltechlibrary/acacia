@@ -302,12 +302,12 @@ table td {
 form div label {
     display: inline-block;
     text-align: right;
-    min-width: 10%;
+    min-width: 15%;
 }
 
 form div input {
     text-align: left;
-    min-width: 30%;
+    min-width: 70%;
 }
 
 form p {
@@ -332,4 +332,27 @@ form p input {
 
 #project_logo {
     float: right;
+}
+
+.paging {
+    font-size: smaller;
+    font-family: "Gill Sans", sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.paging h2 {
+    margin-bottom: 0.24em;
+    text-transform: lowercase;
+}
+
+.paging ul {
+    padding: 0;
+    list-style-type: none;
+}
+
+.paging ul li {
+    display: inline-block;
+    text-transform: lowercase;
+    text-decoration: underline;
 }

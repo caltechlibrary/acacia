@@ -70,7 +70,7 @@ class ConnectionInfo:
             if u.password:
                 self.password = u.password
 
-    def toDict(self):
+    def to_dict(self):
         if self.db_type == 'mysql':
             return { 'user': self.user, 'password': self.password,
                      'host': self.host, 'port': self.port,

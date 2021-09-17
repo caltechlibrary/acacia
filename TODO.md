@@ -7,12 +7,10 @@ next
 
 **Staff managed processing**
 
-- [ ] Enforce who can use Acacia
-    - Review restrictions via Apache confirmation
-    - Review DIBs approach to restriction by "role"
+- [x] Enforce who can use Acacia by role
 - [ ] Documentation cleanup
     - [ ] Proofread and copyedit
-    - [ ] Organize documentation around activities
+    - [x] Organize documentation around activities
     - [ ] Improve installation instructures
     - [ ] Writeup idea map for future versions
 

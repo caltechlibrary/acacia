@@ -1,16 +1,19 @@
-Acacia -- Help
-==============
+Help
+====
+
+Table of contents
+-----------------
 
 1. [Overview](overview.html)
-2. [Add a DOI](add-a-doi.html)
-3. Retrieving DOI EMail submissions
-4. Extracting DOI from retrieved EMail submissions
-5. Retrieving DOI metadata from CrossRef and DataCite
-6. [Reports](reports.html)
-7. [Export submissions to EPrints](export-to-eprints.html)
+2. [Adding a DOI](add-a-doi.html)
+3. [DOI EMail submissions](submissions.html)
+4. [Retrieving metadata from CrossRef and DataCite](retrieving-metadata.html)
+5. [Reports](reports.html)
+6. [Export submissions to EPrints](export-to-eprints.html)
 
-DLD - Developer notes
+Supplimental Material
 ---------------------
 
-The project is available on [GitHub](https://github.com/caltechlibrary/acacia). See [developer notes](developers.html) for links to developer documentation.
+- Source code at [GitHub](https://github.com/caltechlibrary/acacia)
+- [For Developers](developers.html "Developer documentation")
 

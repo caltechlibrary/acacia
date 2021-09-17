@@ -58,12 +58,11 @@ _HELP_URL = '/help/'
 # General-purpose utilities used repeatedly.
 # .............................................................................
 
-def page(name, **kargs):
+def page(name, person, **kargs):
     '''Create a page using template "name" with some standard variables set.'''
 #FIXME: we're alling person_from_environ multiple times per request,
 # maybe this should happend once in a bottle plugin and all requests
 # should have a person object or person as None.
-    person = person_from_environ(request.environ)
     logged_in = (person != None and person.uname != '')
     if kargs.get('browser_no_cache', False):
         response.add_header('Expires', '0')
@@ -84,6 +83,15 @@ def debug_mode():
     '''Return True if we're running Bottle's default server in debug mode.'''
     return getattr(acacia, 'debug_mode', False)
 
+
+def required_roles(person, allowed_roles = []):
+    logged_in = (person != None and person.uname != '')
+    if not logged_in:
+        redirect(f'/logout')
+    for role in allowed_roles:
+        if person.has_role(role):
+            return
+    redirect('/notallowed')
 
 #
 # URL end points
@@ -137,21 +145,18 @@ def logout():
 def get_add_a_doi():
     '''Display the form to add a DOI'''
     person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
     logged_in = (person != None and person.uname != '')
     if not logged_in:
         redirect(f'/Shibboleth.sso/Logout')
-    return page('form.tpl', title="Add DOI", uname = person.uname, form = 'add-doi')
+    return page('form.tpl', person, title="Add DOI", uname = person.uname, form = 'add-doi')
 
 @acacia.post('/add-doi')
 def do_add_a_doi():
     '''Process submission of DOI and object URL'''
-    error_message = None # Assume no errors to start.
-# Get user info
     person = person_from_environ(request.environ)
-    logged_in = (person != None and person.uname != '')
-    if not logged_in:
-        redirect(f'/Shibboleth.sso/Logout')
-# Get form info
+    required_roles(person, [ 'staff', 'library' ])
+    error_message = None # Assume no errors to start.
     uname = person.uname
     doi = request.forms.get("doi")
     object_url = request.forms.get("object_url")
@@ -168,30 +173,34 @@ def do_add_a_doi():
                 m_from = f'{person.display_name} <{person.email}>')
         else:
             error_message = f'The DOI "{doi}" has previously been submitted.'
-            return page('form.tpl', title="Doi previously submitted",
+            return page('form.tpl', person, title="Doi previously submitted",
                 uname = uname, doi = doi, object_url= object_url,
                 error_message = error_message, form = 'doi-submitted')
     else:
         error_message = f'The DOI "{doi}" is not valid.'
-        return page('form.tpl', title="Doi not valid",
+        return page('form.tpl', person, title="Doi not valid",
                 uname = uname, doi = doi, object_url= object_url,
                 error_message = error_message, form = 'doi-submitted')
-    return page('form.tpl', title="DOI Submitted", uname = uname,
+    return page('form.tpl', person, title="DOI Submitted", uname = uname,
         doi = doi, object_url = object_url, error_message = None, 
         form = 'doi-submitted')
 
 
 @acacia.get('/get-messages')
 def get_messages():
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
     mail_processor = EMailProcessor()
     if mail_processor.get_mail():
         redirect(f'{acacia.base_url}/messages')
-    return page('error', title="Get Messages", summary = "Error retrieving EMAIL submissions", description = (
+    return page('error', person, title="Get Messages", summary = "Error retrieving EMAIL submissions", description = (
         f'EMail account: {mail_processor.email}',
         f'SMTP hostname: {mail_processor.smtp_host}'))
 
 @acacia.get('/messages-to-doi')
 def message_to_doi():
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
     mail_processor = EMailProcessor()
     doi_processor = DOIProcessor()
     records = mail_processor.get_unprocessed()
@@ -211,11 +220,13 @@ def message_to_doi():
         item_cnt += 1
     if err_cnt == 0:
         redirect(f'{acacia.base_url}/messages/')
-    return page('error', title='Messages to DOI', summary = "Error converting email messages into DOI records", description = (f'''{errors.join(" ")}'''))
+    return page('error', person, title='Messages to DOI', summary = "Error converting email messages into DOI records", description = (f'''{errors.join(" ")}'''))
 
 
 @acacia.get('/message-reset/<rec_id:int>')
 def message_reset(rec_id = None):
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
     if rec_id != None:
         record = Message.get_by_id(str(rec_id))
         if record != None:
@@ -225,6 +236,8 @@ def message_reset(rec_id = None):
 
 @acacia.get('/message-remove/<rec_id:int>')
 def message_remove(rec_id = None):
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
     if rec_id != None:
         rec = Message.get_by_id(str(rec_id))
         if rec != None:
@@ -232,14 +245,16 @@ def message_remove(rec_id = None):
             query.execute()
         redirect(f'{acacia.base_url}/messages/')
     else:
-        return page('error', title='Delete Message', summary ='deletion failed', message = (f'Message {rec_id} not found'))
-    return page('error', title='Delete Message', summary ='deletion failed', message = (f'Missing record ID in URL'))
+        return page('error', person, title='Delete Message', summary ='deletion failed', message = (f'Message {rec_id} not found'))
+    return page('error', person, title='Delete Message', summary ='deletion failed', message = (f'Missing record ID in URL'))
 
 
 @acacia.get('/retrieve-metadata')
 @acacia.get('/retrieve-metadata/')
 @acacia.get('/retrieve-metadata/<rec_id:int>')
 def get_metadata(rec_id = None):
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
     doi_processor = DOIProcessor()
     errors = []
     if rec_id == None:
@@ -314,7 +329,7 @@ def get_metadata(rec_id = None):
         else:
             errors.append('record not found in DOI table')
     if len(errors) > 0:
-        return page('error', title = 'Retrieve Metadata',
+        return page('error', person, title = 'Retrieve Metadata',
             summary = 'Error retrieving metadata', description = errors, message = errors) 
     redirect(f'{acacia.base_url}/list')
         
@@ -325,6 +340,8 @@ def get_metadata(rec_id = None):
 @acacia.get('/messages/<filter_by>/<sort_by>')
 def list_messages(filter_by = None, sort_by = None):
     ''' List the messages that have been retrieved for processing'''
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
     submit_email = config('SUBMIT_EMAIL', '')
     opts = []
     if filter_by:
@@ -336,7 +353,7 @@ def list_messages(filter_by = None, sort_by = None):
         items.append(item)
     description = f'''This is a list of all the emails retrieved from {submit_email}. You can manage those messages from your mail client.
 '''
-    return page('messages', title = 'Manage Messages', description = description, items = items, error_message = None)
+    return page('messages', person, title = 'Manage Messages', description = description, items = items, error_message = None)
 
 
 @acacia.get('/list')
@@ -347,6 +364,8 @@ def list_items( filter_by = None, sort_by = None):
     ''' Process DOI should act on selections of list, it needs
         to trigger the generation of export bundles which are
         then emailed to the requesting librarian '''
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
     opts = []
     if filter_by:
         opts.append(filter_by)
@@ -359,19 +378,23 @@ def list_items( filter_by = None, sort_by = None):
     description = f'''
 This is a list of DOIs that Acacia knows about.
 '''
-    return page('list', title = 'Manage DOI', description = description, items = items)
+    return page('list', person, title = 'Manage DOI', description = description, items = items)
 
 @acacia.get('/eprint-xml/<rec_id:int>')
 def get_eprint_xml(rec_id = None):
     '''Retrieve the EPrint XML saved as "metadata" in the doi object'''
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
     rec = Doi.get_by_id(str(rec_id))
     if rec != None:
         return xml_page(data = '''<?xml version='1.0' encoding='utf-8'?>''' + "\n" + rec.metadata, content_type = 'text/plain')
-    return page('error', title = "EPrint XML", summary = 'access error',
+    return page('error', person, title = "EPrint XML", summary = 'access error',
                 message = ('EPrint XML not available'))
 
 @acacia.get('/doi-reset/<rec_id:int>')
 def doi_reset(rec_id = None):
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
 
     if rec_id != None:
         record = Doi.get_by_id(str(rec_id))
@@ -384,6 +407,8 @@ def doi_reset(rec_id = None):
 @acacia.get('/doi-remove/<rec_id:int>')
 def doi_remove(rec_id = None):
     '''Remove the requested record'''
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
     base_url = config('BASE_URL', '')
     if rec_id != None:
         rec = Doi.get_by_id(str(rec_id))
@@ -392,8 +417,8 @@ def doi_remove(rec_id = None):
             query.execute()
         redirect(f'{acacia.base_url}/list')
     else:
-        return page('error', title='Delete request', summary ='deletion failed', message = (f'Record {rec_id} not found'))
-    return page('error', title='Delete request', summary ='deletion failed', message = (f'Missing record ID in URL'))
+        return page('error', person, title='Delete request', summary ='deletion failed', message = (f'Record {rec_id} not found'))
+    return page('error', person, title='Delete request', summary ='deletion failed', message = (f'Missing record ID in URL'))
 
 
 
@@ -406,20 +431,23 @@ def doi_remove(rec_id = None):
 @acacia.get('/notallowed')
 @acacia.post('/notallowed')
 def not_allowed():
-    return page('error', summary = 'access error',
+    person = person_from_environ(request.environ)
+    return page('error', person, title = 'Unauthorized', summary = 'access error',
                 message = ('The requested page does not exist or you do not '
                            'not have permission to access the requested item.'))
 
 @acacia.error(404)
 def error404(error):
+    person = person_from_environ(request.environ)
     log(f'{request.method} called on {request.path}, resulting in {error}')
-    return page('404', title = 'Acacia Error', code = error.status_code, message = error.body)
+    return page('404', person, title = 'Acacia Error', code = error.status_code, message = error.body)
 
 
 @acacia.error(405)
 def error405(error):
+    person = person_from_environ(request.environ)
     log(f'{request.method} called on {request.path}, resulting in {error}')
-    return page('error', title = "Acacia Error", summary = 'method not allowed',
+    return page('error', person, title = "Acacia Error", summary = 'method not allowed',
                 message = ('The requested method does not exist or you do not '
                            'not have permission to perform the action.'))
 
@@ -432,6 +460,8 @@ def error405(error):
 @acacia.get('/') 
 def dashboard():
     '''Manage provides a dashbaord of available activities.'''
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
 # Load static dashboard page
     return static_file('dashboard.html', root = os.path.join(_SERVER_ROOT, 'htdocs'))
 
@@ -439,6 +469,8 @@ def dashboard():
 @acacia.get('/about')
 @acacia.get('/about/')
 def manage_items():
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
     '''Manage provides a dashbaord of available activities.'''
 # Load static dashboard page
     return static_file('about.html', root = os.path.join(_SERVER_ROOT, 'htdocs'))
@@ -450,11 +482,26 @@ def favicon():
     return static_file('favicon.ico', root = os.path.join(_SERVER_ROOT, 'htdocs/media'))
 
 
-# Handle our static accets in htdocs/css, htdocs/assets, htdocs/media, htdocs/help
-@acacia.get('/<folder:re:(assets|css|about|media|help)>/')
-@acacia.get('/<folder:re:(assets|css|about|media|help)>/<filename:re:[-a-zA-Z0-9]+.(gif|ico|png|jpg|svg|css|js|html|md)>')
+# Handle our help pages
+@acacia.get('/help')
+@acacia.get('/help/')
+@acacia.get('/help/<filename:re:[-a-zA-Z0-9]+.(gif|ico|png|jpg|svg|html|md)>')
+def help_pages(filename = 'index.html'):
+    '''Return a static file'''
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
+    p = os.path.join(_SERVER_ROOT, 'htdocs', 'help')
+    log(f'returning help file {filename} {p}')
+    return static_file(filename, root = p)
+
+
+# Handle our static accets in htdocs/css, htdocs/assets, htdocs/media
+@acacia.get('/<folder:re:(assets|css|about|media)>/')
+@acacia.get('/<folder:re:(assets|css|about|media)>/<filename:re:[-a-zA-Z0-9]+.(gif|ico|png|jpg|svg|css|js|html|md)>')
 def include_file(folder, filename = 'index.html'):
     '''Return a static file'''
     p = os.path.join(_SERVER_ROOT, 'htdocs', folder)
     log(f'returning {folder} file {filename} {p}')
     return static_file(filename, root = p)
+
+

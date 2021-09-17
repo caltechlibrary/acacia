@@ -1,16 +1,24 @@
-Developers
-==========
+For Developers
+==============
 
 This documentation is for the people developing and maintaining
 Acacia at Caltech Library. The audiance is application developers
 in the Digital Library group at Caltech Library.
 
-- [GitHub](https://github.com/caltechlibrary/acacia)
-    - [Requirements](https://github.com/caltechlibrary/acacia/blob/main/docs/requirements.md)
-    - [Commands](https://github.com/caltechlibrary/acacia/blob/main/docs/commands.md)
-    - [Package Layout](https://github.com/caltechlibrary/acacia/blob/main/docs/package-layout.md)
-    - [Managing users and roles](https://github.com/caltechlibrary/acacia/blob/main/People-Manager.md)
-    - [Installation](https://github.com/caltechlibrary/acacia/blob/main/INSTALL.md)
-    - [Updating Static content]()
+- Source code at [GitHub](https://github.com/caltechlibrary/acacia)
+- [Requirements](requirements.html)
+- [Commands](commands.html)
+- [Package Layout](package-layout.html)
+- [People Manager](people-manager.html)
+- [Updating static content](static-content.html)
 
+<div class="paging">
+
+Continue Reading
+----------------
+
+- [Up](./ "Table of Contents")
+- [Next](requirements.html "Requirements")
+
+</div>
 

@@ -1,5 +1,5 @@
-Available Reports
-=================
+Help -- Available Reports
+=========================
 
 Two reports are currently provided via Acacia's web application.
 
@@ -37,3 +37,13 @@ The third step is to take the EPrints XML and downloaded PDF and import them int
 Once you've imported the material successfully into EPrints switch back to 
 Acacia's [DOI Report](../list) and press the "remove" button on the row with the DOI you just imported.
 
+<div class="paging">
+
+Continue Reading
+----------------
+
+- [Up](./ "Table of Contents")
+- [Next](export-to-eprints.html "Export submissions to EPrints")
+- [Prev](retrieving-metadata.html "Retrieving metadata from CrossRef DataCite")
+
+</div>
