@@ -9,7 +9,7 @@ next
 
 - [x] Enforce who can use Acacia by role
 - [ ] Documentation cleanup
-    - [ ] Proofread and copy edit
+    - [x] Proofread and copy edit
     - [x] Organize documentation around activities
     - [ ] Improve installation instructions
     - [ ] Write up idea map for future versions
