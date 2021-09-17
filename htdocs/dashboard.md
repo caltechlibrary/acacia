@@ -41,5 +41,4 @@ Misc
 ----
 
 - [Help](help/)
-    - [Overview](help/overview.html)
 - [About Acacia](about)
