@@ -7,7 +7,6 @@ next
 
 **Staff managed processing**
 
-- [x] Enforce who can use Acacia by role
 - [ ] Documentation cleanup
     - [x] Proofread and copy edit
     - [x] Organize documentation around activities
@@ -30,6 +29,7 @@ Completed
 
 **Staff managed processing**
 
+- [x] Enforce who can use Acacia by role
 - [x] Need `BASE_URL` integrating into settings.ini and in mk-static-pages.bash.
     - On dev box app is in root but in production it'll be under the "/acacia/" directory
     - Also need to handle base URL in Pandoc and bottler templates
