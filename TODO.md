@@ -5,6 +5,20 @@ Action Items
 next
 ----
 
+**Staff managed processing**
+
+- [ ] Enforce who can use Acacia
+    - Review restrictions via Apache confirmation
+    - Review DIBs approach to restriction by "role"
+- [ ] Documentation cleanup
+    - [ ] Proofread and copyedit
+    - [ ] Organize documentation around activities
+    - [ ] Improve installation instructures
+    - [ ] Writeup idea map for future versions
+
+Completed
+---------
+
 **Automated processing**
 
 - [x] Figure out how to connect from Python to Google SMTP service to read the submissions.authors@library.caltech.edu. According to the configuration in Thunderbird OAuth2 is being used to authenticate.
@@ -18,11 +32,6 @@ next
 
 **Staff managed processing**
 
-- [ ] Documentation cleanup
-    - [ ] Proofread and copyedit
-    - [ ] Organize documentation around activities
-    - [ ] Improve installation instructures
-    - [ ] Writeup idea map for future versions
 - [x] Need `BASE_URL` integrating into settings.ini and in mk-static-pages.bash.
     - On dev box app is in root but in production it'll be under the "/acacia/" directory
     - Also need to handle base url in pandoc and bottler templates
@@ -32,13 +41,13 @@ next
         - [x] Provide a means of triggering `messages-to-doi` script
         - [x] Provide a way to clear the message table
         - [x] List contents retrieved from email account
-    - [ ] Process DOI
+    - [x] Process DOI
         - [x] Show link to DOI
         - [x] Show link Object URL if provided
         - [x] Show status or EPrint URL if eprint record exists
         - [x] Show link to retrieved EPrints XML
-        - [ ] Provide a means of triggering `retrieve-metadata` script
-        - [ ] Provide a means to retrieve the individual DOI records
+        - [x] Provide a means of triggering `retrieve-metadata` script
+        - [x] Provide a means to retrieve the individual DOI records
         - [x] Provide button to move to trash/processed
         - [x] List contents DOI queued in Acacia
 

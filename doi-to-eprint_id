@@ -86,10 +86,11 @@ def apply(app_name, _db, args):
     if len(records) == 0:
         print(f'WARNING: no DOI found')
     else:
+        print(f'INFO: Found {len(records)} records')
         for rec in records:
             now = datetime.now()
             if not rec.eprint_id:
-                src, err = eprints_ssh.get_eprint_id_by_doi(rec.doi)
+                eprint_id, err = eprints_ssh.get_eprint_id_by_doi(rec.doi)
                 if err:
                     msg = f'ERROR get_eprint_id_by_doi({rec.doi}): {err}'
                     print(msg)
@@ -97,10 +98,12 @@ def apply(app_name, _db, args):
                         sys.exit(1)
                     else:
                         err_cnt += 1
-                else:
+                elif eprint_id != None:
+                    print(f'DEBUG: found {eprint_id} for doi {rec.doi}')
                     rec.repo_id = repo_id
-                    rec.eprint_id = src
-                rec.save()
+                    rec.eprint_id = eprint_id
+                    rec.updated = now
+                    rec.save()
             item_cnt += 1
     if dry_run:
         print(f'Dry run: no records saved.')
