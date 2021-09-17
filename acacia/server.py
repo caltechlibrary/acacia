@@ -87,11 +87,11 @@ def debug_mode():
 def required_roles(person, allowed_roles = []):
     logged_in = (person != None and person.uname != '')
     if not logged_in:
-        redirect(f'/logout')
+        redirect(f'{acacia.base_url}/logout')
     for role in allowed_roles:
         if person.has_role(role):
             return
-    redirect('/notallowed')
+    redirect(f'{acacia.base_url}/notallowed')
 
 #
 # URL end points
