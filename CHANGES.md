@@ -4,9 +4,9 @@ Change log for Acacia
 Version 0.0.1
 -------------
 
-- Implemented a Web UI for processign DOI submission requests from email or simple data entry form
+- Implemented a Web UI for processing DOI submission requests from email or simple data entry form
 - Implemented an interactive report to manage queued Email submissions to Acacia
-- Implemented an interactive rerport for the queue DOI submitted via Email or via data entry form
+- Implemented an interactive report for the queue DOI submitted via Email or via data entry form
 - Integrated `doi2eprintsxml` to generating EPrints XML suitable for import into EPrints
 
 Version 0.0.0
