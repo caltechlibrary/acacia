@@ -1,16 +1,20 @@
 Change log for Acacia
 =====================
 
-Version (next)
---------------
+Version 0.0.1
+-------------
 
-- An automated process for harvesting DOI submissions via Email
-- A process to convert DOI Email requests into a DOI metadata retrieval request
-- A process for fetch metadata by DOI from CrossRef/DataCite
-- A process for checking CaltechAUTHORS for EPrints record with a given DOI
-- A means of generating EPrints XML suitable for import into EPrints
-- A means of harvesting any PDF materials supplied with DOI retrieval request
-- A means of bundling up the EPrints XML and downloaded materials for continued work by librarian and library staff
-- A web UI for managing process and selecting content to be imported into CaltechAUTHORS
+- Implemented a Web UI for processign DOI submission requests from email or simple data entry form
+- Implemented an interactive report to manage queued Email submissions to Acacia
+- Implemented an interactive rerport for the queue DOI submitted via Email or via data entry form
+- Integrated `doi2eprintsxml` to generating EPrints XML suitable for import into EPrints
+
+Version 0.0.0
+-------------
+
+- Automated process for harvesting DOI submissions via Email
+- Automated process to convert DOI Email requests into a DOI metadata retrieval request
+- Automated process for fetch metadata by DOI from CrossRef/DataCite
+- Automated process for checking CaltechAUTHORS for EPrints record with a given DOI
 
 
