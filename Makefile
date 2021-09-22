@@ -3,8 +3,11 @@
 #
 PROJECT = Acacia
 
-website:
+static: .FORCE
 	./mk-static-pages.bash
+
+website:
+	./mk-website.bash
 
 setup: requirements.txt
 	python3 -m pip install -r requirements.txt
