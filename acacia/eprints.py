@@ -42,7 +42,7 @@ class EPrintsSSH:
 ##            return
 ##        _con = ConnectionInfo()
 ##        _con.parse(connection_string)
-##        con = _con.toDict()
+##        con = _con.to_dict()
 ##        if con == None:
 ##            raise ValueError(f'Could not parse "{connection_string}"')
 ##            return

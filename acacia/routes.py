@@ -23,7 +23,6 @@ from . import __version__
 
 # Acacia Code
 from .persons import Person, person_from_environ
-from .roles import role_to_redirect, has_role, staff_user
 from .messages import Message, EMailProcessor
 from .doi import Workflow, Doi, DOIProcessor, validate_doi
 from .eprints import EPrintsSSH
@@ -64,13 +63,14 @@ def page(name, person, **kargs):
 # maybe this should happend once in a bottle plugin and all requests
 # should have a person object or person as None.
     logged_in = (person != None and person.uname != '')
+    staff_user = person.has_role('staff') or person.has_role('library')
     if kargs.get('browser_no_cache', False):
         response.add_header('Expires', '0')
         response.add_header('Pragma', 'no-cache')
         response.add_header('Cache-Control',
                             'no-store, max-age=0, no-cache, must-revalidate')
     return template(name, base_url = acacia.base_url, version = __version__,
-                    logged_in = logged_in, staff_user = staff_user(person),
+                    logged_in = logged_in, staff_user = staff_user,
                     help_url = _HELP_URL, **kargs)
 
 def xml_page(data, **kargs):
