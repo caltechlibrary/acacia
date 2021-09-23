@@ -11,13 +11,13 @@ Workflows
 ---------
 
 - Email
-    1. Get [Messages](get-messages)
-    2. Convert [Messages to DOI](messages-to-doi)
-    3. Review [Messages Report](messages/)
+    1. Get [Messages](./get-messages)
+    2. Convert [Messages to DOI](./messages-to-doi)
+    3. Review [Messages Report](./messages/)
 - Data Entry
     1. [Add a DOI](add-doi)
 - Retrieving metadata and generating EPrint XML
-    1. Review the [DOI Report](list/)
+    1. Review the [DOI Report](./list/)
     2. For each DOI collected
         a. Review the link contents for DOI, URL of PDF
         b. If OK and you see the "look up" button, press it
@@ -34,11 +34,11 @@ Workflows
 Reports
 -------
 
-- [Messages](messages/)
-- [DOI](list/)
+- [Messages](./messages/)
+- [DOI](./list/)
 
 Misc
 ----
 
-- [Help](help/)
-- [About Acacia](about)
+- [Help](./help/)
+- [About Acacia](./about)

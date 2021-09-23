@@ -66,7 +66,7 @@
    <td>
        <a href="https://doi.org/{{item.doi}}" target="_blank">{{item.doi}}</a>
    </td>
-   <td><a href="{{item.object_url}}">
+   <td><a href="{{item.object_url}}" target="_blank">
 % if len(item.object_url) > 0:
 {{item.object_url.replace('http://', '').replace('https://', '').split(sep="/", maxsplit=2)[0]}}
 % end
