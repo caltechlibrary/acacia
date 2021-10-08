@@ -22,4 +22,3 @@ Developers
 + Tommy Keswick
 + George Porter
 
-Version: {{version}}
