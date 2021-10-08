@@ -1,0 +1,19 @@
+
+cff-version: 1.1.0
+message: "If you use this software, please cite it as below."
+authors:
+   - family-names: Doiel
+     given-names: Robert
+     orcid: https://orcid.org/0000-0003-0900-6903
+   - family-names: Morrell
+     given-names: Thomas E
+     orcid: https://orcid.org/0000-0001-9266-5146
+   - family-names: Hucka
+     given-names: Michael
+     orcid: https://orcid.org/0000-0001-9105-5960
+   - family-names: Porter
+     given-names: George
+     orcid: https://orcid.org/0000-0002-6539-638X 
+version: 0.0.1
+title: acacia
+date-released: 2021-10-07
