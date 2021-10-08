@@ -114,4 +114,5 @@ Authors and history
 + R. S. Doiel
 + Tommy Keswick
 + Tom Morrell
++ George Porter
 

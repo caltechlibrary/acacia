@@ -20,5 +20,6 @@ Developers
 + R. S. Doiel
 + Tom Morrell
 + Tommy Keswick
++ George Porter
 
 Version: {{version}}
