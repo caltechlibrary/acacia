@@ -84,7 +84,7 @@ from   rich.box import DOUBLE_EDGE
 from   rich.console import Console
 from   rich.panel import Panel
 from   shutil import get_terminal_size
-from   sidetrack import set_debug, log, logr
+from   sidetrack import set_debug, log, logf, loglist
 from   yurl import URL
 
 from   acacia import acacia, print_version
@@ -256,7 +256,7 @@ def start_wsgi_server(scheme, host, port, extra_path, adapter_file, mode):
         args += ['--access-log-format', '[%{%a %b %0e %H:%M:%S %Y}t] %h \"%r\" %>s']
         print_settings(mode, adapter_file)
 
-    logr(f'starting mod_wsgi with arguments: {" ".join(args)}')
+    logf(f'starting mod_wsgi with arguments: {" ".join(args)}')
     mod_wsgi_start(args)
 
 
