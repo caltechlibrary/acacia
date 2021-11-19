@@ -25,7 +25,6 @@ from . import __version__
 from .persons import Person, person_from_environ
 from .messages import Message, EMailProcessor
 from .doi import Workflow, Doi, DOIProcessor, validate_doi
-from .eprints import EPrintsSSH
 
 if __debug__:
     from sidetrack import set_debug, log
@@ -38,10 +37,9 @@ if __debug__:
 # behaviors in the rest of this file.
 acacia = Bottle()
 
-# Access to EPrints via EPrintsSSH
-ssh_host = config('EPRINT_SSH', None)
-repo_id = config('EPRINT_REPO_ID', None)
-eprints_ssh = EPrintsSSH(ssh_host, repo_id)
+#
+# FIXME: Setup access to ep3apid via acacia/ep3api.py
+#
 
 # Construct the path to the server root, which we use to construct other paths.
 _SERVER_ROOT = os.path.realpath(os.path.join(os.path.dirname(__file__), os.pardir))
