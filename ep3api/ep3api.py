@@ -20,9 +20,9 @@ def squote(s):
 #
 # Handle HTTP Requests
 #
-def http_get(u):
+def http_get(u, headers = None):
     '''http_get takes a URL and performs a GET. It returns a touple of payload and error'''
-    req = Request(u)
+    req = Request(u, headers = headers)
     try:
         res = urlopen(req)
     except HTTPError as e:
@@ -46,7 +46,8 @@ def http_post(u, content_type, data):
         return res.read(), None
 
 def get_json_data(u):
-    src, err = http_get(u)
+    headers = {'Content-Type': 'application/json'}
+    src, err = http_get(u, headers = headers)
     if err != None:
         return None, err
     if not isinstance(src, bytes):
@@ -239,10 +240,21 @@ class Ep3API:
         else:
             return get_json_data(f'{self.url}/{self.repo_id}/year/{year}')
 
-    def eprint(self, eprint_id = None):
+    def eprint(self, eprint_id):
         return get_json_data(f'{self.url}/{self.repo_id}/eprint/{eprint_id}')
 
-    def eprint(self, eprint_xml = None):
+    def eprint_import(self, eprint_xml = None):
+        if eprint_xml == None:
+            return [], 'missing eprint xml'
         return post_xml(f'{self.url}/{self.repo_id}/eprint-import', eprint_xml)
+
+    def user(self, username_or_id):
+        return get_json_data(f'{self.url}/{self.repo_id}/user/{username_or_id}')
+
+    def usernames(self):
+        return get_json_data(f'{self.url}/{self.repo_id}/usernames')
+
+    def lookup_userid(self, username):
+        return get_json_data(f'{self.url}/{self.repo_id}/lookup-userid/{username}')
 
 
