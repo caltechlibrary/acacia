@@ -25,6 +25,7 @@ from . import __version__
 from .persons import Person, person_from_environ
 from .messages import Message, EMailProcessor
 from .doi import Workflow, Doi, DOIProcessor, validate_doi
+from .ep3apid import Ep3API
 
 if __debug__:
     from sidetrack import set_debug, log
@@ -36,6 +37,10 @@ if __debug__:
 # Begin by creating a Bottle object on which we will define routes and other
 # behaviors in the rest of this file.
 acacia = Bottle()
+
+repo_id = config('REPO_ID', 'caltechauthors')
+ep3apid_url = config('EP3APID_URL', 'http://localhost:8484')
+ep3api = Ep3API(ep3apid_url, repo_id)
 
 #
 # FIXME: Setup access to ep3apid via acacia/ep3api.py
@@ -57,7 +62,7 @@ _HELP_URL = '/help/'
 
 def page(name, person, **kargs):
     '''Create a page using template "name" with some standard variables set.'''
-#FIXME: we're alling person_from_environ multiple times per request,
+#FIXME: we're allowing person_from_environ multiple times per request,
 # maybe this should happend once in a bottle plugin and all requests
 # should have a person object or person as None.
     logged_in = (person != None and person.uname != '')
@@ -203,7 +208,7 @@ def message_to_doi():
     doi_processor = DOIProcessor()
     records = mail_processor.get_unprocessed()
     if len(records) == 0:
-        redirect(f'{acacia.base_url}/messages/')
+        redirect(f'{acacia.base_url}/list/')
     errors = []
     err_cnt, item_cnt, doi_cnt = 0, 0, 0
     for rec in records:
@@ -217,7 +222,7 @@ def message_to_doi():
         doi_cnt += n
         item_cnt += 1
     if err_cnt == 0:
-        redirect(f'{acacia.base_url}/messages/')
+        redirect(f'{acacia.base_url}/list/')
     return page('error', person, title='Messages to DOI', summary = "Error converting email messages into DOI records", description = (f'''{errors.join(" ")}'''))
 
 
@@ -276,15 +281,18 @@ def get_metadata(rec_id = None):
                         record.updated = now
                         doi_cnt += 1
                 if not record.eprint_id:
-                    eprint_id, err = eprints_ssh.get_eprint_id_by_doi(record.doi)
+                    eprint_id, err = None,None # DEBUG
+                    ids, err = ep3api.doi(record.doi)
+                    print(f'DEBUG doi1 ids {ids}, err: {err}')
                     if err:
-                        msg = f'ERROR get_eprint_id_by_doi({record.doi}): {err}'
+                        msg = f'ERROR ep3api.doi({record.doi}): {err}'
                         errors.append(msg)
                         record.status = 'processing_error'
                         record.notes += msg + "\n"
                         record.updated = now
                         err_cnt += 1
-                    elif eprint_id != None:
+                    elif ids != None and len(ids) > 0:
+                        eprint_id = ids[0]
                         record.repo_id = repo_id
                         record.eprint_id = eprint_id
                     record.save()
@@ -310,15 +318,17 @@ def get_metadata(rec_id = None):
                 record.status = 'ready'
                 record.updated = now
             if not record.eprint_id:
-                #eprint_id, err = eprints_ssh.get_eprint_id_by_doi(record.doi)
                 eprint_id, err = None,None # DEBUG
+                ids, err = ep3api.doi(record.doi)
+                print(f'DEBUG doi2 ids {ids}, err: {err}')
                 if err:
-                    msg = f'ERROR get_eprint_id_by_doi({record.doi}): {err}'
+                    msg = f'ERROR ep3api.doi({record.doi}): {err}'
                     errors.append(msg)
                     record.status = 'processing_error'
                     record.notes += msg + "\n"
                     record.updated = now
-                elif eprint_id != None:
+                elif ids != None and len(ids) > 0:
+                    eprint_id = ids[0]
                     log(f'DEBUG updating eprint_id: {eprint_id}')
                     record.repo_id = repo_id
                     record.eprint_id = eprint_id
@@ -372,11 +382,15 @@ def list_items( filter_by = None, sort_by = None):
     #FIXME: need to apply options and describe 
     items = []
     for item in Doi.select():
+        if item.doi != None and not item.eprint_id:
+            ids, err = ep3api.doi(item.doi)
+            if err == None and ids != None and len(ids) > 0:
+                item.eprint_id = ids[0]
         items.append(item)
     description = f'''
 This is a list of DOIs that Acacia knows about.
 '''
-    return page('list', person, title = 'Manage DOI', description = description, items = items)
+    return page('list', person, title = 'Manage DOI', description = description, items = items, repo_id = repo_id)
 
 @acacia.get('/eprint-xml/<rec_id:int>')
 def get_eprint_xml(rec_id = None):
@@ -418,6 +432,26 @@ def doi_remove(rec_id = None):
         return page('error', person, title='Delete request', summary ='deletion failed', message = (f'Record {rec_id} not found'))
     return page('error', person, title='Delete request', summary ='deletion failed', message = (f'Missing record ID in URL'))
 
+@acacia.get('/item-import/<rec_id:int>')
+def item_import(rec_id = None):
+    '''Import an Acacia record into the IR (e.g. CaltechAUTHORS)'''
+    person = person_from_environ(request.environ)
+    required_roles(person, [ 'staff', 'library' ])
+    base_url = config('BASE_URL', '')
+    if rec_id != None:
+        rec = Doi.get_by_id(str(rec_id))
+        if rec != None and not rec.eprint_id:
+            src = rec.metadata
+            if not isinstance(src, bytes):
+                src = src.encode('utf-8')
+            ids, err = ep3api.eprint_import(src)
+            if err:
+                return page('error', person, title = "Import EPrint", summary = 'failed to import to eprints', message = err)
+            if ids != None and len(ids) > 0:
+                rec.eprint_id = ids[0]
+                rec.status = 'imported'
+                rec.save()
+    redirect(f'{acacia.base_url}/list')
 
 
 # Error pages.

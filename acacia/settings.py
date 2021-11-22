@@ -27,7 +27,6 @@ BASE_PREFIX = http://localhost:8080
 
 # EP3API_URL is the URL to the ep3apid instance (e.g. http://localhost:8484)
 EP3API_URL = http://localhost:8484
-# REPO_ID the repository ID used by EP3API_URL.
 REPO_ID = "REPO_ID"
 
 # Email details. This is to access the mailbox of the submissions

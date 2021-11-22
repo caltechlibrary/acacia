@@ -315,7 +315,7 @@ form p {
     max-width: 50%;
 }
 form p input {
-    text-align: center;
+    text-align: left;
 }
 
 .subject {

@@ -3,7 +3,7 @@
 ep3api_test.py tests the ep3api.py python library used in acacia object.
 '''
 from cltests import TestSet, T, IsSuccessful
-from ep3api import Ep3API
+from ep3apid import Ep3API
 
 api = Ep3API('http://localhost:8484', 'lemurprints')
 
