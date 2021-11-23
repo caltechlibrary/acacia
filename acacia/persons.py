@@ -41,7 +41,7 @@ import os
 
 repo_id = config('REPO_ID', 'caltechauthors')
 ep3apid_url = config('EP3APID_URL', 'http://localhost:8484')
-ep3api = Ep3API(ep3apid_url, repo_id)
+api = Ep3API(ep3apid_url, repo_id)
 
 if not ('environ' in globals()):
     environ = {'REMOTE_USER': None}
@@ -57,13 +57,19 @@ class GuestPerson(User):
         return None
 
 class Person(User):
-    def __init__(self, uname):
-        self = User.__init__()
-        m = ep3api.user(uname)
-        self.from_dict(m)
+    def __init__(self, uname = None):
+        '''Person inits with a username rather than a dict'''
+        if isinstance(uname, str):
+            m, err = api.user(uname)
+            if not err:
+                User.__init__(self, m)
+            else:
+                User.__init___(self)
+        else:
+            User.__init__(self)
 
     def get_or_none(self, uname):
-        m, err = ep3api.user(uname)
+        m, err = api.user(uname)
         self.from_dict(m)
         return m
 
@@ -92,14 +98,14 @@ class PersonManager:
     def list_people(self, kv = None):
         '''list people in the Repository usering username'''
         if not kv:
-            print(f'''User Id\tUsername\tName\tRole\tUpdated''')
-            usernames, err = ep3api.usernames()
+            print(f'''User Id\tUsername\tName\tRole\tCreated''')
+            usernames, err = api.usernames()
             person = Person(None)
+            required = [ 'admin', 'editor' ]
             for uname in usernames:
                 u = Person(uname)
-                print(f'DEBUG u: {u.to_string()}')
-                if u != None:
-                    print(f'''{u.userid}\t{u.uname}\t{u.display_name}\t{u.role}\t{u.updated}''')
+                if u != None and u.has_role(required):
+                    print(f'''{u.userid}\t{u.uname}\t{u.display_name}\t{u.role}\t{u.created}''')
         elif isinstance(kv, dict) and 'uname' in kv:
             u = Person(kv['uname'])
             print(f'''
