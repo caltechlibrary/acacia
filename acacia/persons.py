@@ -32,7 +32,7 @@ from peewee import SqliteDatabase, Model
 from peewee import AutoField, CharField, TimestampField
 
 ## from . import cmds
-from .ep3apid import Ep3API
+from .ep3apid import Ep3API, User
 
 import os
 
@@ -49,44 +49,23 @@ if not ('environ' in globals()):
 
 # GuestPerson only exists while REMOTE_USER available in the environment.
 # It is not stored in the person table as the Person model is.
-class GuestPerson:
+class GuestPerson(User):
     '''GuestPerson is an object for non-staff people.  It has the same
     signature but is not persisted in the person table of the database.
     '''
     def get_or_none(self, uname):
         return None
 
-    def has_role(self, required_role):
-        return False
-
-class Person:
+class Person(User):
     def __init__(self, uname):
-        self.userid = 0
-        self.uname = ''
-        self.role = ''
-        self.display_name = ''
-        self.updated = ''
-        self.get_or_none(uname)
+        self = User.__init__()
+        m = ep3api.user(uname)
+        self.from_dict(m)
 
     def get_or_none(self, uname):
-        u, err = ep3api.user(uname)
-        if not err:
-            if 'userid' in u:
-                self.userid = u['userid']
-            if 'username' in u:
-                self.uname = u['username']
-            if 'type' in u:
-                self.role = u['type']
-            if 'name' in u:
-                name = u['name']
-            if 'family' in name and 'given' in name:
-                self.display_name = f'{name["family"]}, {name["given"]}'
-            self.updated = u["joined"]
-            return self 
-        return None
-
-    def has_role(self, required_role):
-        return self.role == required_role
+        m, err = ep3api.user(uname)
+        self.from_dict(m)
+        return m
 
 def person_from_environ(environ):
     if 'REMOTE_USER' in environ:
@@ -117,7 +96,8 @@ class PersonManager:
             usernames, err = ep3api.usernames()
             person = Person(None)
             for uname in usernames:
-                u = person.get_or_none(uname)
+                u = Person(uname)
+                print(f'DEBUG u: {u.to_string()}')
                 if u != None:
                     print(f'''{u.userid}\t{u.uname}\t{u.display_name}\t{u.role}\t{u.updated}''')
         elif isinstance(kv, dict) and 'uname' in kv:

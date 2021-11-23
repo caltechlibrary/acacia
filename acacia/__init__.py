@@ -34,6 +34,8 @@ __license__     = 'BSD 3-clause'
 # .............................................................................
 
 from .routes import acacia
+from .ep3apid.ep3api import Ep3API
+from .ep3apid.user import User
 
 
 # Miscellaneous utilities.
