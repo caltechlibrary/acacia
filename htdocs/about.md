@@ -16,9 +16,11 @@ functionality.
 Developers
 ----------
 
-+ Mike Hucka
+(alphabetically)
+
 + R. S. Doiel
-+ Tom Morrell
++ Mike Hucka
 + Tommy Keswick
++ Tom Morrell
 + George Porter
 

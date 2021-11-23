@@ -12,11 +12,12 @@
 </header>
 <nav>
 <% include('nav.tpl') %>
+<% include('user_info.tpl') %>
 </nav>
 
 <section>
 <p>
-<button><a href="{{base_url}}/get-messages">Get Messages</a></button>
+<!-- <button><a href="{{base_url}}/get-messages">Get Messages</a></button><! -->
 <button><a href="{{base_url}}/messages-to-doi">Process Messages</a></button>
 <!--
 <button><a href="{{base_url}}/retrieve-metadata">Retrieve Metadata</a></button>

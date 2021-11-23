@@ -12,8 +12,8 @@
 </header>
 <nav>
 <% include('nav.tpl') %>
+<% include('user_info.tpl') %>
 </nav>
-
 <section>
 % if form == 'add-doi':
 %    include('add-doi.tpl')

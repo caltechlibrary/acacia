@@ -12,8 +12,8 @@
 </header>
 <nav>
 <% include('nav.tpl') %>
+<% include('user_info.tpl') %>
 </nav>
-
 <section>
 <p>
 <!-- 
@@ -22,23 +22,27 @@
 <button><a href="{{base_url}}/retrieve-metadata">Retrieve Metadata</a></button>
 -->
 </p>
-<h1>DOI Report</h1>
+<h1>Manage DOI</h1>
 <p>{{description}}</p>
 <table>
 <tr>
     <th class="action">&nbsp;</th>
     <th>From</th>
     <th>Status</th>
+    <th>Repository ID</th>
     <th>DOI</th>
     <th>URL to PDF</th>
-    <th>Export</th>
+    <th>View XML</th>
+    <th class="action">&nbsp;</th>
     <th class="action">&nbsp;</th>
 </tr>
 % for item in items: 
 <tr>
    <td>
-   % if item.status == "ready":
-   <button><a href="{{base_url}}/doi-reset/{{item.id}}" title="Clear the retrieved metadata from record">reset</a></button>
+   % if item.eprint_id:
+   &nbsp;
+   % elif item.status == "ready":
+   <button><a href="{{base_url}}/doi-reset/{{item.id}}" title="Clear the retrieved metadata for record {{item.id}} in Acacia">clear</a></button>
    % else:
    <button><a href="{{base_url}}/retrieve-metadata/{{item.id}}" title="retrieve the metadata via CrossRef or DataCite">look up</a></button>
    % end
@@ -51,16 +55,21 @@
 % end
    </td>
    <td>
-% if item.status == "ready":
-   % if item.eprint_id == None:
-    {{item.status}}
-   % else:
-<a href="https://authors.library.caltech.edu/{{item.eprint_id}}" target="_blank">EPrint {{item.eprint_id}}</a>
-   % end
-% elif item.status == "unprocessed":
-    pending
+% if item.eprint_id:
+   imported
+% elif item.status == "ready":   
+metadata retrieved   
+% elif item.status == "pending":
+   waiting for lookup
 % else:
    {{item.status}}
+% end
+   </td>
+   <td>
+% if (item.eprint_id != None):
+<a href="https://authors.library.caltech.edu/{{item.eprint_id}}" target="_blank">{{item.eprint_id}}</a>
+% else:
+   &nbsp;
 % end
    </td>
    <td>
@@ -73,11 +82,16 @@
 </a></td>
    <td>
 % if item.status == "ready":
-   <a href="{{base_url}}/eprint-xml/{{item.id}}" target="_blank">EPrint XML</a>
+   <a href="{{base_url}}/eprint-xml/{{item.id}}" target="_blank">XML</a>
 % end
    </td>
    <td>
-       <button><a href="{{base_url}}/doi-remove/{{item.id}}">Remove</a></button>
+% if item.status == "ready" and not item.eprint_id:
+       <button><a href="{{base_url}}/item-import/{{item.id}}" title="Import item into EPrints">Import</a></button>
+% end
+   </td>
+   <td>
+       <button><a href="{{base_url}}/doi-remove/{{item.id}}" title="Remove item from Acacia">Remove</a></button>
    </td>
 </tr>
 % end

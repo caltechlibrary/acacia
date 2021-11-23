@@ -7,6 +7,7 @@ next
 
 **Staff managed processing**
 
+- [ ] Add logged in user id to EPrint when importing. E.g. If George is using Acacia then the userid needs to be 6 in the EPrint XML before push.
 - [ ] Documentation cleanup
     - [x] Proofread and copy edit
     - [x] Organize documentation around activities

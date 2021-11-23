@@ -315,7 +315,7 @@ form p {
     max-width: 50%;
 }
 form p input {
-    text-align: center;
+    text-align: left;
 }
 
 .subject {
@@ -355,4 +355,12 @@ form p input {
     display: inline-block;
     text-transform: lowercase;
     text-decoration: underline;
+}
+
+.logged-in-user {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+    padding-left: 1.24em;
+    display: inline-block;
 }
