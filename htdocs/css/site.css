@@ -356,3 +356,11 @@ form p input {
     text-transform: lowercase;
     text-decoration: underline;
 }
+
+.logged-in-user {
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+    padding-left: 1.24em;
+    display: inline-block;
+}

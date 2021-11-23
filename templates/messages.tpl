@@ -12,6 +12,7 @@
 </header>
 <nav>
 <% include('nav.tpl') %>
+<% include('user_info.tpl') %>
 </nav>
 
 <section>

@@ -26,6 +26,7 @@ from .persons import Person, person_from_environ
 from .messages import Message, EMailProcessor
 from .doi import Workflow, Doi, DOIProcessor, validate_doi
 from .ep3apid import Ep3API
+from .misc import apply_user_id_to_xml
 
 if __debug__:
     from sidetrack import set_debug, log
@@ -66,13 +67,14 @@ def page(name, person, **kargs):
 # maybe this should happend once in a bottle plugin and all requests
 # should have a person object or person as None.
     logged_in = (person != None and person.uname != '')
-    staff_user = person.has_role('staff') or person.has_role('library')
+    staff_user = person.has_role('admin') or person.has_role('editor')
     if kargs.get('browser_no_cache', False):
         response.add_header('Expires', '0')
         response.add_header('Pragma', 'no-cache')
         response.add_header('Cache-Control',
                             'no-store, max-age=0, no-cache, must-revalidate')
     return template(name, base_url = acacia.base_url, version = __version__,
+                    person = person,
                     logged_in = logged_in, staff_user = staff_user,
                     help_url = _HELP_URL, **kargs)
 
@@ -87,7 +89,8 @@ def debug_mode():
     return getattr(acacia, 'debug_mode', False)
 
 
-def required_roles(person, allowed_roles = []):
+def required_roles(person):
+    allowed_roles = [ 'admin', 'editor' ]
     logged_in = (person != None and person.uname != '')
     if not logged_in:
         redirect(f'{acacia.base_url}/logout')
@@ -144,11 +147,16 @@ def logout():
 # DOI.
 #
 
+@acacia.get('/whoami')
+def whoami():
+    person = person_from_environ(request.environ)
+    return page('whoami.tpl', person, title='Who am I?', description = 'A page for debugging user/role issues')
+
 @acacia.get('/add-doi')
 def get_add_a_doi():
     '''Display the form to add a DOI'''
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     logged_in = (person != None and person.uname != '')
     if not logged_in:
         redirect(f'/Shibboleth.sso/Logout')
@@ -158,7 +166,7 @@ def get_add_a_doi():
 def do_add_a_doi():
     '''Process submission of DOI and object URL'''
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     error_message = None # Assume no errors to start.
     uname = person.uname
     doi = request.forms.get("doi")
@@ -192,7 +200,7 @@ def do_add_a_doi():
 @acacia.get('/get-messages')
 def get_messages():
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     mail_processor = EMailProcessor()
     if mail_processor.get_mail():
         redirect(f'{acacia.base_url}/messages')
@@ -203,7 +211,7 @@ def get_messages():
 @acacia.get('/messages-to-doi')
 def message_to_doi():
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     mail_processor = EMailProcessor()
     doi_processor = DOIProcessor()
     records = mail_processor.get_unprocessed()
@@ -229,7 +237,7 @@ def message_to_doi():
 @acacia.get('/message-reset/<rec_id:int>')
 def message_reset(rec_id = None):
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     if rec_id != None:
         record = Message.get_by_id(str(rec_id))
         if record != None:
@@ -240,7 +248,7 @@ def message_reset(rec_id = None):
 @acacia.get('/message-remove/<rec_id:int>')
 def message_remove(rec_id = None):
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     if rec_id != None:
         rec = Message.get_by_id(str(rec_id))
         if rec != None:
@@ -257,7 +265,7 @@ def message_remove(rec_id = None):
 @acacia.get('/retrieve-metadata/<rec_id:int>')
 def get_metadata(rec_id = None):
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     doi_processor = DOIProcessor()
     errors = []
     if rec_id == None:
@@ -349,7 +357,7 @@ def get_metadata(rec_id = None):
 def list_messages(filter_by = None, sort_by = None):
     ''' List the messages that have been retrieved for processing'''
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     submit_email = config('SUBMIT_EMAIL', '')
     opts = []
     if filter_by:
@@ -373,7 +381,7 @@ def list_items( filter_by = None, sort_by = None):
         to trigger the generation of export bundles which are
         then emailed to the requesting librarian '''
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     opts = []
     if filter_by:
         opts.append(filter_by)
@@ -396,7 +404,7 @@ This is a list of DOIs that Acacia knows about.
 def get_eprint_xml(rec_id = None):
     '''Retrieve the EPrint XML saved as "metadata" in the doi object'''
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     rec = Doi.get_by_id(str(rec_id))
     if rec != None:
         return xml_page(data = '''<?xml version='1.0' encoding='utf-8'?>''' + "\n" + rec.metadata, content_type = 'text/plain')
@@ -406,7 +414,7 @@ def get_eprint_xml(rec_id = None):
 @acacia.get('/doi-reset/<rec_id:int>')
 def doi_reset(rec_id = None):
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
 
     if rec_id != None:
         record = Doi.get_by_id(str(rec_id))
@@ -420,7 +428,7 @@ def doi_reset(rec_id = None):
 def doi_remove(rec_id = None):
     '''Remove the requested record'''
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     base_url = config('BASE_URL', '')
     if rec_id != None:
         rec = Doi.get_by_id(str(rec_id))
@@ -436,7 +444,7 @@ def doi_remove(rec_id = None):
 def item_import(rec_id = None):
     '''Import an Acacia record into the IR (e.g. CaltechAUTHORS)'''
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     base_url = config('BASE_URL', '')
     if rec_id != None:
         rec = Doi.get_by_id(str(rec_id))
@@ -444,6 +452,7 @@ def item_import(rec_id = None):
             src = rec.metadata
             if not isinstance(src, bytes):
                 src = src.encode('utf-8')
+            src = apply_user_id_to_xml(src, person.userid)
             ids, err = ep3api.eprint_import(src)
             if err:
                 return page('error', person, title = "Import EPrint", summary = 'failed to import to eprints', message = err)
@@ -493,7 +502,7 @@ def error405(error):
 def home_page():
     '''Manage provides a dashbaord of available activities.'''
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
 # Load static dashboard page
     return static_file('index.html', root = os.path.join(_SERVER_ROOT, 'htdocs'))
 
@@ -502,7 +511,7 @@ def home_page():
 @acacia.get('/about/')
 def manage_items():
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     '''Manage provides a dashbaord of available activities.'''
 # Load static dashboard page
     return static_file('about.html', root = os.path.join(_SERVER_ROOT, 'htdocs'))
@@ -521,7 +530,7 @@ def favicon():
 def help_pages(filename = 'index.html'):
     '''Return a static file'''
     person = person_from_environ(request.environ)
-    required_roles(person, [ 'staff', 'library' ])
+    required_roles(person)
     p = os.path.join(_SERVER_ROOT, 'htdocs', 'help')
     log(f'returning help file {filename} {p}')
     return static_file(filename, root = p)

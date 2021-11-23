@@ -29,7 +29,8 @@ if [ -f "settings.ini" ]; then
 fi
 
 # Build navigation base on nav.tmpl and BASE_URL
-mkpage "base_url=text:${BASE_URL}" nav.tmpl >htdocs/nav.md
+mkpage "base_url=text:${BASE_URL}" \
+       nav.tmpl >htdocs/nav.md
 
 for BNAME in $(find htdocs -type f | grep '.md$' | sed -E 's/htdocs\///;s/\.md$//'); do
   if [ "${BNAME}" != "nav" ]; then
