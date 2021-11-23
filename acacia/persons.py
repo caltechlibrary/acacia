@@ -34,18 +34,9 @@ from peewee import AutoField, CharField, TimestampField
 ## from . import cmds
 from .ep3apid import Ep3API, User
 
-import os
-
-## Figure out how are authentication and authorization is configured.
-#_db = SqliteDatabase(config('DATABASE_FILE', default='acacia.db'))
-
 repo_id = config('REPO_ID', 'caltechauthors')
 ep3apid_url = config('EP3APID_URL', 'http://localhost:8484')
 api = Ep3API(ep3apid_url, repo_id)
-
-if not ('environ' in globals()):
-    environ = {'REMOTE_USER': None}
-
 
 # GuestPerson only exists while REMOTE_USER available in the environment.
 # It is not stored in the person table as the Person model is.
@@ -75,13 +66,15 @@ class Person(User):
 
 def person_from_environ(environ):
     if 'REMOTE_USER' in environ:
-        # NOTE: If we're shibbed then we always return a Person object.
-        # Either they are a known person (e.g. library staff) or other community
-        # member without a role.
-        person = Person(environ['REMOTE_USER'])
-    else:
-        person = Person()
-    return person
+        remote_user = environ['REMOTE_USER']
+        if '@' in remote_user:
+            uname, host = remote_user.split('@', 2)
+        else:
+            uname = remote_user
+        # NOTE: If we're shibbed use the REMOTE_USER value to 
+        # retrieve person from EPrint user table without the @caltech.edu
+        return Person(uname)
+    return Person()
 
 def normalize_str(s):
     if isinstance(s, bytes):

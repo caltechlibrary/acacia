@@ -67,7 +67,7 @@ def page(name, person, **kargs):
 # maybe this should happend once in a bottle plugin and all requests
 # should have a person object or person as None.
     logged_in = (person != None and person.uname != '')
-    staff_user = person.has_role('admin') or person.has_role('editor')
+    staff_user = person.has_role(['admin', 'editor'])
     if kargs.get('browser_no_cache', False):
         response.add_header('Expires', '0')
         response.add_header('Pragma', 'no-cache')
@@ -150,7 +150,11 @@ def logout():
 @acacia.get('/whoami')
 def whoami():
     person = person_from_environ(request.environ)
-    return page('whoami.tpl', person, title='Who am I?', description = 'A page for debugging user/role issues')
+    if 'REMOTE_USER' in request.environ:
+        shib_user = request.environ['REMOTE_USER']
+    else:
+        shib_user = ''
+    return page('whoami.tpl', person, title='Who am I?', description = 'A page for debugging user/role issues', shib_user = shib_user)
 
 @acacia.get('/add-doi')
 def get_add_a_doi():

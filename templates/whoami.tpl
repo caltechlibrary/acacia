@@ -28,6 +28,9 @@
 % end
     <tr><th>role</th><td>{{person.role}}</td></tr>
     <tr><th>created</th><td>{{person.created}}</td></tr>
+% if shib_user:
+    <tr><th>REMOTE_USER</th><td>{{shib_user}}</td></tr>
+% end
 </table>
 </section>
 
