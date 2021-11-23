@@ -37,8 +37,6 @@ def test_demo_setup():
     dois, err = demo_api.doi()
     t.Expected(None, err, f"Did not expect an error for doi, {err}")
     if isinstance(dois, list):
-        #for doi in dois:
-        #    print(f'DEBUG doi {doi}')
         t.Expected(True, len(dois) > 0, 'Expected non-zero dois')
         ids, err = demo_api.doi(dois[0])
         t.Expected(None, err, "Did not expect an error for ids")

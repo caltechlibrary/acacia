@@ -29,12 +29,13 @@ Installation
 Requirements
 
 + [EPrint Tools >= 1.1.0](https://github.com/caltechlibrary/eprinttools/releases)
+    - [doi2eprintxml](https://caltechlibrary.github.io/eprinttools/docs/doi2eprintxml)'s to retrieve the metadata associated with a DOI from CrossRef or DataCite (version 1.1.0 or better)
+    - [ep3apid](https://caltechlibrary.github.io/eprinttools/docs/ep3apid) / to handling importing records and quering the EPrints repository for records and user accounts.
 + Python3
-+ SQLite3
++ MySQL (used by EPrints)
 + IMAP email account (and access credentials)
 + Emails with list of DOI, one per line
 + software in this repository setup to run periodically (e.g. via cron, systemd or launchd)
-+ [EPrint Tools](https://github.com/caltechlibrary/eprinttools)'s `doi2eprintxml` to retrieve the metadata associated with a DOI from CrossRef or DataCite (version 1.1.0 or better) and `ep3apid` to handling importing records.
 
 See [INSTALL.md](INSTALL.md) for full details.
 
@@ -42,29 +43,18 @@ See [INSTALL.md](INSTALL.md) for full details.
 Usage
 -----
 
-The application consist of two parts. The first part is
-a set of services for commands for retrieving email submissions,
-translating them into DOIs to be requested and to retrieve
-the CrossRef/DataCite JSON records associated with the DOI.
-Another service will check our EPrints repository to see
-if the DOI is already known.  These typically would run on a
-schedule (e.g. run from cron).
+The application consist of several parts. 
 
-The second part is a web service for monitoring and aggregating
-the harvested DOI records for import eventual import into EPrints.
-The web interface is intended to show status information about
-the DOIs submitted, support triage the DOI for further processing
-(e.g. import into EPrints), generating a downloadable bundle of
-PDF and EPrints XML for import into EPrints. Additional reports
-will be determined through the pilot process of application
-development.
+1. A Bottle based Python3 application for UI
+2. EPrinttools' ep3apid for interacting with our EPrints repository
+3. EPrinttools' doi2eprintxml for retrieving metadata from CrossRef or DataCite services
 
-The downloadable bundle is a zip file that contains any PDF
-retrieved, an EPrints XML document for importing into EPrints,
-a CSV manifest file for what was included and status information
-(e.g. HTTP error codes) for material retrieved and placed into the
-bundle. Once the bundle is successfully generated the DOI record
-is marketed as processed.
+Both the Bottle application and ep3apid need to run as services on your server. In addition the Bottle application is expected to run behind Shibboleth and Apache2. The Bottle application functions as the interaction point querying the ep3apid service as needed as well as calling doi2eprintxml as needed.  
+
+After setting up Apache2 and Shibboleth the Bottle application runs as a WSGI service via Apache2. The Bottle application uses a settings.ini file to know where to access the ep3apid service as well as some additional configuration.   For the Bottle application to function it needs to have ep3apid running on localhost. This service has it's own configuration in a "settings.json" file. See [EPrinttools](https://github.com/caltechlibrary/eprinttools) for details on setting it up and configuring it.
+
+To install this application review [INSTALLmd](INSTALL.html). Download both [Acacia](https://github.com/caltechlibrary/Acacia/releases) and [EPrinttools](https://github.com/caltechlibrary/eprinttools/releases). Unzip the respective files and copy into the desired locations on your system (e.g. /Sites/acacia for the Bottle app and /usr/local/bin for EPrinttools).  Edit the settings.ini appropriately for Acacia and the settings.json for EPrinttools. Configure Apache2 for Shibboleth and WSGI for Acacia. Restart Apache2.  Start the ep3apid service using your updated `settings.json` file.  The ep3apid daemon can be configured to run via systemd or macOS's launchd.
+
 
 
 Known issues and limitations
@@ -111,8 +101,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 Authors and history
 -------------------
 
-+ Mike Hucka
 + R. S. Doiel
++ Mike Hucka
 + Tommy Keswick
 + Tom Morrell
 + George Porter
