@@ -67,7 +67,7 @@ metadata retrieved
    </td>
    <td>
 % if (item.eprint_id != None):
-<a href="{{view_url}}/{{item.eprint_id}}" target="_blank">{{item.eprint_id}}</a>
+<a href="{{view_url}}{{item.eprint_id}}" target="_blank">{{item.eprint_id}}</a>
 % else:
    &nbsp;
 % end
