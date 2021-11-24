@@ -12,6 +12,7 @@ import os
 import logging
 from time import strftime
 from datetime import datetime
+import json
 
 from decouple import config
 
@@ -19,7 +20,7 @@ import bottle
 from   bottle import Bottle, HTTPResponse, static_file, template
 from   bottle import request, response, redirect, route, get, post, error
 
-from . import __version__
+from . import __app__, __version__, __description__, __author__, __license__, __url__, __email__
 
 # Acacia Code
 from .persons import Person, person_from_environ
@@ -76,6 +77,12 @@ def page(name, person, **kargs):
                     person = person,
                     logged_in = logged_in, staff_user = staff_user,
                     help_url = _HELP_URL, **kargs)
+
+def json_page(data, **kargs):
+    content_type = 'application/json'
+    content_type = kargs.get('content_type', 'application/json')
+    response.add_header('Content-Type', content_type)
+    return data
 
 def xml_page(data, **kargs):
     content_type = 'application/xml'
@@ -294,7 +301,6 @@ def get_metadata(rec_id = None):
                 if not record.eprint_id:
                     eprint_id, err = None,None # DEBUG
                     ids, err = ep3api.doi(record.doi)
-                    print(f'DEBUG doi1 ids {ids}, err: {err}')
                     if err:
                         msg = f'ERROR ep3api.doi({record.doi}): {err}'
                         errors.append(msg)
@@ -312,10 +318,8 @@ def get_metadata(rec_id = None):
                 redirect(f'{acacia.base_url}/list')
     else:
         now = datetime.now()
-        log(f'DEBUG retrieve individual record {rec_id}')
         record = Doi.get_or_none(Doi.id == str(rec_id))
         if record != None:
-            log(f'DEBUG retrieving metadata for {record.doi}')
             metadata, err = doi_processor.get_metadata(record.doi)
             if err:
                 msg = f'ERROR get_metadata({record.doi}) {now.isoformat}: {err}'
@@ -331,7 +335,6 @@ def get_metadata(rec_id = None):
             if not record.eprint_id:
                 eprint_id, err = None,None # DEBUG
                 ids, err = ep3api.doi(record.doi)
-                print(f'DEBUG doi2 ids {ids}, err: {err}')
                 if err:
                     msg = f'ERROR ep3api.doi({record.doi}): {err}'
                     errors.append(msg)
@@ -340,10 +343,8 @@ def get_metadata(rec_id = None):
                     record.updated = now
                 elif ids != None and len(ids) > 0:
                     eprint_id = ids[0]
-                    log(f'DEBUG updating eprint_id: {eprint_id}')
                     record.repo_id = repo_id
                     record.eprint_id = eprint_id
-            log(f'DEBUG updating {record.doi}, record id {record.id}')
             record.save()
         else:
             errors.append('record not found in DOI table')
@@ -465,17 +466,30 @@ def item_import(rec_id = None):
                 rec.save()
     redirect(f'{acacia.base_url}/list')
 
-@acacia.get('/eprint/<rec_id:int>')
-def get_eprint(rec_id = None):
-    '''Retrieve the EPrint XML saved as "metadata" in the doi object'''
+@acacia.get('/eprint-json/<rec_id:int>')
+def get_eprint_json(rec_id = None):
+    '''Retrieve the EPrint JSON from repository and display it.'''
     person = person_from_environ(request.environ)
     required_roles(person)
     rec, err = ep3api.eprint(str(rec_id))
     if err:
-        return page('error', person, title = "EPrint XML", summary = 'access error', message = err)
+        return page('error', person, title = "EPrint JSON", summary = 'access error', message = err)
     if rec == None:
-        return page('error', person, title = "EPrint XML", summary = 'access error', message = ('EPrint XML not available'))
-    return xml_page(data = '''<?xml version='1.0' encoding='utf-8'?>''' + "\n" + rec.metadata, content_type = 'text/plain')
+        return page('error', person, title = "EPrint JSON", summary = 'access error', message = ('EPrint JSON not available'))
+    return json_page(data = json.dumps(rec, sort_keys = True, indent = 4))
+
+@acacia.get('/version')
+def get_version():
+    obj = {
+        "application": __app__,
+        "version": __version__,
+        "description": __description__,
+        "url": __url__,
+        "authors": __author__,
+        "email": __email__, 
+        "license": __license__
+    }
+    return json_page(data = json.dumps(obj, sort_keys = True, indent = 4))
 
 
 # Error pages.
