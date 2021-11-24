@@ -18,9 +18,15 @@ def settings_example():
 # Path to the sqlite database, relative to here.
 DATABASE_FILE = acacia.db
 
-# BASE_URL this is the URL including path prefix which is used
-# in linking the application together.
+# Base url for Acacia Application
+# NOTE: This is needed in part to render the static content for via mkpage
+# and Pandoc
 BASE_URL = http://localhost:8080
+
+# EPRINT_URL is the URL embedded in EPrints XML
+#FIXME: Set this to your eprints repository URL
+EPRINT_URL = https://eprints.example.edu
+
 
 # The URL to prefix to view the record. E.g.
 #     https://authors.library.caltech.edu ...
@@ -50,7 +56,7 @@ SMTP_SSL_PORT = 465
 SMTP_TLS_PORT = 587
 
 # Account info
-# FIXME: you need to EMAIL and SECRET appropriately
+#FIXME: you need to EMAIL and SECRET appropriately
 DISPLAY_NAME = 'Author submission bot'
 SUBMIT_EMAIL = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_ADDRESS'
 SECRET = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_PASSWORD'
