@@ -22,10 +22,10 @@ file "LICENSE" for more information.
 #  |    by the Makefile. Manual changes to these values will be lost.      |
 #  ╰────────────────────── Notice ── Notice ── Notice ─────────────────────╯
 
-__version__     = '0.0.2'
+__version__     = '0.0.3'
 __description__ = 'A content submission system for CaltechAUTHORS using DOI metadata retrieval.'
 __url__         = 'https://github.com/caltechlibrary/acacia'
-__author__      = 'Robert S. Doiel, Michael Hucka, Thomas E Morrell, Tommy Keswick'
+__author__      = 'Robert S. Doiel, Michael Hucka, Thomas E Morrell, Tommy Keswick, George Porter'
 __email__       = 'helpdesk@library.caltech.edu'
 __license__     = 'BSD 3-clause'
 
