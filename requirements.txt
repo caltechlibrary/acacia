@@ -7,6 +7,10 @@
 # @website https://github.com/caltechlibrary/acacia
 # ==========================================================================
 
+# Database access
+pymysql         >=1.0.2
+cryptography    >=36.0.0
+
 # Caltech Library packages
 sidetrack       >= 2.0.0
 commonpy        >= 1.6.3
