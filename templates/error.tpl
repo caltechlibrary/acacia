@@ -12,8 +12,8 @@
 </header>
 <nav>
 <% include('nav.tpl') %>
+<% include('user_info.tpl') %>
 </nav>
-
 <section>
   <h1>Sorry, Acacia encountered an error</h1>
   <div class="summary>{{summary}}</div>

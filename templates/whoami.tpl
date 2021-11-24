@@ -12,13 +12,26 @@
 </header>
 <nav>
 <% include('nav.tpl') %>
-<% include('user_info.tpl') %>
+<% include("user_info.tpl") %>
 </nav>
 
 <section>
-  <h1>Page not found</h1>
-  <p>I am sorry, not sure what you are looking for.</p>
-  <p><small>(Code {{code}}: {{message}})</small></p>
+<h1>Who am I?</h1>
+<p>{{description}}</p>
+<table>
+    <tr><th>userid</th><td>{{person.userid}}</td></tr>
+    <tr><th>uname</th><td>{{person.uname}}</td></tr>
+    <tr><th>name</th><td>{{person.name.honourific}} {{person.name.given}} {{person.name.family}} {{person.name.lineage}}</td></tr>
+    <tr><th>display name</td><td>{{person.display_name}}</td></tr>
+% if not person.hide_email:
+    <tr><th>email</th><td>{{person.email}}</td></tr>
+% end
+    <tr><th>role</th><td>{{person.role}}</td></tr>
+    <tr><th>created</th><td>{{person.created}}</td></tr>
+% if shib_user:
+    <tr><th>REMOTE_USER</th><td>{{shib_user}}</td></tr>
+% end
+</table>
 </section>
 
 <footer>

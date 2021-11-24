@@ -100,7 +100,7 @@ from   acacia import acacia, print_version
 )
 
 def main(adapter = 'A', base_url = 'B', database = 'D', manifests = 'F',
-         iiif_url = 'I', mode = 'M', debug_user = 'U', version = False):
+         mode = 'M', debug_user = 'U', version = False):
     '''Convenient interface for running the Acacia server during development.
 
 This starts a local server running Acacia. It always looks for a file named
@@ -141,12 +141,11 @@ using the -m option. The possible run modes and their effects are as follows:
   option -m debug. It has no corresponding RUN_MODE value in settings.ini.
 
 Since debug mode uses Bottle's default server, the normal authentication
-mechanism is nonfunctional and you will not be able to access most pages
-unless you define a person using Acacia's people-manager interface and tell
-run-server the identity of that user.  To do this, use option -u with the
-name of the user you defined.  Here is an example of running in debug mode:
+mechanism is nonfunctional and you will not be able to access most pages.
+The user needs to be defined in the EPrint repository user table.
+To do this, use option -u with the name of the user you defined.
+Here is an example of running in debug mode:
 
-  people-manager add uname="debuguser" role="library"
   run-server -m debug -u debuguser
 
 Options
