@@ -13,13 +13,29 @@ from datetime import datetime
 from urllib.parse import urlparse
 
 import idutils
+
 from decouple import config
-from peewee import SqliteDatabase, Model, Field
-from peewee import CharField, TextField, DateTimeField, BooleanField
+
+import pymysql
+from peewee import MySQLDatabase, Model, Field
+from peewee import CharField, IntegerField, TextField, DateTimeField, BooleanField
 
 from . import cmds
 
-_db = SqliteDatabase(config('DATABASE', 'acacia.db'))
+db_name = config('DATABASE_NAME', 'acacia')
+db_host = config('DATABASE_HOST', 'localhost:3306')
+if ':' in db_host:
+    host, port = db_host.split(':', 2)
+    if isinstance(port, str):
+        port = int(port)
+else:
+    host = db_host
+    port = 3306
+db_user = config('DATABASE_USER', 'root')
+db_password = config('DATABASE_PASSWORD', '')
+_db = MySQLDatabase(db_name, host = host, port = port, user = db_user, password = db_password)
+
+repo_id = config('REPO_ID', 'lemurprints')
 
 # e.g. 'Wed, 15 Jul 2020 12:13:29 -0700'
 dt_email_format = '%a, %d %b %Y %H:%M:%S %z'
@@ -27,35 +43,16 @@ dt_email_format = '%a, %d %b %Y %H:%M:%S %z'
 def validate_doi(doi):
     return idutils.is_doi(doi)
 
-def setup_doi_table(db_name, table_name = 'doi'):
-    '''setup a SQLite3 database table'''
-    db = SqliteDatabase(db_name)
-    if db.connect():
-        if db.table_exists(table_name):
+def setup_doi_table(table_name = 'doi'):
+    '''setup a MySQL 8 database table'''
+    if _db.connect():
+        if _db.table_exists(table_name):
             print(f'''WARNING: {table_name} already exists in {db_name}''')
         else:
-            db.create_tables([Doi])
+            _db.create_tables([Doi])
             print(f'''{table_name} table created in {db_name}''')
     else:
         print(f'''ERROR: could not connect to {db_name}''')
-
-def upgrade_doi_table(db_name, table_name = 'doi'):
-    # Find upgrade sql file to run.
-    sql_file = os.path.join('schema', f'upgrade_{table_name}.sql')
-    if os.path.exists(sql_file):
-        with open(sql_file, 'r') as fp:
-            sql = fp.read()
-    else:
-        print(f'''ERROR: {sql_file} does not exist. Upgrade aborted''')
-    # Copy existing SQLite3 database to a backup
-    backup_name = f'{db_name}.bak-' + datetime.now().strftime('%Y%m%d%H%M%S')
-    shutil.copyfile(db_name, backup_name)
-
-    cmd = ["sqlite3", '--init', f'{sql_file}', db_name, '.exit' ]
-    out, err = cmds.run(cmd)
-    if err:
-        print(f'''ERROR ({' '.join(cmd)}): {err}''')
-        sys.exit(1)
 
 def populate_field(key, msg, default = ''):
     field = None
@@ -92,7 +89,7 @@ class Doi(Model):
     # message from used for submission (if submitted via email)
     m_from = CharField(default = '')
     # Workflow status
-    status = Workflow(default = 'unprocessed')
+    status = CharField(default = 'unprocessed') # Workflow(default = 'unprocessed')
     # bundle-name, this is a machine generated associated with a download
     bundle_name = CharField(default = '')
     # EPrint XML for metadata retrieved from either CrossRef or DataCite
@@ -105,9 +102,9 @@ class Doi(Model):
     # When the record was created
     created = DateTimeField(default=datetime.now)
     # EPrints eprint_id if known
-    eprint_id = CharField(null = True, default = None)
+    eprint_id = IntegerField(default = 0)
     # EPrints repository id if known
-    repo_id = CharField(null = True, default = None)
+    repo_id = CharField(default = repo_id)
 
     class Meta():
         database = _db

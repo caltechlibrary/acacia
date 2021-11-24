@@ -55,7 +55,7 @@ unprocessed
    </td>
    <td class="subject">{{item.m_subject}}</td>
    <td class="datestamp">
-   {{item.m_date[0:11]}}
+   {{item.m_date.strftime("%Y-%m-%d")}}
    </td>
    <td class="action">
    <button><a href="{{base_url}}/message-remove/{{item.id}}">Remove</a></button>

@@ -17,46 +17,41 @@ from email.policy import default
 from email.message import EmailMessage
 
 from decouple import config
-from peewee import SqliteDatabase, Model
+
+import pymysql
+from peewee import MySQLDatabase, Model
 from peewee import CharField, TextField, DateTimeField, BooleanField
 
 from . import cmds
 
-_db = SqliteDatabase(config('DATABASE', 'acacia.db'))
+db_name = config('DATABASE_NAME', 'acacia')
+db_host = config('DATABASE_HOST', 'localhost:3306')
+if ':' in db_host:
+    host, port = db_host.split(':', 2)
+    if isinstance(port, str):
+        port = int(port)
+else:
+    host = db_host
+    port = 3306
+db_user = config('DATABASE_USER', 'root')
+db_password = config('DATABASE_PASSWORD', '')
+_db = MySQLDatabase(db_name, host = host, port = port, user = db_user, password = db_password)
+
 
 # e.g. 'Wed, 15 Jul 2020 12:13:29 -0700'
 dt_email_format = '%a, %d %b %Y %H:%M:%S %z'
 
-def setup_message_table(db_name, table_name = 'message'):
-    '''setup a SQLite3 database table'''
-    db = SqliteDatabase(db_name)
-    if db.connect():
-        if db.table_exists(table_name):
+def setup_message_table(table_name = 'message'):
+    '''setup a MySQL 8 database table'''
+    if _db.connect():
+        if _db.table_exists(table_name):
             print(f'''WARNING: {table_name} already exists in {db_name}''')
         else:
-            db.create_tables([Message])
+            _db.create_tables([Message])
             print(f'''{table_name} table created in {db_name}''')
     else:
         print(f'''ERROR: could not connect to {db_name}''')
 
-def upgrade_message_table(db_name, table_name = 'message'):
-    # Find upgrade sql file to run.
-    sql_file = os.path.join('schema', f'upgrade_{table_name}.sql')
-    if os.path.exists(sql_file):
-        with open(sql_file, 'r') as fp:
-            sql = fp.read()
-    else:
-        print(f'''ERROR: {sql_file} does not exist. Upgrade aborted''')
-    # Copy existing SQLite3 database to a backup
-    backup_name = f'{db_name}.bak-' + datetime.now().strftime('%Y%m%d%H%M%S')
-    shutil.copyfile(db_name, backup_name)
-
-    cmd = ["sqlite3", '--init', f'{sql_file}', db_name, '.exit' ]
-    out, err = cmds.run(cmd)
-    if err:
-        print(f'''ERROR ({' '.join(cmd)}): {err}''')
-        sys.exit(1)
-    
 def populate_field(key, msg, default = ''):
     field = None
     if key in msg:

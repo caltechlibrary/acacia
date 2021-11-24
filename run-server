@@ -93,13 +93,12 @@ from   acacia import acacia, print_version
 @plac.annotations(
     adapter    = ('use file "A" as the WSGI adapter (default: acacia.wsgi)', 'option', 'a'),
     base_url   = (f'set the server address (default: {_DEFAULT_BASE_URL})',   'option', 'b'),
-    database   = ('use "D" as the database file',                             'option', 'd'),
     mode       = ('run mode: normal, verbose, or debug (default: normal)',    'option', 'm'),
     debug_user = ('identity of staff user in debug mode (default: none)',     'option', 'u'),
     version    = ('print version info and exit',                              'flag',   'V'),
 )
 
-def main(adapter = 'A', base_url = 'B', database = 'D', manifests = 'F',
+def main(adapter = 'A', base_url = 'B',
          mode = 'M', debug_user = 'U', version = False):
     '''Convenient interface for running the Acacia server during development.
 
@@ -203,13 +202,6 @@ Command-line arguments summary
         print(f'‼️  File not found or not readable: {adapter_file}')
         exit(1)
 
-    if database != 'D':
-        if exists(database) and readable(database):
-            os.environ['DATABASE_FILE'] = database
-        else:
-            print(f'‼️  Database file not found or not readable: "{database}"')
-            exit(1)
-
     if mode != 'debug':
         print_safety_warning()
     elif not child:
@@ -311,7 +303,9 @@ def print_settings(mode, adapter_file = None):
     settings = ('\n  Current settings are:\n'
                 + f'    Run mode:      {mode} (using {server} server)\n'
                 + f'    WSGI adapter:  {adapter}\n'
-                + f'    DATABASE_FILE: {config("DATABASE_FILE")}\n')
+                + f'    DATABASE_HOST: {config("DATABASE_HOST")}\n'
+                + f'    DATABASE_NAME: {config("DATABASE_NAME")}\n'
+                + f'    DATABASE_USER: {config("DATABASE_USER")}\n')
     log(settings)
 
 def print_geeky_logo():
