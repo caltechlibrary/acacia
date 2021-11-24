@@ -12,24 +12,24 @@ import sys
 from decouple import config
 
 from acacia.settings import settings_example
-from acacia.messages import setup_message_table, upgrade_message_table
-from acacia.doi import setup_doi_table, upgrade_doi_table
+from acacia.messages import setup_message_table
+from acacia.doi import setup_doi_table
+
+import pymysql
 
 def usage(app_name, db_name, exit_code = None):
     '''describe how configure-database works'''
     print(f'''
 USAGE: {app_name} [OPTIONS]
 
-This program will created the necessary SQLite3 database
+This program will created the necessary MySQL 8 database
 and tables needed for Acacia.
 
 OPTIONS
 
-  -h, --help   this help message
+  -h, --help          this help message
 
-  --upgrade    this attempts a schema upgrade for existing tables.
-               It will rename {db_name} to {db_name}.bak.YYYYMMDDHHMMSS
-               before doing so.
+  -d, --drop-database this drop the database and tables
 
 EXAMPLES
 
@@ -39,23 +39,38 @@ EXAMPLES
     if isinstance(exit_code, int):
         sys.exit(exit_code)
 
-def apply(app_name, db_name, args):
-    upgrade  = False
+def open_db(host, port, user, password):
+    return pymysql.connect(host = host, port = port, user = user, password = password) 
+
+def apply(app_name, args):
+    drop_database = False
     for arg in args:
         if arg.startswith('-'):
             if arg.startswith('-h') or arg.startswith('--help'):
                 usage(app_name, db_name, 0)
-            elif arg.startswith('-upgrade') or arg.startswith('--upgrade'):
-                upgrade = True
-    if upgrade:
-        upgrade_message_table(db_name)
-        upgrade_doi_table(db_name)
+            if arg.startswith('-d') or arg.startswith('--drop'):
+                drop_database = True
+    db_name = config('DATABASE_NAME', 'acacia')
+    db_host = config('DATABASE_HOST', 'localhost:3306')
+    db_user = config('DATABASE_USER', 'root')
+    db_password = config('DATABASE_PASSWORD', '')
+    if ':' in db_host:
+        host, port = db_host.split(':', 2)
+        if isinstance(port, str):
+            port = int(port)
     else:
-        setup_message_table(db_name)
-        setup_doi_table(db_name)
-        print('-'*50)
-        print('Now use people-manager to add users')
-        print('-'*50)
+        host = db_host
+        port = 3306
+    db = open_db(host, port, db_user, db_password)
+    if drop_database == True:
+        print(f'Dropping {db_name} if it exists')
+        db.cursor().execute(f'DROP DATABASE IF EXISTS {db_name}')
+    print(f'Creating {db_name} if it does not exist')
+    db.cursor().execute(f'CREATE DATABASE IF NOT EXISTS {db_name}')
+    db.close()
+    setup_message_table()
+    setup_doi_table()
+    print('-'*50)
 
 if __name__ == '__main__':
     app_name = os.path.basename(sys.argv[0])
@@ -63,8 +78,5 @@ if __name__ == '__main__':
         print(f'ERROR: Missing settings.ini')
         settings_example()
         sys.exit(1)
-    db_name = config('DATABASE_FILE', default='acacia.db')
-    apply(app_name, db_name, sys.argv[1:])
+    apply(app_name, sys.argv[1:])
     
-
-

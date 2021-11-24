@@ -13,8 +13,15 @@
 # ========================================================================
 
 [settings]
-# Path to the sqlite database, relative to here.
-DATABASE_FILE = acacia.db
+
+# The MySQL data base connection information
+DATABASE_NAME = acacia
+DATABASE_HOST = localhost:3306
+#FIXME: change this DATABASE_USER and DATABASE_PASSWORD
+# to match your database configuration.
+DATABASE_USER = acacia 
+DATABASE_PASSWORD = CHANGE_ME_SOME_SECRET_THING_HERE
+
 
 # Base url for Acacia Application
 # NOTE: This is needed in part to render the static content for via mkpage

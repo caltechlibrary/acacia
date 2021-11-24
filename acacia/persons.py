@@ -4,12 +4,10 @@ the user table in your EPrints repository as accessed from the ep3apid
 service.
 
 It does not provide suppport for authentication, that needs to be
-provided by your front end web server such as Apache 2. If you
-have Apache2's Basic Auth the PersonManager class will attempt
-to store/update/remove passwords (aka secrets) via the
-Apache htpasswd program. 
+provided by your front end web server such as Apache 2 or Apache 2
+and Shibboleth.
 
-No password are stored in the SQLite3 person table.
+No password are stored by the Acacia application.
 
 Copyright
 ---------
@@ -28,8 +26,7 @@ from subprocess import Popen, PIPE
 from getpass import getpass
 
 from decouple import config
-from peewee import SqliteDatabase, Model
-from peewee import AutoField, CharField, TimestampField
+
 
 ## from . import cmds
 from .ep3apid import Ep3API, User
