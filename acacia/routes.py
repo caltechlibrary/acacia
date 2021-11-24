@@ -465,7 +465,7 @@ def item_import(rec_id = None):
                 rec.save()
     redirect(f'{acacia.base_url}/list')
 
-@acacia.get('/eprint/<recid:int>')
+@acacia.get('/eprint/<rec_id:int>')
 def get_eprint(rec_id = None):
     '''Retrieve the EPrint XML saved as "metadata" in the doi object'''
     person = person_from_environ(request.environ)
