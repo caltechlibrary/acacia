@@ -1,12 +1,9 @@
 def settings_example():
    print('''
-The "settings.ini" file should look something like
-
-```
 # ========================================================================
 # @file    settings.ini
 # @brief   Settings file for Acacia.
-# @created 2021-03-19
+# @created 2021-11-24
 # @license Please see the file named LICENSE in the project directory
 # @website https://github.com/caltechlibrary/acacia
 # 
@@ -23,34 +20,52 @@ DATABASE_FILE = acacia.db
 
 # BASE_URL this is the URL including path prefix which is used
 # in linking the application together.
-BASE_PREFIX = http://localhost:8080
+BASE_URL = http://localhost:8080
 
-# EP3API_URL is the URL to the ep3apid instance (e.g. http://localhost:8484)
-EP3API_URL = http://localhost:8484
-REPO_ID = "REPO_ID"
+# The URL to prefix to view the record. E.g.
+#     https://authors.library.caltech.edu ...
+#     ... /cgi/users/home?screen=EPrint::View&eprintid=
+VIEW_URL = https://eprints.example.edu/cgi/users/home?screen=EPrint::View&eprintid=
+
+# EP3APID_URL the URL to the eprinttools' ep3apid service
+EP3APID_URL = http://localhost:8484
+# The repo_id used by the ep3apid service.
+REPO_ID = caltechauthors
+
 
 # Email details. This is to access the mailbox of the submissions
 # email account.
 
 # Inbound IMAP Mailbox of submittions email address
-# FIXME: You need to set these appropriate to your email provider
+# NOTE: Codebase assumes SSL support
+# FIXME: you need to set these appropriate to your email provider
 IMAP_HOST = imap.gmail.com
-IMAP_SSL = true
 IMAP_PORT   = 993
 
 # Outbound IMAP if needed
-# FIXME: You need to set these appropriate to your email provider
+# NOTE: Codebase assumes SSL/TLS support
+# FIXME: you need to set these appropriate to your email provider
 SMTP_HOST = smtp.gmail.com
-SMTP_SSL = true
-SMTP_REQUIRE_TLS = true
-SMTP_AUTH = true
 SMTP_SSL_PORT = 465
 SMTP_TLS_PORT = 587
 
 # Account info
-# FIXME: You will need change the values for SUBMIT_EMAIL and PASSWORD
-DISPLAY_NAME = "Author Submissions Bot"
-SUBMIT_EMAIL = "CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_ADDRESS"
-PASSWORD = "CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_PASSWORD"
-```
+# FIXME: you need to EMAIL and SECRET appropriately
+DISPLAY_NAME = 'Author submission bot'
+SUBMIT_EMAIL = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_ADDRESS'
+SECRET = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_PASSWORD'
+
+
+# Location of the doi2eprintxml command line program.
+# NOTE: if this is not in your path you need to specify the 
+# full path to the program.
+DOI2EPRINTXML = doi2eprintxml
+
+# The following run mode options are recognized:
+#   "normal":  use adapter.wsgi without special options
+#   "verbose": use adapter.wsgi with verbose logging options
+# When started using the program run-server included with DIBS, this value
+# maybe overriden by command-line options given to run-server.
+RUN_MODE = verbose
+
 ''')

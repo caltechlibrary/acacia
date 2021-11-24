@@ -67,7 +67,7 @@ metadata retrieved
    </td>
    <td>
 % if (item.eprint_id != None):
-<a href="https://authors.library.caltech.edu/{{item.eprint_id}}" target="_blank">{{item.eprint_id}}</a>
+<a href="{{view_url}}/{{item.eprint_id}}" target="_blank">{{item.eprint_id}}</a>
 % else:
    &nbsp;
 % end
@@ -81,7 +81,7 @@ metadata retrieved
 % end
 </a></td>
    <td>
-% if item.status == "ready":
+% if item.status == "ready" or item.status == "imported":
    <a href="{{base_url}}/eprint-xml/{{item.id}}" target="_blank">XML</a>
 % end
    </td>

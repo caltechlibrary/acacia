@@ -1,7 +1,7 @@
 # ========================================================================
 # @file    settings.ini
 # @brief   Settings file for Acacia.
-# @created 2021-03-19
+# @created 2021-11-24
 # @license Please see the file named LICENSE in the project directory
 # @website https://github.com/caltechlibrary/acacia
 # 
@@ -13,15 +13,22 @@
 # ========================================================================
 
 [settings]
-
-# Base url for site
-# NOTE: This is needed in part to render the static content for via mkpage
-# and Pandoc
-BASE_URL = http://localhost:8080
-
 # Path to the sqlite database, relative to here.
 DATABASE_FILE = acacia.db
 
+# BASE_URL this is the URL including path prefix which is used
+# in linking the application together.
+BASE_URL = http://localhost:8080
+
+# The URL to prefix to view the record. E.g.
+#     https://authors.library.caltech.edu ...
+#     ... /cgi/users/home?screen=EPrint::View&eprintid=
+VIEW_URL = https://eprint.example.edu/cgi/users/home?screen=EPrint::View&eprintid=
+
+# EP3APID_URL the URL to the eprinttools' ep3apid service
+EP3APID_URL = http://localhost:8484
+# The repo_id used by the ep3apid service.
+REPO_ID = caltechauthors
 
 
 # Email details. This is to access the mailbox of the submissions
@@ -42,25 +49,20 @@ SMTP_TLS_PORT = 587
 
 # Account info
 # FIXME: you need to EMAIL and SECRET appropriately
-DISPLAY_NAME = 'Author Submissions Bot'
+DISPLAY_NAME = 'Author submission bot'
 SUBMIT_EMAIL = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_ADDRESS'
 SECRET = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_PASSWORD'
+
 
 # Location of the doi2eprintxml command line program.
 # NOTE: if this is not in your path you need to specify the 
 # full path to the program.
 DOI2EPRINTXML = doi2eprintxml
 
-# EPrints MySQL DB connection string
-#EPRINT_DATABASE = 'mysql://DB_USER:DB_PASSWORD@hostname.example.edu/DB_NAME'
-# EPrints SSH API
-EPRINT_SSH = USER@HOSTNAME
-EPRINT_REPO_ID = EPRINT_REPO_ID
-
 # The following run mode options are recognized:
 #   "normal":  use adapter.wsgi without special options
 #   "verbose": use adapter.wsgi with verbose logging options
 # When started using the program run-server included with DIBS, this value
 # maybe overriden by command-line options given to run-server.
-RUN_MODE = normal
+RUN_MODE = verbose
 

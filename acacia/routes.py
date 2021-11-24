@@ -383,6 +383,7 @@ def list_items( filter_by = None, sort_by = None):
     ''' Process DOI should act on selections of list, it needs
         to trigger the generation of export bundles which are
         then emailed to the requesting librarian '''
+    view_url = config('VIEW_URL', '')
     person = person_from_environ(request.environ)
     required_roles(person)
     opts = []
@@ -401,7 +402,7 @@ def list_items( filter_by = None, sort_by = None):
     description = f'''
 This is a list of DOIs that Acacia knows about.
 '''
-    return page('list', person, title = 'Manage DOI', description = description, items = items, repo_id = repo_id)
+    return page('list', person, title = 'Manage DOI', description = description, items = items, repo_id = repo_id, view_url = view_url)
 
 @acacia.get('/eprint-xml/<rec_id:int>')
 def get_eprint_xml(rec_id = None):
@@ -463,6 +464,18 @@ def item_import(rec_id = None):
                 rec.status = 'imported'
                 rec.save()
     redirect(f'{acacia.base_url}/list')
+
+@acacia.get('/eprint/<recid:int>')
+def get_eprint(rec_id = None):
+    '''Retrieve the EPrint XML saved as "metadata" in the doi object'''
+    person = person_from_environ(request.environ)
+    required_roles(person)
+    rec, err = ep3api.eprint(str(rec_id))
+    if err:
+        return page('error', person, title = "EPrint XML", summary = 'access error', message = err)
+    if rec == None:
+        return page('error', person, title = "EPrint XML", summary = 'access error', message = ('EPrint XML not available'))
+    return xml_page(data = '''<?xml version='1.0' encoding='utf-8'?>''' + "\n" + rec.metadata, content_type = 'text/plain')
 
 
 # Error pages.
