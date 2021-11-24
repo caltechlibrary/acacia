@@ -71,7 +71,7 @@ EPrint Tools
 ------------
 
 Acacia depends on EPrinttools already being installed.
-You need version 1.1.0 or better of EPrinttools for authorization,
+You need version 1.1.1 or better of EPrinttools for authorization,
 retrieving and processing data from CrossRef and DataCite. You can install
 that by visiting [github.com/caltechlibrary/eprinttools/releases](https://github.com/caltechlibrary/eprinttools/releases) and downloading
 and install the version of the tools suited to your computer.

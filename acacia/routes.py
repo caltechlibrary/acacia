@@ -26,7 +26,6 @@ from .persons import Person, person_from_environ
 from .messages import Message, EMailProcessor
 from .doi import Workflow, Doi, DOIProcessor, validate_doi
 from .ep3apid import Ep3API
-from .misc import apply_user_id_to_xml
 
 if __debug__:
     from sidetrack import set_debug, log
@@ -456,8 +455,7 @@ def item_import(rec_id = None):
             src = rec.metadata
             if not isinstance(src, bytes):
                 src = src.encode('utf-8')
-            src = apply_user_id_to_xml(src, person.userid)
-            ids, err = ep3api.eprint_import(src)
+            ids, err = ep3api.eprint_import(person.userid, src)
             if err:
                 return page('error', person, title = "Import EPrint", summary = 'failed to import to eprints', message = err)
             if ids != None and len(ids) > 0:
