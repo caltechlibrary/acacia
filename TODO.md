@@ -7,6 +7,9 @@ next
 
 **Staff managed processing**
 
+- [ ] Add created, updated timestamps in the UI for managed DOI page
+- [ ] Rename "Remove" to "Completed" in Manage DOI Page
+- [ ] "Remove" should flag the row completed and provide a different page for viewing completed items.
 - [ ] Add logged in user id to EPrint when importing. E.g. If George is using Acacia then the userid needs to be 6 in the EPrint XML before push.
 - [ ] Documentation cleanup
     - [x] Proofread and copy edit
