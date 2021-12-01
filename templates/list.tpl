@@ -91,7 +91,7 @@ metadata retrieved
 % end
    </td>
    <td>
-       <button><a href="{{base_url}}/doi-remove/{{item.id}}" title="Remove item from Acacia">Remove</a></button>
+       <button><a href="{{base_url}}/doi-remove/{{item.id}}" title="Complete (Remove) item from Acacia">Completed</a></button>
    </td>
 </tr>
 % end
