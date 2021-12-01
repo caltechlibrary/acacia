@@ -41,6 +41,13 @@
         },
         {
             "@type": "Person",
+            "givenName": "Kathy",
+            "familyName": "Johnson",
+            "affiliation": "Caltech Library",
+            "email": "kjohnson@caltech.edu"
+        },
+        {
+            "@type": "Person",
             "givenName": "George",
             "familyName": "Porter",
             "affiliation": "Caltech Library",

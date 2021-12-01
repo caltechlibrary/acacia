@@ -21,6 +21,7 @@ Developers
 + R. S. Doiel
 + Mike Hucka
 + Tommy Keswick
++ Kathy Johnson
 + Tom Morrell
 + George Porter
 
