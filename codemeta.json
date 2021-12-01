@@ -44,7 +44,8 @@
             "givenName": "Kathy",
             "familyName": "Johnson",
             "affiliation": "Caltech Library",
-            "email": "kjohnson@caltech.edu"
+            "email": "kjohnson@caltech.edu",
+            "@id":"https/orcid.org/0000-0002-0026-2516"
         },
         {
             "@type": "Person",
