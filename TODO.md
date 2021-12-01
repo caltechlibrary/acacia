@@ -7,6 +7,8 @@ next
 
 **Staff managed processing**
 
+- [ ] On "Get Mail" menu item should the number of pending messages
+- [ ] When a mail message is retrieved and processed take it out of the pending mail list
 - [ ] Add created, updated timestamps in the UI for managed DOI page
 - [ ] Rename "Remove" to "Completed" in Manage DOI Page
 - [ ] "Remove" should flag the row completed and provide a different page for viewing completed items.

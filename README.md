@@ -103,6 +103,7 @@ Authors and history
 
 + R. S. Doiel
 + Mike Hucka
++ Kathy Johnson
 + Tommy Keswick
 + Tom Morrell
 + George Porter
