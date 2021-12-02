@@ -27,9 +27,11 @@
 <table>
 <tr>
     <th class="action">&nbsp;</th>
+    <th>Recieved</th>
     <th>From</th>
     <th>Status</th>
-    <th>Repository ID</th>
+    <th>Metadata Retrieved</th>
+    <th>EPrint ID</th>
     <th>DOI</th>
     <th>URL to PDF</th>
     <th>View XML</th>
@@ -48,25 +50,33 @@
    % end
    </td>
    <td>
+   {{item.created.strftime("%Y-%m-%d")}}
+   </td>
+   <td>
 % if ("<" in item.m_from) and (item.m_from.split('<', 2)[0] != ""):
-   {{item.m_from.split('<', 2)[0]}}
+   {{item.m_from.split('<', 2)[0].replace('"', '')}}
 % else:
    {{item.m_from}}
 % end
    </td>
    <td>
-% if item.eprint_id:
-   imported
-% elif item.status == "ready":   
+% if item.status == "ready":   
 metadata retrieved   
 % elif item.status == "pending":
    waiting for lookup
+% elif item.eprint_id:
+   in repository
 % else:
    {{item.status}}
 % end
    </td>
    <td>
-% if (item.eprint_id != None):
+% if item.status == "ready":
+   {{item.updated.strftime("%Y-%m-%d")}}
+% end
+   </td>
+   <td>
+% if (item.eprint_id != None) and (item.eprint_id != 0):
 <a href="{{view_url}}{{item.eprint_id}}" target="_blank">{{item.eprint_id}}</a>
 % else:
    &nbsp;
@@ -81,7 +91,7 @@ metadata retrieved
 % end
 </a></td>
    <td>
-% if item.status == "ready" or item.status == "imported":
+% if (item.status == "ready"):
    <a href="{{base_url}}/eprint-xml/{{item.id}}" target="_blank">XML</a>
 % end
    </td>
@@ -91,7 +101,12 @@ metadata retrieved
 % end
    </td>
    <td>
-       <button><a href="{{base_url}}/doi-remove/{{item.id}}" title="Complete (Remove) item from Acacia">Completed</a></button>
+% if item.status == "imported" or item.eprint_id:
+       <button><a href="{{base_url}}/doi-remove/{{item.id}}" title="Complete by removing item from Acacia">Completed</a></button>
+
+% else:
+       <button><a href="{{base_url}}/doi-remove/{{item.id}}" title="Remove item from Acacia">Remove</a></button>
+% end
    </td>
 </tr>
 % end
