@@ -6,7 +6,7 @@
     "codeRepository": "https://github.com/caltechlibrary/acacia",
     "issueTracker": "https://github.com/caltechlibrary/acacia/issues",
     "license": "https://data.caltech.edu/license",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "author": [
         {
             "@type": "Person",
