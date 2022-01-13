@@ -23,7 +23,7 @@ file "LICENSE" for more information.
 #  ╰────────────────────── Notice ── Notice ── Notice ─────────────────────╯
 
 __app__         = 'Acacia'
-__version__     = '0.0.5'
+__version__     = '0.0.7'
 __description__ = 'A content submission system for CaltechAUTHORS using DOI metadata retrieval.'
 __url__         = 'https://github.com/caltechlibrary/acacia'
 __author__      = 'Robert S. Doiel, Michael Hucka, Thomas E Morrell, Tommy Keswick, George Porter'
