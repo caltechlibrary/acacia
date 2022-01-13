@@ -25,7 +25,7 @@ from . import __app__, __version__, __description__, __author__, __license__, __
 # Acacia Code
 from .persons import Person, person_from_environ
 from .messages import Message, EMailProcessor
-from .doi import Workflow, Doi, DOIProcessor, validate_doi
+from .doi import Workflow, Doi, DOIProcessor, validate_doi, __doi2eprintxml_version__
 from .ep3apid import Ep3API
 
 if __debug__:
@@ -42,6 +42,10 @@ acacia = Bottle()
 repo_id = config('REPO_ID', 'caltechauthors')
 ep3apid_url = config('EP3APID_URL', 'http://localhost:8484')
 ep3api = Ep3API(ep3apid_url, repo_id)
+
+# Get version numbers for doi2eprintxml and ep3apid
+__ep3apid_version__ = ep3api.version()
+
 
 #
 # FIXME: Setup access to ep3apid via acacia/ep3api.py
@@ -487,8 +491,13 @@ def get_version():
         "url": __url__,
         "authors": __author__,
         "email": __email__, 
-        "license": __license__
+        "license": __license__,
+        "depends_on": []
     }
+    # Get ep3apid version number
+    obj["depends_on"].append(__ep3apid_version__)
+    obj["depends_on"].append(__doi2eprintxml_version__)
+    # Get doi2eprintxml version number
     return json_page(data = json.dumps(obj, sort_keys = True, indent = 4))
 
 

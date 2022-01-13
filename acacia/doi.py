@@ -201,5 +201,17 @@ class DOIProcessor:
         cmd = [ 'doi2eprintxml', '-clsrules=true', doi ]
         return cmds.run(cmd)
 
+def doi2eprintxml_version():
+    cmd = [ 'doi2eprintxml', '-version' ]
+    s, err = cmds.run(cmd)
+    if err != None:
+        if isinstance(err, bytes):
+            err = err.decode('utf-8')
+        return err.strip()
+    if isinstance(s, bytes):
+        s = s.decode('utf-8')
+    return s.strip()
+
+__doi2eprintxml_version__ = doi2eprintxml_version()
 
 
