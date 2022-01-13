@@ -81,6 +81,18 @@ class Ep3API:
             return True
         return False
 
+    def version(self):
+        '''Return the version string for ep3apid'''
+        headers = {'Content-Type': 'text/plain'}
+        src, err = http_get(self.url + '/version', headers = headers)
+        if err != None:
+            if isinstance(src, bytes):
+                err = err.decode('utf-8')
+            return err.strip()
+        if isinstance(src, bytes):
+            src = src.decode('utf-8')
+        return src.strip()
+
     def repositories(self):
         '''Return a list of repositories available'''
         return get_json_data(f'{self.url}/repositories')
