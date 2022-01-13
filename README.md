@@ -28,7 +28,7 @@ Installation
 
 Requirements
 
-+ [EPrint Tools >= 1.1.1](https://github.com/caltechlibrary/eprinttools/releases)
++ [EPrint Tools >= 1.1.2](https://github.com/caltechlibrary/eprinttools/releases)
     - [doi2eprintxml](https://caltechlibrary.github.io/eprinttools/docs/doi2eprintxml)'s to retrieve the metadata associated with a DOI from CrossRef or DataCite (version 1.1.0 or better)
     - [ep3apid](https://caltechlibrary.github.io/eprinttools/docs/ep3apid) / to handling importing records and quering the EPrints repository for records and user accounts.
 + Python3
