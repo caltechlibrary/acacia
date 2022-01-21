@@ -12,6 +12,7 @@ from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 from urllib.parse import quote_plus
 
+
 def dquote(s):
     return '"' + s + '"'
 
@@ -23,6 +24,8 @@ def squote(s):
 #
 def http_get(u, headers = None):
     '''http_get takes a URL and performs a GET. It returns a touple of payload and error'''
+    if headers == None:
+        headers = {}
     req = Request(u, headers = headers)
     try:
         res = urlopen(req)
@@ -63,6 +66,16 @@ def post_xml(u, xml_src):
         src = src.encode('utf-8')
     return json.loads(src), None
     
+def ep3apid_is_running(u = 'http://localhost:8484/version'):
+    version, err = http_get(u, {'Content-Type': 'test/plain'});
+    if err != None:
+        print(f'ep3apid not avialable, {err}')
+        return False
+    if isinstance(version, bytes):
+        version = version.decode('utf-8')
+    print(f'ep3apid version {version.strip()}')
+    return True 
+
 class Ep3API:
     '''Ep3API provides data access to the ep3apid web service for a specific repository'''
     url = 'http://localhost:8484'
