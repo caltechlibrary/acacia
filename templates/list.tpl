@@ -24,10 +24,11 @@
 -->
 </p>
 <h1>Manage DOI</h1>
-<p>{{description}}</p>
 <table>
-<tr>
-    <th class="action">&nbsp;</th>
+<caption>{{description}}</caption>
+<thead>
+  <tr>
+    <th class="action">Lookup</th>
     <th>Recieved</th>
     <th>From</th>
     <th>Status</th>
@@ -36,9 +37,11 @@
     <th>DOI</th>
     <th>URL to PDF</th>
     <th>View XML</th>
-    <th class="action">&nbsp;</th>
-    <th class="action">&nbsp;</th>
-</tr>
+    <th class="action">Import</th>
+    <th class="action">Workflow</th>
+  </tr>
+</thead>
+<tbody>
 % for item in items: 
 <tr>
    <td>
@@ -86,11 +89,13 @@ metadata retrieved
    <td>
        <a href="https://doi.org/{{item.doi}}" target="_blank">{{item.doi}}</a>
    </td>
-   <td><a href="{{item.object_url}}" target="_blank">
+   <td>
 % if len(item.object_url) > 0:
-{{item.object_url.replace('http://', '').replace('https://', '').split(sep="/", maxsplit=2)[0]}}
+   <a href="{{item.object_url}}" target="_blank">
+{{item.object_url.replace('http://', '').replace('https://', '').split(sep="/", maxsplit=2)[0]}}/...
+</a>
 % end
-</a></td>
+   </td>
    <td>
 % if (item.status == "ready"):
    <a href="{{base_url}}/eprint-xml/{{item.id}}" target="_blank">XML</a>
@@ -111,6 +116,7 @@ metadata retrieved
    </td>
 </tr>
 % end
+</tbody>
 </table>
 </section>
 

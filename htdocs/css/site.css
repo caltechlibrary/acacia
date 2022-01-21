@@ -333,3 +333,10 @@ footer a, footer a:link, footer a:visited, footer a:active, footer a:focus, foot
     font-style: italic;
     font-size: smaller;
 }
+
+.logged-in-user {
+    padding: 0.12em;
+    border-radius: 0.24em;
+    font-size: 1.2em;
+    background-color: white;
+}

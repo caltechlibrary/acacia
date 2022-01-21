@@ -28,12 +28,12 @@
 <p>{{description}}</p>
 <table>
 <tr>
-    <th class="action">&nbsp;</th>
+    <th class="action">Reset</th>
     <th class="from">From</th>
     <th class="status">Status</th>
     <th class="subject">Subject</th>
     <th class="datestamp">Date</th>
-    <th class="action">&nbsp;</th>
+    <th class="action">Remove</th>
 </tr>
 % for item in items:
    <tr>
