@@ -575,8 +575,8 @@ def help_pages(filename = 'index.html'):
 
 
 # Handle our static accets in htdocs/css, htdocs/assets, htdocs/media
-@acacia.get('/<folder:re:(assets|css|about|media)>/')
-@acacia.get('/<folder:re:(assets|css|about|media)>/<filename:re:[-a-zA-Z0-9]+.(gif|ico|png|jpg|svg|css|js|html|md)>')
+@acacia.get('/<folder:re:(assets|css|about|media|widgets)>/')
+@acacia.get('/<folder:re:(assets|css|about|media|widgets)>/<filename:re:[-a-zA-Z0-9]+.(gif|ico|png|jpg|svg|css|js|html|md)>')
 def include_file(folder, filename = 'index.html'):
     '''Return a static file'''
     p = os.path.join(_SERVER_ROOT, 'htdocs', folder)

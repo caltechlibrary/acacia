@@ -28,17 +28,17 @@
 <caption>{{description}}</caption>
 <thead>
   <tr>
-    <th class="action">Lookup</th>
-    <th>Recieved</th>
-    <th>From</th>
-    <th>Status</th>
-    <th>Metadata Retrieved</th>
-    <th>EPrint ID</th>
-    <th>DOI</th>
-    <th>URL to PDF</th>
-    <th>View XML</th>
-    <th class="action">Import</th>
-    <th class="action">Workflow</th>
+    <th class="action" title="click on heading to change sort order">Lookup</th>
+    <th title="click on heading to change sort order">Recieved</th>
+    <th title="click on heading to change sort order">From</th>
+    <th title="click on heading to change sort order">Status</th>
+    <th title="click on heading to change sort order">Metadata Retrieved</th>
+    <th title="click on heading to change sort order">EPrint ID</th>
+    <th title="click on heading to change sort order">DOI</th>
+    <th title="click on heading to change sort order">URL to PDF</th>
+    <th title="click on heading to change sort order">View XML</th>
+    <th class="action" title="click on heading to change sort order">Import</th>
+    <th class="action" title="click on heading to change sort order">Workflow</th>
   </tr>
 </thead>
 <tbody>
@@ -126,5 +126,11 @@ metadata retrieved
 <span><a href="mailto:library@caltech.edu">Email Us</a></span> 
 <span>Phone: <a href="tel:+1-626-395-3405">(626)395-3405</a></span>
 </footer>
+<script type="module" src="/widgets/sorttable.js"></script>
+<script type="module">
+"use strict";
+import { make_table_sortable } from '/widgets/sorttable.js';
+make_table_sortable('table');
+</script>
 </body>
 </html>
