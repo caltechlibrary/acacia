@@ -10,7 +10,7 @@
 </li>
 <!-- <li><a href="http://localhost:8080/messages/">Messages Report</a></li> -->
 <li>
-<a href="http://localhost:8080/list">Manage DOI</a>
+<a href="http://localhost:8080/manage-doi">Manage DOI</a>
 </li>
 <li>
 <a href="http://localhost:8080/help/">Help</a>

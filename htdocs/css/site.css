@@ -251,7 +251,10 @@ footer a, footer a:link, footer a:visited, footer a:active, footer a:focus, foot
 }
 
 th {
-    text-decoration: underline;
+     text-align: left;
+     text-decoration: underline;
+     padding: 0.24em;
+     margin: 0.24.em;
 }
 
 .announcement {

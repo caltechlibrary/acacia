@@ -230,7 +230,7 @@ def message_to_doi():
     doi_processor = DOIProcessor()
     records = mail_processor.get_unprocessed()
     if len(records) == 0:
-        redirect(f'{acacia.base_url}/list/')
+        redirect(f'{acacia.base_url}/manage-doi/')
     errors = []
     err_cnt, item_cnt, doi_cnt = 0, 0, 0
     for rec in records:
@@ -244,7 +244,7 @@ def message_to_doi():
         doi_cnt += n
         item_cnt += 1
     if err_cnt == 0:
-        redirect(f'{acacia.base_url}/list/')
+        redirect(f'{acacia.base_url}/manage-doi/')
     return page('error', person, title='Messages to DOI', summary = "Error converting email messages into DOI records", description = (f'''{errors.join(" ")}'''))
 
 
@@ -319,7 +319,7 @@ def get_metadata(rec_id = None):
                     record.save()
                 item_cnt += 1
             if err_cnt == 0:
-                redirect(f'{acacia.base_url}/list')
+                redirect(f'{acacia.base_url}/manage-doi')
     else:
         now = datetime.now()
         record = Doi.get_or_none(Doi.id == str(rec_id))
@@ -355,7 +355,7 @@ def get_metadata(rec_id = None):
     if len(errors) > 0:
         return page('error', person, title = 'Retrieve Metadata',
             summary = 'Error retrieving metadata', description = errors, message = errors) 
-    redirect(f'{acacia.base_url}/list')
+    redirect(f'{acacia.base_url}/manage-doi')
         
 
 @acacia.get('/messages')
@@ -380,10 +380,10 @@ def list_messages(filter_by = None, sort_by = None):
     return page('messages', person, title = 'Manage Messages', description = description, items = items, error_message = None)
 
 
-@acacia.get('/list')
-@acacia.get('/list/')
-@acacia.get('/list/<filter_by>')
-@acacia.get('/list/<filter_by>/<sort_by>')
+@acacia.get('/manage-doi')
+@acacia.get('/manage-doi/')
+@acacia.get('/manage-doi/<filter_by>')
+@acacia.get('/manage-doi/<filter_by>/<sort_by>')
 def list_items( filter_by = None, sort_by = None):
     ''' Process DOI should act on selections of list, it needs
         to trigger the generation of export bundles which are
@@ -459,7 +459,7 @@ def doi_reset(rec_id = None):
             record.metadata = ""
             record.status = 'unprocessed'
             record.save()
-    redirect(f'{acacia.base_url}/list/')
+    redirect(f'{acacia.base_url}/manage-doi/')
 
 @acacia.get('/doi-remove/<rec_id:int>')
 def doi_remove(rec_id = None):
@@ -472,7 +472,7 @@ def doi_remove(rec_id = None):
         if rec != None:
             query = Doi.delete().where(Doi.id == rec_id)
             query.execute()
-        redirect(f'{acacia.base_url}/list')
+        redirect(f'{acacia.base_url}/manage-doi')
     else:
         return page('error', person, title='Delete request', summary ='deletion failed', message = (f'Record {rec_id} not found'))
     return page('error', person, title='Delete request', summary ='deletion failed', message = (f'Missing record ID in URL'))
@@ -496,7 +496,7 @@ def item_import(rec_id = None):
                 rec.eprint_id = ids[0]
                 rec.status = 'imported'
                 rec.save()
-    redirect(f'{acacia.base_url}/list')
+    redirect(f'{acacia.base_url}/manage-doi')
 
 @acacia.get('/eprint-json/<rec_id:int>')
 def get_eprint_json(rec_id = None):
