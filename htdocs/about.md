@@ -42,7 +42,7 @@ function updateVersionInfo() {
 function retrieveVersionInfo() {
     let oReq = new XMLHttpRequest();
     oReq.addEventListener('load', updateVersionInfo);
-    oReq.open('GET', '/version');
+    oReq.open('GET', '/acacia/version');
     oReq.send();
 }
 retrieveVersionInfo();

@@ -46,7 +46,7 @@ function updateViewer() {
 function retrieveRecord(rec_id) {
     let oReq = new XMLHttpRequest();
     oReq.addEventListener('load', updateViewer);
-    oReq.open('GET', `/viewer-json/${rec_id}`);
+    oReq.open('GET', `{{base_url}}/viewer-json/${rec_id}`);
     oReq.send();
 }
 retrieveRecord(rec_id);
