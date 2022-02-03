@@ -9,7 +9,7 @@
 "use strict";
 
 function make_table_sortable(css_selector = 'table') {
-  let sort_ascending = true;
+  let sort_ascending = false;
   for (let table of document.querySelectorAll(css_selector)) {
     for (let th of table.tHead.rows[0].cells) {
       th.onclick = function() {

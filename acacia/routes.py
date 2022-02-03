@@ -373,7 +373,7 @@ def list_messages(filter_by = None, sort_by = None):
     if sort_by:
         opts.append(sort_by)
     items = []
-    for item in Message.select():
+    for item in Message.select().order_by(Message.m_date.desc()):
         items.append(item)
     description = f'''This is a list of all the emails retrieved from {submit_email}. You can manage those messages from your mail client.
 '''
@@ -398,7 +398,7 @@ def list_items( filter_by = None, sort_by = None):
         opts.append(sort_by)
     #FIXME: need to apply options and describe 
     items = []
-    for item in Doi.select():
+    for item in Doi.select().order_by(Doi.updated.desc()):
         if item.doi != None and not item.eprint_id:
             ids, err = ep3api.doi(item.doi)
             if err == None and ids != None and len(ids) > 0:
