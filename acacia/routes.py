@@ -420,6 +420,34 @@ def get_eprint_xml(rec_id = None):
     return page('error', person, title = "EPrint XML", summary = 'access error',
                 message = ('EPrint XML not available'))
 
+@acacia.get('/viewer-json/<rec_id:int>')
+def get_viewer_json(rec_id = None):
+    '''Retrieve the JSON data needed by the viewer widget.'''
+    person = person_from_environ(request.environ)
+    required_roles(person)
+    rec = Doi.get_by_id(str(rec_id))
+    if rec != None:
+        obj = (json.loads(rec.metadata))
+        if ('eprint' in obj) and (len(obj['eprint']) > 0):
+            return json_page(obj['eprint'][0])
+    return page('error', person, title = "Viewer JSON", summary = 'access error',
+                message = ('object not found'))
+
+
+@acacia.get('/viewer/<rec_id:int>')
+def get_viewer(rec_id = None):
+    '''Retrieve the converted CrossRef/DataCite record and display it as an EPrints record.'''
+    person = person_from_environ(request.environ)
+    required_roles(person)
+    rec = Doi.get_by_id(str(rec_id))
+    description = f'''
+This is a view of the record before import.
+'''
+    if (rec != None):
+        return page('viewer', person, title = "View Record", description = description, rec_id = rec_id)
+    return page('error', person, title = "View Record", summary = 'access error',
+                message = ('View record not available'))
+
 @acacia.get('/doi-reset/<rec_id:int>')
 def doi_reset(rec_id = None):
     person = person_from_environ(request.environ)
@@ -553,6 +581,7 @@ def manage_items():
     '''Manage provides a dashbaord of available activities.'''
 # Load static dashboard page
     return static_file('about.html', root = os.path.join(_SERVER_ROOT, 'htdocs'))
+
 
 
 @acacia.get('/favicon.ico')

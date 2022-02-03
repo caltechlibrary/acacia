@@ -36,7 +36,7 @@
     <th title="click on heading to change sort order">EPrint ID</th>
     <th title="click on heading to change sort order">DOI</th>
     <th title="click on heading to change sort order">URL to PDF</th>
-    <th title="click on heading to change sort order">View XML</th>
+    <th title="click on heading to change sort order">View Record</th>
     <th class="action" title="click on heading to change sort order">Import</th>
     <th class="action" title="click on heading to change sort order">Workflow</th>
   </tr>
@@ -98,7 +98,7 @@ metadata retrieved
    </td>
    <td>
 % if (item.status == "ready"):
-   <a href="{{base_url}}/eprint-xml/{{item.id}}" target="_blank">XML</a>
+   <a href="{{base_url}}/viewer/{{item.id}}" target="_blank">Record</a>
 % end
    </td>
    <td>
@@ -126,10 +126,10 @@ metadata retrieved
 <span><a href="mailto:library@caltech.edu">Email Us</a></span> 
 <span>Phone: <a href="tel:+1-626-395-3405">(626)395-3405</a></span>
 </footer>
-<script type="module" src="/widgets/sorttable.js"></script>
+<script type="module" src="{{base_url}}/widgets/sorttable.js"></script>
 <script type="module">
 "use strict";
-import { make_table_sortable } from '/widgets/sorttable.js';
+import { make_table_sortable } from '{{base_url}}/widgets/sorttable.js';
 make_table_sortable('table');
 </script>
 </body>

@@ -76,10 +76,10 @@ unprocessed
 <span><a href="mailto:library@caltech.edu">Email Us</a></span> 
 <span>Phone: <a href="tel:+1-626-395-3405">(626)395-3405</a></span>
 </footer>
-<script type="module" src="/widgets/sorttable.js"></script>
+<script type="module" src="{{base_url}}/widgets/sorttable.js"></script>
 <script type="module">
 "use strict";
-import { make_table_sortable } from '/widgets/sorttable.js';
+import { make_table_sortable } from '{{base_url}}/widgets/sorttable.js';
 make_table_sortable('table');
 </script>
 </body>

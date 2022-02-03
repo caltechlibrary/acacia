@@ -197,8 +197,8 @@ class DOIProcessor:
         if dry_run:
             print(f'Dry run, no data fetched with doi2eprintxml')
             return None, None
-        #cmd = [ 'doi2eprintxml', '-json', doi ]
-        cmd = [ 'doi2eprintxml', '-clsrules=true', doi ]
+        #cmd = [ 'doi2eprintxml', '-clsrules=true', doi ]
+        cmd = [ 'doi2eprintxml', '-json', '-clsrules=true', doi ]
         return cmds.run(cmd)
 
 def doi2eprintxml_version():

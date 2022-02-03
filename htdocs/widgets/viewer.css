@@ -1,0 +1,41 @@
+.viewer-field {
+    display: grid;
+    grid-template-columns: 8em auto;
+    gap: 1em;
+    padding-bottom: 0.24em;
+    margin-bottom: 0.24em;
+}
+
+.viewer-field > label {
+    grid-column: 1/2;
+    text-align: right;
+}
+
+.viewer-field > div {
+    grid-column: 2/2;
+}
+
+.name, .orcid {
+    padding: 0.12em;
+    margin: 0.12em;
+}
+
+.funder {
+    display: grid;
+    grid-template-columns: 60% auto;
+    gap: 1em;
+    padding-bottom: 0.48em;
+}
+
+.agency {
+    grid-column: 1/2;
+}
+
+.agency > label {
+    margin: 0.24em;
+    text-align: top;
+}
+
+.grant-number {
+    grid-column: 2/2;
+}
