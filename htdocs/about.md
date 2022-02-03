@@ -27,10 +27,14 @@ Developers
 
 <version-info id="version-info"></version-info>
 
+<script type="module" src="widgets/config.js"></script>
+
 <script type="module" src="widgets/version-info.js"></script>
 
 <script type="module">
 "use strict";
+import { Cfg } from "widgets/config.js";
+
 let version_info = document.getElementById('version-info');
 
 function updateVersionInfo() {
@@ -42,7 +46,7 @@ function updateVersionInfo() {
 function retrieveVersionInfo() {
     let oReq = new XMLHttpRequest();
     oReq.addEventListener('load', updateVersionInfo);
-    oReq.open('GET', '/acacia/version');
+    oReq.open('GET', `${cfg.base_url}/acacia/version`);
     oReq.send();
 }
 retrieveVersionInfo();

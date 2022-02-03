@@ -27,6 +27,13 @@ BASE_URL=""
 if [ -f "settings.ini" ]; then
     BASE_URL=$(grep -E 'BASE_URL\s+=\s+' settings.ini | cut -d = -f 2 | sed -E 's/ //g')
 fi
+cat <<EOT >htdocs/widgets/config.js
+"use strict";
+let Cfg = {
+    "base_url": "${BASE_URL}"
+};
+export { Cfg };
+EOT
 
 # Build navigation base on nav.tmpl and BASE_URL
 mkpage "base_url=text:${BASE_URL}" \
