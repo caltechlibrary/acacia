@@ -407,7 +407,7 @@ def list_items( filter_by = None, sort_by = None):
     description = f'''
 This is a list of DOIs that Acacia knows about.
 '''
-    return page('list', person, title = 'Manage DOI', description = description, items = items, repo_id = repo_id, view_url = view_url)
+    return page('manage-doi', person, title = 'Manage DOI', description = description, items = items, repo_id = repo_id, view_url = view_url)
 
 @acacia.get('/eprint-xml/<rec_id:int>')
 def get_eprint_xml(rec_id = None):
