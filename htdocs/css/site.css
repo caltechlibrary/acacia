@@ -252,9 +252,22 @@ footer a, footer a:link, footer a:visited, footer a:active, footer a:focus, foot
 
 th {
      text-align: left;
-     text-decoration: underline;
+     vertical-align: bottom;
+/*     text-decoration: underline; */
      padding: 0.24em;
      margin: 0.24.em;
+}
+
+thead {
+     background-color: rgb(17, 255, 172);
+}
+
+tbody > tr:nth-child(even) {
+     background-color: rgb(217, 255, 242);
+}
+
+td > button {
+     align-self: center;
 }
 
 .announcement {
