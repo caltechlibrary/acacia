@@ -17,7 +17,7 @@
 </nav>
 <section>
   <h1>Sorry, Acacia encountered an error</h1>
-  <div class="summary>{{summary}}</div>
+  <div class="summary">{{summary}}</div>
   <p>
   <div class="message">{{message}}</div>
 </section>
