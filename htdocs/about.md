@@ -25,3 +25,25 @@ Developers
 + Tom Morrell
 + George Porter
 
+<version-info id="version-info"></version-info>
+
+<script type="module" src="widgets/version-info.js"></script>
+
+<script type="module">
+"use strict";
+let version_info = document.getElementById('version-info');
+
+function updateVersionInfo() {
+    let src = this.responseText,
+        obj = JSON.parse(src);
+    version_info.value = obj;
+}
+
+function retrieveVersionInfo() {
+    let oReq = new XMLHttpRequest();
+    oReq.addEventListener('load', updateVersionInfo);
+    oReq.open('GET', '/version');
+    oReq.send();
+}
+retrieveVersionInfo();
+</script>
