@@ -14,6 +14,6 @@ authors:
    - family-names: Porter
      given-names: George
      orcid: https://orcid.org/0000-0002-6539-638X
-version: 0.0.9-dev
+version: 0.0.9
 title: acacia
 date-released: 2022-02-03
