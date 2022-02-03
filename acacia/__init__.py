@@ -17,13 +17,8 @@ file "LICENSE" for more information.
 # version number.  The information presented to Acacia users, like the contact
 # email address, are set elsewhere, not here.
 #
-#  ╭────────────────────── Notice ── Notice ── Notice ─────────────────────╮
-#  |    The following values are automatically updated at every release    |
-#  |    by the Makefile. Manual changes to these values will be lost.      |
-#  ╰────────────────────── Notice ── Notice ── Notice ─────────────────────╯
 
 __app__         = 'Acacia'
-__version__     = '0.0.7'
 __description__ = 'A content submission system for CaltechAUTHORS using DOI metadata retrieval.'
 __url__         = 'https://github.com/caltechlibrary/acacia'
 __author__      = 'Robert S. Doiel, Michael Hucka, Thomas E Morrell, Tommy Keswick, George Porter'
@@ -34,8 +29,9 @@ __license__     = 'BSD 3-clause'
 # Exports.
 # .............................................................................
 
+from .version import __version__
 from .routes import acacia
-from .ep3apid.ep3api import Ep3API
+from .ep3apid.ep3api import Ep3API, ep3apid_is_running
 from .ep3apid.user import User
 
 

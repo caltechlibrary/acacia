@@ -6,7 +6,7 @@
     "codeRepository": "https://github.com/caltechlibrary/acacia",
     "issueTracker": "https://github.com/caltechlibrary/acacia/issues",
     "license": "https://data.caltech.edu/license",
-    "version": "0.0.7",
+    "version": "0.0.8-dev",
     "author": [
         {
             "@type": "Person",
@@ -56,7 +56,7 @@
             "@id": "https://orcid.org/0000-0002-6539-638X"
         }
     ],
-    "developmentStatus": "concept",
+    "developmentStatus": "wip",
     "downloadUrl": "https://github.com/caltechlibrary/acacia/releases",
     "keywords": [
         "DOI",

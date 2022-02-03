@@ -3,7 +3,11 @@
 #
 PROJECT = Acacia
 
+VERSION = $(shell grep '"version":' codemeta.json | cut -d\"  -f 4)
+
 static: .FORCE
+	codemeta2cff
+	echo "__version__ = '$(VERSION)'" >acacia/version.py
 	./mk-static-pages.bash
 
 website:

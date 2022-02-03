@@ -12,6 +12,8 @@
  *
  * Impact Pallete see: http://identity.caltech.edu/web/colors
  */
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
 body {
      margin: 0;
      border: 0;
@@ -20,7 +22,7 @@ body {
      height: 100%;
      color: black;
      background-color: white;
-     font-family: Open Sans, Helvetica, Sans-Serif;
+     font-family:  'Atkinson Hyperlegible', sans-serif;
      font-size: 14px;
 }
 
@@ -232,7 +234,7 @@ footer h1, footer span, footer address {
      display: inline-block;
      margin: 0;
      padding-left: 0.24em;
-     font-family: Open Sans, Helvetica, Sans-Serif;
+     font-family:  'Atkinson Hyperlegible', sans-serif;
      font-size: 1em;
 }
 
@@ -246,6 +248,10 @@ footer a, footer a:link, footer a:visited, footer a:active, footer a:focus, foot
      margin: 0;
      color: #FF6E1E;
      text-decoration: none;
+}
+
+th {
+    text-decoration: underline;
 }
 
 .announcement {
@@ -330,4 +336,11 @@ footer a, footer a:link, footer a:visited, footer a:active, footer a:focus, foot
 .index-name, .index-value {
     font-style: italic;
     font-size: smaller;
+}
+
+.logged-in-user {
+    padding: 0.12em;
+    border-radius: 0.24em;
+    font-size: 1.2em;
+    background-color: white;
 }

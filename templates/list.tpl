@@ -24,21 +24,24 @@
 -->
 </p>
 <h1>Manage DOI</h1>
-<p>{{description}}</p>
 <table>
-<tr>
-    <th class="action">&nbsp;</th>
-    <th>Recieved</th>
-    <th>From</th>
-    <th>Status</th>
-    <th>Metadata Retrieved</th>
-    <th>EPrint ID</th>
-    <th>DOI</th>
-    <th>URL to PDF</th>
-    <th>View XML</th>
-    <th class="action">&nbsp;</th>
-    <th class="action">&nbsp;</th>
-</tr>
+<caption>{{description}}</caption>
+<thead>
+  <tr>
+    <th class="action" title="click on heading to change sort order">Lookup</th>
+    <th title="click on heading to change sort order">Recieved</th>
+    <th title="click on heading to change sort order">From</th>
+    <th title="click on heading to change sort order">Status</th>
+    <th title="click on heading to change sort order">Metadata Retrieved</th>
+    <th title="click on heading to change sort order">EPrint ID</th>
+    <th title="click on heading to change sort order">DOI</th>
+    <th title="click on heading to change sort order">URL to PDF</th>
+    <th title="click on heading to change sort order">View Record</th>
+    <th class="action" title="click on heading to change sort order">Import</th>
+    <th class="action" title="click on heading to change sort order">Workflow</th>
+  </tr>
+</thead>
+<tbody>
 % for item in items: 
 <tr>
    <td>
@@ -86,14 +89,16 @@ metadata retrieved
    <td>
        <a href="https://doi.org/{{item.doi}}" target="_blank">{{item.doi}}</a>
    </td>
-   <td><a href="{{item.object_url}}" target="_blank">
+   <td>
 % if len(item.object_url) > 0:
-{{item.object_url.replace('http://', '').replace('https://', '').split(sep="/", maxsplit=2)[0]}}
+   <a href="{{item.object_url}}" target="_blank">
+{{item.object_url.replace('http://', '').replace('https://', '').split(sep="/", maxsplit=2)[0]}}/...
+</a>
 % end
-</a></td>
+   </td>
    <td>
 % if (item.status == "ready"):
-   <a href="{{base_url}}/eprint-xml/{{item.id}}" target="_blank">XML</a>
+   <a href="{{base_url}}/viewer/{{item.id}}" target="_blank">Record</a>
 % end
    </td>
    <td>
@@ -111,6 +116,7 @@ metadata retrieved
    </td>
 </tr>
 % end
+</tbody>
 </table>
 </section>
 
@@ -120,5 +126,11 @@ metadata retrieved
 <span><a href="mailto:library@caltech.edu">Email Us</a></span> 
 <span>Phone: <a href="tel:+1-626-395-3405">(626)395-3405</a></span>
 </footer>
+<script type="module" src="{{base_url}}/widgets/sorttable.js"></script>
+<script type="module">
+"use strict";
+import { make_table_sortable } from '{{base_url}}/widgets/sorttable.js';
+make_table_sortable('table');
+</script>
 </body>
 </html>

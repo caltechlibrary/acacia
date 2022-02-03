@@ -3,10 +3,10 @@
 <form method="post" action="{{base_url}}/add-doi">
 <input type="hidden" name="uname" value="{{uname}}">
 <div>
-<p><label>DOI</label> <input type="text" name="doi" value="" title="Enter a DOI here"></p>
+<p><label for="doi-entry">DOI</label> <input id="doi-entry" type="text" name="doi" value="" title="Enter a DOI here"></p>
 </div>
 <div>
-<p><label>URL to PDF</label> <input type="text" name="object_url" value="" title="Enter the URL for the PDF or other digital object"></p>
+<p><label for="url-to-pdf">URL to PDF</label> <input id="url-to-pdf" type="text" name="object_url" value="" title="Enter the URL for the PDF or other digital object"></p>
 </div>
 <p>
 <input type="submit" name="submit" value="Add record">

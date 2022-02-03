@@ -185,6 +185,11 @@ Command-line arguments summary
         print(f'‼️  Unable to parse -b value "{base_url}" -- quitting.')
         exit(1)
 
+    from acacia.ep3apid import ep3apid_is_running
+    if ep3apid_is_running() == False:
+        print(f'ep3apid unavailable, Acacia aborted')
+        exit(1)
+
     mode = config('RUN_MODE', default = 'normal') if mode == 'M' else mode
     if mode not in ['normal', 'verbose', 'debug']:
         print(f'‼️  Unknown mode "{mode}" -- quitting.')

@@ -27,14 +27,17 @@
 <h1>Message Report</h1>
 <p>{{description}}</p>
 <table>
+<thead>
 <tr>
-    <th class="action">&nbsp;</th>
+    <th class="action">Reset</th>
     <th class="from">From</th>
     <th class="status">Status</th>
     <th class="subject">Subject</th>
     <th class="datestamp">Date</th>
-    <th class="action">&nbsp;</th>
+    <th class="action">Remove</th>
 </tr>
+</thead>
+<tbody>
 % for item in items:
    <tr>
    <td class="action">
@@ -63,6 +66,7 @@ unprocessed
    </td>
    </tr>
 % end
+</tbody>
 </table>
 </section>
 
@@ -72,5 +76,11 @@ unprocessed
 <span><a href="mailto:library@caltech.edu">Email Us</a></span> 
 <span>Phone: <a href="tel:+1-626-395-3405">(626)395-3405</a></span>
 </footer>
+<script type="module" src="{{base_url}}/widgets/sorttable.js"></script>
+<script type="module">
+"use strict";
+import { make_table_sortable } from '{{base_url}}/widgets/sorttable.js';
+make_table_sortable('table');
+</script>
 </body>
 </html>
