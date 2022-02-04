@@ -3,6 +3,8 @@
  * ready to be converted in to EPrints XML.
  */
 
+import { Cfg } from "./config.js";
+
 const record_viewer_template = document.createElement('template');
 
 record_viewer_template.innerHTML = `<style>
