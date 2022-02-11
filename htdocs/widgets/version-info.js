@@ -3,6 +3,10 @@
  * version info end point.
  */
 
+import { Cfg } from "./config.js";
+
+console.log("DEBUG Cfg", Cfg);
+
 const version_info_template = document.createElement('template');
 
 version_info_template.innerHTML = `<style>
