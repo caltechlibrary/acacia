@@ -66,6 +66,14 @@ def post_xml(u, xml_src):
         src = src.encode('utf-8')
     return json.loads(src), None
     
+def post_json(u, json_src):
+    src, err = http_post(u, 'application/json', json_src)
+    if err != None:
+        return None, err
+    if not isinstance(src, bytes):
+        src = src.encode('utf-8')
+    return json.loads(src), None
+    
 def ep3apid_is_running(u = 'http://localhost:8484/version'):
     version, err = http_get(u, {'Content-Type': 'test/plain'});
     if err != None:
@@ -286,10 +294,10 @@ class Ep3API:
     def eprint(self, eprint_id):
         return get_json_data(f'{self.url}/{self.repo_id}/eprint/{eprint_id}')
 
-    def eprint_import(self, user_id, eprint_xml = None):
-        if eprint_xml == None:
-            return [], 'missing eprint xml'
-        return post_xml(f'{self.url}/{self.repo_id}/eprint-import/{user_id}', eprint_xml)
+    def eprint_import(self, user_id, eprint_json = None):
+        if eprint_json == None:
+            return [], 'missing eprint json'
+        return post_json(f'{self.url}/{self.repo_id}/eprint-import/{user_id}', eprint_json)
 
     def user(self, username_or_id):
         s = quote_plus(username_or_id)
