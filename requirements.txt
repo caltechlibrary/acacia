@@ -7,6 +7,9 @@
 # @website https://github.com/caltechlibrary/acacia
 # ==========================================================================
 
+wheel           >= 0.37.1
+setuptools      >= 60.9.1
+
 # Database access
 pymysql         >= 1.0.2
 cryptography    >= 36.0.0
@@ -39,5 +42,3 @@ rich            >= 11.2.0
 str2bool        >= 1.1
 werkzeug        >= 2.0.3
 
-wheel           >= 0.37.1
-setuptools      >= 60.9.1
