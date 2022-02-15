@@ -74,7 +74,7 @@ DOI2EPRINTXML = doi2eprintxml
 # The following run mode options are recognized:
 #   "normal":  use adapter.wsgi without special options
 #   "verbose": use adapter.wsgi with verbose logging options
-# When started using the program run-server included with DIBS, this value
+# When started using the program run-server included with Acacia, this value
 # maybe overriden by command-line options given to run-server.
 RUN_MODE = verbose
 

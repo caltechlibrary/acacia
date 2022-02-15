@@ -78,4 +78,21 @@ and install the version of the tools suited to your computer.
 The program `ep3apid` and `doi2epritxml` needs to be copied to the 
 `bin` folder of Acacia.
 
+Notes
+-----
+
+Setup virtual Python environment.
+
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Clone idutils from https://github.com/ines-cruz/idutils
+
+```
+git clone git@github.com:ines-cruz/idutils
+```
+
+Then install via requirements.txt with pip.
 
