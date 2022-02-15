@@ -9,7 +9,7 @@ const record_viewer_template = document.createElement('template');
 
 record_viewer_template.innerHTML = `<style>
 /* Default CSS */
-@import "/widgets/viewer.css";
+@import "${Cfg.base_url}/widgets/viewer.css";
 /* Site overrides */
 @import "/css/site.css";
 </style>
