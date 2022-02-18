@@ -10,6 +10,8 @@ Requirements
 - Pandoc (used in generating the static HTML pages and some templates)
 - MkPage (used in generating the static HTML pages and some templates)
 - Python3 and the modules in requirements.txt
+- EPrinttools (i.e. ep3apid) version 1.1.3 or better
+- MySQL 8
 
 Installation Steps
 ------------------

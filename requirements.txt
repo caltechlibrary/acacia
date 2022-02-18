@@ -23,7 +23,7 @@ yurl            >= 1.0.0
 arrow           >= 1.2.2
 boltons         >= 21.0.0
 bottle          >= 0.12.19
-#idutils         >= 1.1.8
+idutils         >= 1.1.8
 mysql-connector-python >= 8.0.28
 humanize        >= 4.0.0
 
