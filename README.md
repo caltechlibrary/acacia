@@ -28,11 +28,11 @@ Installation
 
 Requirements
 
-+ [EPrint Tools >= 1.1.2](https://github.com/caltechlibrary/eprinttools/releases)
++ [EPrint Tools >= 1.1.4](https://github.com/caltechlibrary/eprinttools/releases)
     - [doi2eprintxml](https://caltechlibrary.github.io/eprinttools/docs/doi2eprintxml)'s to retrieve the metadata associated with a DOI from CrossRef or DataCite (version 1.1.0 or better)
     - [ep3apid](https://caltechlibrary.github.io/eprinttools/docs/ep3apid) / to handling importing records and quering the EPrints repository for records and user accounts.
 + Python3
-+ MySQL (used by EPrints)
++ MySQL 8 (used by EPrints and the Extended EPrints 3 API)
 + IMAP email account (and access credentials)
 + Emails with list of DOI, one per line
 + software in this repository setup to run periodically (e.g. via cron, systemd or launchd)
