@@ -264,7 +264,7 @@ thead {
 th {
      text-align: center;
      vertical-align: bottom;
-     min-width: 8em;
+     work-break: break-all;
 }
 
 tbody > tr:nth-child(even) {
@@ -293,10 +293,20 @@ button {
      background-color: white;
      padding: 0.24em;
      margin: 0.24em;
-/*
-     filter: drop-shadow(0.32.em 0.24em 0.12em lightgrey)
-     */
 }
+
+button:disabled {
+     all:unset;
+     text-align: center;
+     min-width: 6.0em;
+     border-radius: 0.72em;
+     border: 0.16em solid grey;
+     color: red;
+     background-color: black;
+     padding: 0.24em;
+     margin: 0.24em;
+}
+
 
 button, button > a {
      color: black;

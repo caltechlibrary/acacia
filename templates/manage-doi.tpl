@@ -87,7 +87,11 @@ metadata retrieved
 % end
    </td>
    <td>
+% if len(item.doi) > 32:
+       <a href="https://doi.org/{{item.doi}}" target="_blank">{{item.doi[:24]}}...</a>
+% else:
        <a href="https://doi.org/{{item.doi}}" target="_blank">{{item.doi}}</a>
+% end
    </td>
    <td>
 % if len(item.object_url) > 0:
@@ -103,15 +107,15 @@ metadata retrieved
    </td>
    <td>
 % if item.status == "ready" and not item.eprint_id:
-       <button><a href="{{base_url}}/item-import/{{item.id}}" title="Import item into EPrints">Import</a></button>
+       <button class="import-button"><a href="{{base_url}}/item-import/{{item.id}}" title="Import item into EPrints">Import</a></button>
 % end
    </td>
    <td>
 % if item.status == "imported" or item.eprint_id:
-       <button><a href="{{base_url}}/doi-remove/{{item.id}}" title="Complete by removing item from Acacia">Completed</a></button>
+       <button class="workflow-button"><a href="{{base_url}}/doi-remove/{{item.id}}" title="Complete by removing item from Acacia">Completed</a></button>
 
 % else:
-       <button><a href="{{base_url}}/doi-remove/{{item.id}}" title="Remove item from Acacia">Remove</a></button>
+       <button class="workflow-button"><a href="{{base_url}}/doi-remove/{{item.id}}" title="Remove item from Acacia">Remove</a></button>
 % end
    </td>
 </tr>
@@ -131,11 +135,25 @@ metadata retrieved
 "use strict";
 import { make_table_sortable } from '{{base_url}}/widgets/sorttable.js';
 make_table_sortable('table');
-let lookup_buttons = document.querySelectorAll('.look-up-button');
+let lookup_buttons = document.querySelectorAll('.look-up-button'),
+   import_buttons = document.querySelectorAll('.import-button'),
+   workflow_buttons = document.querySelectorAll('.workflow_button');
 
 lookup_buttons.forEach(function (elem) {
    elem.addEventListener('click', function (evt) {
       elem.textContent = 'processing';
+      elem.disabled = true;
+   });
+});
+import_buttons.forEach(function (elem) {
+   elem.addEventListener('click', function (evt) {
+      elem.textContent = 'importing';
+      elem.disabled = true;
+   });
+});
+workflow_buttons.forEach(function (elem) {
+   elem.addEventListener('click', function (evt) {
+      elem.textContent = 'updating';
       elem.disabled = true;
    });
 });
