@@ -22,6 +22,9 @@ from peewee import CharField, IntegerField, TextField, DateTimeField, BooleanFie
 
 from . import cmds
 
+doi2eprintxml_cmd = config('DOI2EPRINTXML', 'doi2eprintxml')
+doi2eprintxml_email = config('DOI2EPRINTXML_EMAIL', '')
+
 db_name = config('DATABASE_NAME', 'acacia')
 db_host = config('DATABASE_HOST', 'localhost:3306')
 if ':' in db_host:
@@ -142,7 +145,7 @@ def extract_doi_and_url(s):
     try:
         u = urlparse(url)
     except Exception as err:
-        is_url = False;
+        is_url = False
     if (url != None) and (is_url == False):
         errors.append(f'"{url}" does not appear to be a URL, {uerr}')
     if len(errors) > 0:
@@ -197,8 +200,9 @@ class DOIProcessor:
         if dry_run:
             print(f'Dry run, no data fetched with doi2eprintxml')
             return None, None
-        #cmd = [ 'doi2eprintxml', '-clsrules=true', doi ]
-        cmd = [ 'doi2eprintxml', '-json', '-clsrules=true', doi ]
+        #cmd = [ doi2eprintxml_cmd, '-mailto', doi2eprintxml_email, '-clsrules=true', doi ]
+        cmd = [ doi2eprintxml_cmd, '-mailto', doi2eprintxml_email, '-json', '-clsrules=true', doi ]
+        print(f'DEBUG get_metadata cmd:', cmd)
         return cmds.run(cmd)
 
 def doi2eprintxml_version():

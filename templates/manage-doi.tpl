@@ -48,9 +48,9 @@
    % if item.eprint_id:
    &nbsp;
    % elif item.status == "ready":
-   <button><a href="{{base_url}}/doi-reset/{{item.id}}" title="Clear the retrieved metadata for record {{item.id}} in Acacia">clear</a></button>
+   <button class="look-up-button"><a href="{{base_url}}/doi-reset/{{item.id}}" title="Clear the retrieved metadata for record {{item.id}} in Acacia">clear</a></button>
    % else:
-   <button><a href="{{base_url}}/retrieve-metadata/{{item.id}}" title="retrieve the metadata via CrossRef or DataCite">look up</a></button>
+   <button class="look-up-button"><a href="{{base_url}}/retrieve-metadata/{{item.id}}" title="retrieve the metadata via CrossRef or DataCite">look up</a></button>
    % end
    </td>
    <td>
@@ -131,6 +131,14 @@ metadata retrieved
 "use strict";
 import { make_table_sortable } from '{{base_url}}/widgets/sorttable.js';
 make_table_sortable('table');
+let lookup_buttons = document.querySelectorAll('.look-up-button');
+
+lookup_buttons.forEach(function (elem) {
+   elem.addEventListener('click', function (evt) {
+      elem.textContent = 'processing';
+      elem.disabled = true;
+   });
+});
 </script>
 </body>
 </html>

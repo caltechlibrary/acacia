@@ -1,22 +1,22 @@
 <ul>
 <li>
-<a href="/">Home</a>
+<a href="http://localhost:8080/">Home</a>
 </li>
 <li>
-<a href="/get-messages">Get Email</a>
+<a href="http://localhost:8080/get-messages">Get Email</a>
 </li>
 <li>
-<a href="/add-doi">Add a DOI</a>
+<a href="http://localhost:8080/add-doi">Add a DOI</a>
 </li>
-<!-- <li><a href="/messages/">Messages Report</a></li> -->
+<!-- <li><a href="http://localhost:8080/messages/">Messages Report</a></li> -->
 <li>
-<a href="/manage-doi">Manage DOI</a>
-</li>
-<li>
-<a href="/help/">Help</a>
+<a href="http://localhost:8080/manage-doi">Manage DOI</a>
 </li>
 <li>
-<a href="/about">About</a>
+<a href="http://localhost:8080/help/">Help</a>
+</li>
+<li>
+<a href="http://localhost:8080/about">About</a>
 </li>
 <li>
 <a href="/Shibboleth.sso/Logout">Logout</a>

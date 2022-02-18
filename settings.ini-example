@@ -69,6 +69,7 @@ SECRET = 'CHANGE_ME_TO_THE_SUBMISSIONS_EMAIL_PASSWORD'
 # Location of the doi2eprintxml command line program.
 # NOTE: if this is not in your path you need to specify the 
 # full path to the program.
+DOI2EPRINTXML_EMAIL = helpdesk@example.edu
 DOI2EPRINTXML = doi2eprintxml
 
 # The following run mode options are recognized:
