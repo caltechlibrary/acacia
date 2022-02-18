@@ -137,7 +137,7 @@ import { make_table_sortable } from '{{base_url}}/widgets/sorttable.js';
 make_table_sortable('table');
 let lookup_buttons = document.querySelectorAll('.look-up-button'),
    import_buttons = document.querySelectorAll('.import-button'),
-   workflow_buttons = document.querySelectorAll('.workflow_button');
+   workflow_buttons = document.querySelectorAll('.workflow-button');
 
 lookup_buttons.forEach(function (elem) {
    elem.addEventListener('click', function (evt) {
