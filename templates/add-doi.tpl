@@ -1,5 +1,11 @@
 <h1 id="add-a-doi">Add a DOI</h1>
+<<<<<<< HEAD
 <p>This form accepts a DOI and a URL (optional) to the digital object which can be be used to generate EPrint XML for import into <a href="https://authors.library.caltech.edu">CaltechAUTHORS</a>.</p>
+=======
+<p>This form accepts a DOI and a URL (optional) to the digital object
+which can be be used to generate EPrint XML for import into <a
+href="https://authors.library.caltech.edu">CaltechAUTHORS</a>.</p>
+>>>>>>> 92af7b09bce2d1e5e4bb14d16ab95dc4ea673bce
 <form method="post" action="{{base_url}}/add-doi">
 <input type="hidden" name="uname" value="{{uname}}">
 <div>
