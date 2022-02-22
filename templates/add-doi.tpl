@@ -2,7 +2,7 @@
 <p>This form accepts a DOI and a URL (optional) to the digital object
 which can be be used to generate EPrint XML for import into <a
 href="https://authors.library.caltech.edu">CaltechAUTHORS</a>.</p>
-<form id="add-doi" method="post" action="{{base_url}}/add-doi">
+<form method="post" action="{{base_url}}/add-doi">
 <input type="hidden" name="uname" value="{{uname}}">
 <p>
 <div class="input-pair">
