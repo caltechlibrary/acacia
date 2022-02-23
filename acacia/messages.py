@@ -232,4 +232,6 @@ class EMailProcessor():
                 return False
             M.close()
             M.logout()
+            # Clean up any lingering stale processed messages.
+            Message.delete().where(Message.m_processed == 1).execute()
             return True

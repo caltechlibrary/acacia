@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
-cleanup_messages removes processed messages from the messages table.
-FIXME: Should also remove the processed messages from the mailbox.
+cleanup_messages removes processed messages from the messages table
+and deletes message from the mailbox.
 '''
 import os
 import sys
