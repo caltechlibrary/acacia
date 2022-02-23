@@ -71,7 +71,7 @@ metadata retrieved
 % elif item.eprint_id:
    in repository
 % else:
-   {{item.status}}
+   {{item.status.replace('_', ' ')}}
 % end
    </td>
    <td>

@@ -19,7 +19,12 @@
   <h1>Sorry, Acacia encountered an error</h1>
   <div class="summary">{{summary}}</div>
   <p>
-  <div class="message">{{message}}</div>
+% for msg in message:
+  <blockquote class="message">{{msg}}</blockquote>
+% end
+  <div>
+    <a href="{{base_url}}/manage-doi">Back to manage doi</a>
+  </div>
 </section>
 
 <footer>

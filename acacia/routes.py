@@ -291,10 +291,11 @@ def get_metadata(rec_id = None):
                 if record.status != 'ready' or not record.metadata:
                     src, err = doi_processor.get_metadata(record.doi)
                     if err:
-                        msg = f'ERROR get_metadata({record.doi}) {now.isoformat()}: {err}'
+                        log(f'ERROR get_metadata({record.doi}) {now.isoformat()}: {err}')
+                        msg = f'metadata for {record.doi} not available'
                         errors.append(msg)
                         err_cnt += 1
-                        record.status = 'processing_error'
+                        record.status = 'metadata_lookup_error'
                         record.notes += msg + "\n"
                         record.updated = now
                     else:
@@ -306,9 +307,10 @@ def get_metadata(rec_id = None):
                     eprint_id, err = None,None # DEBUG
                     ids, err = ep3api.doi(record.doi)
                     if err:
-                        msg = f'ERROR ep3api.doi({record.doi}): {err}'
+                        log(f'ERROR ep3api.doi({record.doi}): {err}')
+                        msg = 'Failed to find eprint record for {record.eprint_id}'
                         errors.append(msg)
-                        record.status = 'processing_error'
+                        record.status = 'eprint_record_error'
                         record.notes += msg + "\n"
                         record.updated = now
                         err_cnt += 1
@@ -326,9 +328,10 @@ def get_metadata(rec_id = None):
         if record != None:
             metadata, err = doi_processor.get_metadata(record.doi)
             if err:
-                msg = f'ERROR get_metadata({record.doi}) {now.isoformat}: {err}'
+                log(f'ERROR get_metadata({record.doi}) {now.isoformat}: {err}')
+                msg = f'metadata for {record.doi} not available'
                 errors.append(msg)
-                record.status = 'processing_error'
+                record.status = 'metadata_lookup_error'
                 record.notes += msg + "\n"
                 record.updated = now
             else:
@@ -340,9 +343,10 @@ def get_metadata(rec_id = None):
                 eprint_id, err = None,None # DEBUG
                 ids, err = ep3api.doi(record.doi)
                 if err:
-                    msg = f'ERROR ep3api.doi({record.doi}): {err}'
+                    log(f'ERROR ep3api.doi({record.doi}): {err}')
+                    msg = 'Failed to find eprint record for {record.eprint_id}'
                     errors.append(msg)
-                    record.status = 'processing_error'
+                    record.status = 'eprint_lookup_error'
                     record.notes += msg + "\n"
                     record.updated = now
                 elif ids != None and len(ids) > 0:
@@ -396,13 +400,14 @@ def list_items( filter_by = None, sort_by = None):
         opts.append(filter_by)
     if sort_by:
         opts.append(sort_by)
-    #FIXME: need to apply options and describe 
     items = []
     for item in Doi.select().order_by(Doi.updated.desc()):
-        if item.doi != None and not item.eprint_id:
+        if (item.doi != None) and (item.eprint_id == 0):
             ids, err = ep3api.doi(item.doi)
-            if err == None and ids != None and len(ids) > 0:
+            if (err == None) and (ids != None) and (len(ids) > 0):
+                # Remember the eprint_id in item.
                 item.eprint_id = ids[0]
+                item.save()
         items.append(item)
     description = f'''
 This is a list of DOIs that Acacia knows about.
