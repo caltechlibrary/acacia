@@ -174,3 +174,64 @@ class EMailProcessor():
         #return records
         return Message.select().where(Message.m_processed == False)
 
+    def cleanup_mailbox(self, smtp_dry_run = False):
+        user = unquote(self.email)
+        passwd = unquote(self.secret)
+        if user == "":
+            print(f'User not set.')
+            return False
+        if passwd == "":
+            print(f'Password not set for {user}')
+            return False
+        print(f'Connect to {self.imap_host}:{self.imap_port} as {user}')
+        if smtp_dry_run == True:
+            print(f'Dry run. No connection made.')
+            return True
+        else:
+            print(f'Making connection');
+            M = IMAP4_SSL(self.imap_host, self.imap_port)
+            try: 
+                M.login(user, passwd)
+            except Exception as err:
+                print(f'Cannot connect, {err}')
+                return False
+            (res, cnt) = M.select(readonly=True)
+# Convert cnt to the integer it represents.
+            if isinstance(cnt, list):
+                cnt = cnt[0]
+                if isinstance(cnt, bytes):
+                    cnt = int(cnt)
+            if cnt == 1:
+                print(f'{res}, {cnt} message found')
+            else:
+                print(f'{res}, {cnt} messages found')
+            cleanup = False
+            res, data = M.search(None, 'ALL')
+            if res == 'OK':
+                for num in data[0].split():
+                    res, data = M.fetch(num, '(RFC822)')
+                    if res == 'OK':
+                        msg = email.message_from_bytes(data[0][1], policy = default)
+                        msg_id = populate_field('Message-ID', msg, None)
+                        if msg_id:
+                            now = datetime.now()
+                            m = Message.get_or_none(m_id = msg_id)
+                            # remove message from messages table if found.
+                            if (m != None) and (m.m_processed == 1):
+                                cleanup = True
+                                Message.delete().where(Message.m_id == msg_id).execute()
+                                M.store(num, '+FLAGS', '\\Deleted')
+                        else:
+                            print(f'ERROR: could not find {str(num)} {msg_id}, {m.m_subject}, {m.m_date}')
+                    else:
+                        print(f"Can't read message {num}")
+                if cleanup:
+                    M.expunge()
+            else:
+                print('No stale messages')
+                return False
+            M.close()
+            M.logout()
+            # Clean up any lingering stale processed messages.
+            Message.delete().where(Message.m_processed == 1).execute()
+            return True
