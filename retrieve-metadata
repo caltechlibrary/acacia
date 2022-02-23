@@ -2,8 +2,7 @@
 '''
 retrieve-metadata retrieves the previously saved unprocessed doi 
 records updating the metadata field with content retrieved via
-`doi2eprintxml` and also pulls down a copy of any PDF URL 
-associated with the DOI. The workflow status in the doi SQLite3 
+`doi2eprintxml`. Updates workflow status in the doi in MySQL 8
 table for doi.
 '''
 import os
@@ -30,7 +29,7 @@ USAGE: {app_name}
 This program updates the metadata for unprocessed doi
 records in the doi table of {db_name}.  It requires that
 both the doi and message tables exist in {db_name} and
-that the {db_name}. See configure-sqlite3 if tables
+that the {db_name}. See configure-database if tables
 do not already exist. Use get-messages if messages
 need to be retrieved and message-to-doi to add any
 unprocessed doi for processing with this program.
@@ -50,8 +49,8 @@ Retrieve the lates email submissions and make then
 ready to review.
 
 ```
-    ./get_messages
-    ./messages_to_doi
+    ./get-messages
+    ./messages-to-doi
     ./retrieve-metadata
 ```
 
@@ -100,7 +99,7 @@ def apply(app_name, _db, args):
                         sys.exit(1)
                     else:
                         err_cnt += 1
-                    rec.status = 'processing_error'
+                    rec.status = 'metadata_lookup_error'
                     rec.notes += msg + "\n"
                     rec.updated = now
                 else:

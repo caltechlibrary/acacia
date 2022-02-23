@@ -204,6 +204,14 @@ class DOIProcessor:
         cmd = [ doi2eprintxml_cmd, '-mailto', doi2eprintxml_email, '-json', '-clsrules=true', doi ]
         print(f'DEBUG get_metadata cmd:', cmd)
         return cmds.run(cmd)
+    
+    def cleanup_doi_table(self, dry_run = False):
+        if dry_run:
+            print(f'Dry run, no rows in doi table will be dropped')
+            cnt = Doi.select().where((Doi.eprint_id > 0) or (Doi.status == 'imported')).count()
+            print(f'{cnt} rows would be dropped')
+            return None
+        return Doi.delete().where((Doi.eprint_id != 0) or (Doi.status == 'imported')).execute()
 
 def doi2eprintxml_version():
     cmd = [ 'doi2eprintxml', '-version' ]

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''
-get_messages retrieves the messages from the configured email
-account and stores the results in a SQLite3 database
+get-messages retrieves the messages from the configured email
+account and stores the results in a MySQL 8 database
 '''
 import os
 import sys

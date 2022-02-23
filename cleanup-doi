@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 '''
-messages_to_doi retrieves the previously saved unprocessed messages 
-converts the message bodies to DOI records to be retreived and
-stores the results in a MySQL 8 database.
+cleanup-doi retrieves the previously saved processed doi
+checks if they exist in EPrints or have status == 'imported' and
+drops the rows from the doi table that match.
 '''
 import os
 import sys
@@ -16,18 +16,17 @@ from decouple import config
 _db = config('DATABASE', 'acacia.db')
 
 def usage(app_name, db_name, exit_code = None):
-    '''Describe how message-to-doi cli works'''
+    '''Describe how cleanup-doi cli works'''
     print(f'''
 USAGE: {app_name}
 
-This program reads the message table in {db_name}
-and extracts and generates DOI retreival records from 
-unprocessed messages saving the retrival records in the
-doi table in {db_name}. It requires that both the
-doi and message tables exist in {db_name} and that
-the {db_name}. See configure-database if tables
-do not already exist. Use get_messages if messages
-need to be retrieved.
+This program reads the doi table in {db_name}
+and drops rows that have an eprint_id or status equal
+of imported.
+
+It requires that both the doi and message tables exist
+in {db_name}. See configure-database if tables
+do not already exist.
 
 A "settings.ini" file needs to exist and be configured.
 See example file and create it if necessary.
@@ -40,12 +39,10 @@ OPTIONS:
 
 EXAMPLE
 
-Retrieve the lates email submissions and make then
-ready to review.
+Cleanup the doi table in {{db_name}}.
 
 ```
-    ./get-messages
-    ./messages-to-doi
+    ./cleanup-doi
 ```
 
 You can now look at the web application for further
@@ -73,35 +70,15 @@ def apply(app_name, _db, args):
                     dry_run = True
             elif arg.startswith('-h') or arg.startswith('--help'):
                 usage(app_name, _db, 0)
-    mail_processor = EMailProcessor()
     doi_processor = DOIProcessor()
     # the request to the SMTP service
-    err_cnt = 0
-    item_cnt = 0
-    doi_cnt = 0
-    records = mail_processor.get_unprocessed()
-    if len(records) == 0:
-        print(f'WARNING: not unprocessed messages found')
-    else:
-        for rec in records:
-            n, e_cnt, err = doi_processor.message_to_doi(rec, dry_run = dry_run)
-            if err:
-                print(f'ERROR message_to_doi: {err}')
-                if dry_run:
-                    sys.exit(1)
-                else:
-                    err_cnt += e_cnt
-            else:
-                rec.m_processed = True
-                rec.save()
-            doi_cnt += n
-            item_cnt += 1
+    err = doi_processor.cleanup_doi_table(dry_run = dry_run)
+    if err:
+        print(f'ERROR cleanup_doi_table: {err}')
+        if dry_run:
+            sys.exit(1)
     if dry_run:
-        print(f'Dry run: no records saved.')
-    print(f'{item_cnt} messages processed into {doi_cnt} retrievals')
-    if err_cnt > 0:
-        print(f'{err_cnt} errors in processing messages')
-        sys.exit(1)
+        print(f'Dry run: no records cleaned up.')
 
 if __name__ == '__main__':
     app_name = os.path.basename(sys.argv[0])
