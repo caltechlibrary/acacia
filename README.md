@@ -1,6 +1,9 @@
 Acacia<img width="18%" align="right" src=".graphics/acacia-icon.svg">
 =======================================================================
 
+> **Acacia is no longer being developed.** The repository is kept, archived, as
+> a historical record.
+
 Acacia ("_**A**utomated **C**altech**A**UTHORS **C**atalog **I**ngest **A**gent_") is a project to facilitate [ACM Open](https://libraries.acm.org/subscriptions-access/acmopen)'s direct submissions into [CaltechAUTHORS](https://authors.library.caltech.edu) using a simple mail-based workflow.
 
 
